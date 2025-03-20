@@ -74,6 +74,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 }; ?>
 
 <div class="flex flex-col gap-6">
+    <span class=""><img loading="lazy" decoding="async" src="https://imageproxy.wolt.com/assets/679b29eaa2da890ebfeb939e" alt="" draggable="true"  style="object-fit: cover;"><noscript></noscript></span>
     <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
 
     <!-- Session Status -->
