@@ -17,16 +17,16 @@ class ProductSeeder extends Seeder
     {
         $products = [
             [
-                'name' => 'Čeburekas su kiauliena', 'price' => 4.5,
+                'name' => 'Čeburekas su kiauliena', 'price' => 4.5, 'sign' => 'K',
             ],
             [
-                'name' => 'Čeburekas su aviena', 'price' => 4.0,
+                'name' => 'Čeburekas su aviena', 'price' => 4.0, 'sign' => 'A',
             ],
             [
-                'name' => 'Čeburekas su suriu', 'price' => 3.9,
+                'name' => 'Čeburekas su suriu', 'price' => 3.9, 'sign' => 'S',
             ],
             [
-                'name' => 'Čeburekas su jautiena', 'price' => 5.0,
+                'name' => 'Čeburekas su jautiena', 'price' => 5.0, 'sign' => 'J',
             ],
         ];
 

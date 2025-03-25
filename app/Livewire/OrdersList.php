@@ -18,15 +18,9 @@ class OrdersList extends Component
         $this->orders = Order::all();
     }
 
-    public function removeOneOrder($id)
+    public function makeOrder()
     {
-        $order = Order::find($id);
-        $order->amount -= 1;
-        $order->save();
-        if ($order->amount == 0) {
-            $order->delete();
-        }
-        $this->dispatch('change-order');
+        $this->dispatch('order-made');
     }
 
     public function addOneOrder($id)
@@ -46,6 +40,7 @@ class OrdersList extends Component
     {
         Order::truncate();
         $this->dispatch('change-order');
+        $this->dispatch('reset-orders');
     }
 
     public function mount()

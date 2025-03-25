@@ -1,11 +1,10 @@
 <div>
 <div class="bg-gray-100 ">
     <div class="container mx-auto">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">rrr
             @foreach(\App\Models\Product::all() as $product)
                 <livewire:product :productName="$product->name"/>
             @endforeach
-
         </div>
     </div>
 </div>

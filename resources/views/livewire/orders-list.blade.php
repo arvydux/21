@@ -1,5 +1,5 @@
 
-    <div class="bg-white/80 flex flex-col  p-10 rounded-xl">
+    <div class="bg-white/80 flex flex-col  p-10 rounded-xl backdrop-blur-[2px] " >
         <div class="flex items-center mb-3 justify-between ">
             <h2 class="text-[#191919] text-xl font-medium leading-[30px]">Krepšelis ({{\App\Models\Order::all()->sum('amount')}})</h2>
         </div>
@@ -90,18 +90,26 @@
         <div class="">
             <div class=" py-6 flex justify-between items-center">
                 <div class="font-semibold text-lg  text-[#191919]">Iš viso</div>
-                <div class="font-semibold text-4xl text-[#191919]"> <livewire:total-sum-manager/></div>
+                <div class="font-semibold text-4xl text-[#191919]"><livewire:total-sum-manager/></div>
 
 
             </div>
-            <button
-                class="w-full px-10 py-4 bg-emerald-700 rounded-2xl text-white/80 text-base font-semibold  leading-tight">
-                Daryti užsakymą
-            </button>
+            <flux:modal.trigger name="make-order">
+                <button wire:click="makeOrder"
+                    class="w-full px-10 py-4 bg-emerald-700 rounded-2xl text-white/80 text-base font-semibold  leading-tight">
+                    Daryti užsakymą
+                </button>
+            </flux:modal.trigger>
             <button wire:click="resetOrders"
-                    class="w-[376px] mt-3 px-10 py-4 bg-emerald-600/10 rounded-2xl   text-emerald-700 text-base font-semibold  leading-tight">
+                    class="w-full mt-3 px-10 py-4 bg-emerald-600/10 rounded-2xl   text-emerald-700 text-base font-semibold  leading-tight">
                 Valyti krepšelį
             </button>
+
+            <flux:modal name="make-order" class="md:w-96">
+                <div class="space-y-6">
+                    <livewire:sign-orders/>
+                </div>
+            </flux:modal>
         </div>
     </div>
 

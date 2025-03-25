@@ -16,13 +16,13 @@ class ToppingSeeder extends Seeder
     {
         $toppings = [
             [
-                'name' => 'Suris', 'price' => 0.5,
+                'name' => 'Suris', 'price' => 0.5, 'sign' => 'S',
             ],
             [
-                'name' => 'Jalapenai', 'price' => 0.6,
+                'name' => 'Jalapenai', 'price' => 0.6, 'sign' => 'J',
             ],
             [
-                'name' => 'Grybai', 'price' => 0.7,
+                'name' => 'Grybai', 'price' => 0.7, 'sign' => 'G',
             ],
         ];
 

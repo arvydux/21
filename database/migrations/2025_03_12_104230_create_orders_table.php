@@ -16,6 +16,7 @@ return new class extends Migration
             $table->json('name');
             $table->json('toppings')->nullable();
             $table->integer('amount')->default(1);
+            $table->boolean('takeaway')->default(false);
             $table->timestamps();
         });
     }
