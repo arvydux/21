@@ -67,5 +67,6 @@
         </tbody>
     </table>
         </div>
+        <livewire:kibinai-create-form/>
     </div>
 </div>
