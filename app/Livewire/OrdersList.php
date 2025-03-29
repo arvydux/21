@@ -30,6 +30,18 @@ class OrdersList extends Component
         $order->save();
         $this->dispatch('change-order');
     }
+
+    public function removeOneOrder($id)
+    {
+        $order = Order::find($id);
+        $order->amount -= 1;
+        $order->save();
+        if ($order->amount === 0){
+            $this->removeOrder($id);
+        }
+        $this->dispatch('change-order');
+    }
+
     public function removeOrder($id)
     {
         Order::find($id)->delete();

@@ -5,10 +5,10 @@ namespace App\Livewire;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class KibinaiTable extends Component
+class DrinksTable extends Component
 {
     public int $editedProductNameId = 0;
-    public \App\Models\SimpleProduct $simpleProduct;
+    public \App\Models\Drink $simpleProduct;
     public string $name;
     public string $price;
     public bool $show = false;
@@ -17,7 +17,7 @@ class KibinaiTable extends Component
     public function editProduct(int $productNameId): void
     {
         $this->editedProductNameId = $productNameId;
-        $this->simpleProduct = \App\Models\SimpleProduct::find($productNameId);
+        $this->simpleProduct = \App\Models\Drink::find($productNameId);
         $this->name = $this->simpleProduct->name;
         $this->price = $this->simpleProduct->price;
         $this->show = $this->simpleProduct->show;
@@ -25,11 +25,11 @@ class KibinaiTable extends Component
 
     public function save()
     {
-       // $this->validate();
+        // $this->validate();
 
         if (is_null($this->simpleProduct)) {
-            $position = \App\Models\SimpleProduct::max('position') + 1;
-            \App\Models\SimpleProduct::create(array_merge($this->only('name', 'price', 'show'), ['position' => $position]));
+            $position = \App\Models\Drink::max('position') + 1;
+            \App\Models\Drink::create(array_merge($this->only('name', 'price', 'show'), ['position' => $position]));
         } else {
             $this->simpleProduct->update($this->only('name', 'price', 'show'));
         }
@@ -40,14 +40,14 @@ class KibinaiTable extends Component
 
     public function deleteProduct(int $productNameId): void
     {
-        \App\Models\SimpleProduct::destroy($productNameId);
+        \App\Models\Drink::destroy($productNameId);
         $this->mount();
     }
 
     #[on('productAdded')]
     public function mount(): void
     {
-        $this->simpleProducts = \App\Models\SimpleProduct::all();
+        $this->simpleProducts = \App\Models\Drink::all();
     }
     public function cancel(): void
     {
@@ -56,6 +56,6 @@ class KibinaiTable extends Component
 
     public function render()
     {
-        return view('livewire.kibinai-table');
+        return view('livewire.drinks-table');
     }
 }

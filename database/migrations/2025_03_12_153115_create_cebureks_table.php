@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('cebureks', function (Blueprint $table) {
             $table->id();
-            $table->json('name');
-            $table->json('toppings')->nullable();
-            $table->integer('amount')->default(1);
-            $table->decimal('order_price', 8, 2)->nullable();
-            $table->boolean('takeaway')->default(false);
+            $table->text('name');
+            $table->decimal('price', 8, 2);
+            $table->text('sign');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('cebureks');
     }
 };

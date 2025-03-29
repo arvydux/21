@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Ceburek extends Model
 {
     //
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'price'];
 }

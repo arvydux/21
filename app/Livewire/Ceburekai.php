@@ -17,7 +17,7 @@ class Ceburekai extends Component
 
     public $productName;
 
-    public $takeaway;
+    public $takeaway = true;
 
     #[on('chooseProductName')]
     public function getProductName($name): void
@@ -33,7 +33,7 @@ class Ceburekai extends Component
 
     public function getProductList()
     {
-        $this->allProducts = \App\Models\Product::all();
+        $this->allProducts = \App\Models\Ceburek::all();
     }
 
     public function getToppingList()
@@ -68,13 +68,17 @@ class Ceburekai extends Component
                     'name' => json_encode($productWithPrice),
                     'toppings' => json_encode($toppingsWithPrices),
                     'takeaway' => $this->takeaway,
+                    'order_price' => $this->orderPrice,
                 ]);
             }
         }
 
         if (!empty($toppingsWithPrices)) {
             $sameOrder = Order::whereJsonContains('name', $productWithPrice)
-                ->whereJsonContains('toppings', $toppingsWithPrices)->first() ?? null;
+                ->whereJsonLength('toppings', count($toppingsWithPrices))
+                ->whereJsonContains('toppings', $toppingsWithPrices)
+                ->first() ?? null;
+            //dd($toppingsWithPrices, $sameOrder);
             if ($sameOrder) {
                 Order::where('id', $sameOrder->id)->update([
                     'amount' => $sameOrder->amount + 1,
@@ -84,6 +88,7 @@ class Ceburekai extends Component
                     'name' => json_encode($productWithPrice),
                     'toppings' => json_encode($toppingsWithPrices),
                     'takeaway' => $this->takeaway,
+                    'order_price' => $this->orderPrice,
                 ]);
             }
         }

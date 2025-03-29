@@ -25,41 +25,48 @@
                     {{ $productName->name }}
                 </th>
                 <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                    <input type="text" wire:model.live.debounce="name" id="name" class="bg-white/80 py-4 pr-4 pl-2 rounded-lg  sm:text-base " >
+                    <input type="text" wire:model.live.debounce="name" id="name" class="bg-white/80 px-4 py-1.5  pl-4 rounded-lg  sm:text-base " >
                     @error('name')
                     <span class="text-sm text-red-500">hy7hy7h</span>
                     @enderror
-                </td>
-                <td class="px-6 py-4">
                 </td>
                 <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-6 py-4 font-medium   dark:text-white">
                     {{ $productName->price }}
                 </th>
                 <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                    <input type="text" wire:model.live.debounce="price" id="price" class="bg-white/80 py-4 pr-4 pl-2 rounded-lg  sm:text-base " >
-{{--                    <div class="flex items-center">
-                        <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Online
-
-
-                        <div class="flex items-center gap-x-3">
-                            <label for="hs-valid-toggle-switch" class="relative inline-block w-11 h-6 cursor-pointer">
-                                <input type="checkbox" id="hs-valid-toggle-switch" wire:model="show" class="peer sr-only" checked="">
-                                <span class="absolute inset-0 bg-red-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-gray-900/20 dark:bg-neutral-700 dark:peer-checked:bg-teal-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
-                                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full dark:bg-neutral-400 dark:peer-checked:bg-white"></span>
-                            </label>
-                            <label for="hs-valid-toggle-switch" class="text-sm text-gray-500 dark:text-neutral-400">Valid switch</label>
-                        </div>
-                    </div>--}}
+                    <input type="text" wire:model.live.debounce="price" id="price" class="bg-white/80 px-4 py-1.5  pl-4  rounded-lg  sm:text-base " >
                     @error('price')
                     <span class="text-sm text-red-500">hy7hy7h</span>
                     @enderror
                 </td>
+                <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-6 py-4 font-medium   dark:text-white">
+                    @if($productName->show)
+                        <div class="flex items-center">
+                            <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Taip
+                        </div>
+                    @else
+                        <div class="flex items-center">
+                            <div class="h-2.5 w-2.5 rounded-full bg-gray-300 me-2"></div> Ne
+                        </div>
+                    @endif
+                </th>
+                <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
+                    <div class="flex items-center">
+                        <label class="relative cursor-pointer">
+                            <input type="checkbox"  wire:model="show" class="sr-only peer" />
+                            <div
+                                class="w-[53px] h-7 flex items-center bg-gray-300 rounded-full text-[9px] peer-checked:text-emerald-700  text-gray-300 font-extrabold after:flex after:items-center after:justify-center peer after:content-['Ne'] peer-checked:after:content-['Taip'] peer-checked:after:translate-x-full after:absolute after:left-[2px] peer-checked:after:border-white after:bg-white after:border after:border-gray-300 after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-700 ">
+                            </div>
+                        </label>
+                    </div>
+                </td>
                 <td class="px-6 py-4">
                     @if($editedProductNameId === $productName->id)
-                        <flux:button wire:click="save({{ $productName->id }})" variant="primary" class="bg-gray-900/20">Išsaugoti</flux:button>
+                        <flux:button wire:click="save({{ $productName->id }})" variant="primary" class="">Išsaugoti</flux:button>
                         <flux:button wire:click.prevent="cancel" variant="primary">Atšaukti</flux:button>
                     @else
                         <flux:button wire:click="editProduct({{ $productName->id }})" variant="primary">Pakeisti</flux:button>
+                        <flux:button wire:click="deleteProduct({{ $productName->id }})" variant="primary">Pašalinti</flux:button>
                     @endif
                 </td>
             </tr>

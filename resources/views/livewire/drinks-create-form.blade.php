@@ -20,7 +20,7 @@
 
         <div class="my-4">
             <button wire:click="save"
-                class="w-full px-10 py-4 bg-emerald-700 rounded-2xl text-white/80 text-base font-semibold  leading-tight">
+                    class="w-full px-10 py-4 bg-emerald-700 rounded-2xl text-white/80 text-base font-semibold  leading-tight">
                 Sukurti produktą
             </button>
         </div>

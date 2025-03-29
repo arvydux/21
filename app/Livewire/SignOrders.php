@@ -17,7 +17,7 @@ class SignOrders extends Component
             if (isset($order->toppings)) {
                 $orderName = json_decode($order->name);
                 $productName = array_key_first((array)$orderName[0]);
-                $ceburekSign = \App\Models\Product::where('name', $productName)->first()->sign;
+                $ceburekSign = \App\Models\Ceburek::where('name', $productName)->first()->sign;
                 if (!empty($order->toppings)) {
                     $toppings = json_decode($order->toppings);
                     foreach ($toppings as $topping) {

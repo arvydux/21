@@ -2,13 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Product;
-use App\Models\Topping;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Ceburek;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
-class ProductSeeder extends Seeder
+class CeburekSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -30,6 +27,6 @@ class ProductSeeder extends Seeder
             ],
         ];
 
-        Product::insert($products);
+        Ceburek::insert($products);
     }
 }
