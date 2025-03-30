@@ -4,11 +4,11 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class KibinaiCreateForm extends Component
+class OtherProductsCreateForm extends Component
 {
     public $name;
     public $price;
-
+    
     public function save()
     {
         $this->validate([
@@ -17,7 +17,7 @@ class KibinaiCreateForm extends Component
         ]);
 
         // Save to database
-        \App\Models\Kibinai::create([
+        \App\Models\OtherProduct::create([
             'name' => $this->name,
             'price' => $this->price,
         ]);
@@ -31,6 +31,6 @@ class KibinaiCreateForm extends Component
 
     public function render()
     {
-        return view('livewire.kibinai-create-form');
+        return view('livewire.other-products-create-form');
     }
 }

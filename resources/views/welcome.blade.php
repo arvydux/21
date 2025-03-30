@@ -3,7 +3,7 @@
         <div class="flex h-full w-full flex-1  gap-4 rounded-xl">
             <div class="auto-rows-min gap-4 w-1/2" data-tabs-toggle="#default-tab-content" role="tablist">
                 <div class="grid md:grid-cols-1 auto-rows-min gap-4">
-                    <a href="{{ route('dashboard') }}" >
+                    <a href="{{ route('kasa') }}" >
                         <div
                              class="relative text-center shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
                 aspect-video overflow-hidden rounded-xl  bg-gray-900/20 dark:border-neutral-700">

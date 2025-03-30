@@ -4,33 +4,37 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class KibinaiCreateForm extends Component
+class ToppingsCreateForm extends Component
 {
     public $name;
     public $price;
+    public $sign;
 
     public function save()
     {
         $this->validate([
             'name' => 'required',
             'price' => 'required|numeric',
+            'sign' => 'required|max:1',
         ]);
 
         // Save to database
-        \App\Models\Kibinai::create([
+        \App\Models\Topping::create([
             'name' => $this->name,
             'price' => $this->price,
+            'sign' => $this->sign,
         ]);
 
         // Reset form
         $this->name = '';
         $this->price = '';
+        $this->sign = '';
 
         $this->dispatch('productAdded');
     }
 
     public function render()
     {
-        return view('livewire.kibinai-create-form');
+        return view('livewire.toppings-create-form');
     }
 }

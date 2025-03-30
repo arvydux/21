@@ -9,9 +9,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::view('kasa', 'dashboard')
+Route::view('kasa', 'kasa')
    // ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+    ->name('kasa');
 
 Route::view('menu', 'menu')
    // ->middleware(['auth', 'verified'])

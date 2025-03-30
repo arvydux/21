@@ -20,10 +20,10 @@ class CategorySeeder extends Seeder
                 'name' => 'Kibinai', 'component_name' => 'kibinai',
             ],
             [
-                'name' => 'Gerimai', 'component_name' => 'gerimai',
+                'name' => 'Gėrimai', 'component_name' => 'drinks',
             ],
             [
-                'name' => 'Kiti', 'component_name' => 'kiti',
+                'name' => 'Kiti', 'component_name' => 'other',
             ],
         ];
 
