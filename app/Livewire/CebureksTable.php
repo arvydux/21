@@ -8,30 +8,32 @@ use Livewire\Component;
 class CebureksTable extends Component
 {
     public int $editedProductNameId = 0;
-    public \App\Models\Ceburek $simpleProduct;
+    public \App\Models\Ceburek $product;
     public string $name;
     public string $price;
+    public string $sign;
     public bool $show = false;
-    public $simpleProducts= [];
+    public $products= [];
 
     public function editProduct(int $productNameId): void
     {
         $this->editedProductNameId = $productNameId;
-        $this->simpleProduct = \App\Models\Ceburek::find($productNameId);
-        $this->name = $this->simpleProduct->name;
-        $this->price = $this->simpleProduct->price;
-        $this->show = $this->simpleProduct->show;
+        $this->product = \App\Models\Ceburek::find($productNameId);
+        $this->name = $this->product->name;
+        $this->price = $this->product->price;
+        $this->sign = $this->product->sign;
+        $this->show = $this->product->show;
     }
 
     public function save()
     {
         // $this->validate();
 
-        if (is_null($this->simpleProduct)) {
-            $position = \App\Models\Drink::max('position') + 1;
-            \App\Models\Drink::create(array_merge($this->only('name', 'price', 'show'), ['position' => $position]));
+        if (is_null($this->product)) {
+            $position = \App\Models\Ceburek::max('position') + 1;
+            \App\Models\Ceburek::create(array_merge($this->only('name', 'price', 'show', 'sign'), ['position' => $position]));
         } else {
-            $this->simpleProduct->update($this->only('name', 'price', 'show'));
+            $this->product->update($this->only('name', 'price', 'show', 'sign'));
         }
 
         $this->editedProductNameId = 0;
@@ -40,14 +42,14 @@ class CebureksTable extends Component
 
     public function deleteProduct(int $productNameId): void
     {
-        \App\Models\Drink::destroy($productNameId);
+        \App\Models\Ceburek::destroy($productNameId);
         $this->mount();
     }
 
     #[on('productAdded')]
     public function mount(): void
     {
-        $this->simpleProducts = \App\Models\Ceburek::all();
+        $this->products = \App\Models\Ceburek::all();
     }
     public function cancel(): void
     {

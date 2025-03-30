@@ -8,10 +8,10 @@
                         Pavadinimas
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Rodyti
+                        Kaina
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Kaina
+                        Rodyti
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Veiksmai

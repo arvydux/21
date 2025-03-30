@@ -1,5 +1,5 @@
 <div class="grid md:grid-cols-3 auto-rows-min gap-4 mt-4">
-    @foreach(\App\Models\Ceburek::all() as $productName)
+    @foreach(\App\Models\Ceburek::where('show', true)->get() as $productName)
         <flux:modal.trigger name="edit-profile">
             <div  wire:click="getProductName('{{ $productName->name }}')" class="relative text-center  shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
             aspect-video overflow-hidden rounded-xl  dark:border-neutral-700">

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('name');
             $table->decimal('price', 8, 2);
             $table->text('sign');
+            $table->boolean('show')->default(true);
             $table->timestamps();
         });
     }
