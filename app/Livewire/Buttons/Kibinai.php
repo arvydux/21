@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Livewire\buttons;
+namespace App\Livewire\Buttons;
 
 use App\Models\Order;
 use Livewire\Component;
 
-class OtherProducts extends Component
+class Kibinai extends Component
 {
     public $productName;
     public $selectedProductName = '';
@@ -29,6 +29,6 @@ class OtherProducts extends Component
 
     public function render()
     {
-        return view('livewire.buttons.other-products');
+        return view('livewire.buttons.kibinai');
     }
 }

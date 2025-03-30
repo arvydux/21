@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\buttons;
+namespace App\Livewire\Buttons;
 
 use App\Models\Order;
 use Livewire\Attributes\On;
