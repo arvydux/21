@@ -27,7 +27,11 @@ class CebureksTable extends Component
 
     public function save()
     {
-        // $this->validate();
+        $this->validate([
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'sign' => 'required'
+        ]);
 
         if (is_null($this->product)) {
             $position = \App\Models\Ceburek::max('position') + 1;

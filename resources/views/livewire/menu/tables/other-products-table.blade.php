@@ -27,16 +27,16 @@
                         <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
                             <input type="text" wire:model.live.debounce="name" id="name" class="bg-white/80 px-4 py-1.5  pl-4 rounded-lg  sm:text-base " >
                             @error('name')
-                            <span class="text-sm text-red-500">hy7hy7h</span>
+                            <span class="text-md text-red-500">Pavadinimas turi būti užpildytas</span>
                             @enderror
                         </td>
                         <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-6 py-4 font-medium   dark:text-white">
-                            {{ $productName->price }}
+                            {{ number_format($productName->price, 2) }} €
                         </th>
                         <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
                             <input type="text" wire:model.live.debounce="price" id="price" class="bg-white/80 px-4 py-1.5  pl-4  rounded-lg  sm:text-base " >
                             @error('price')
-                            <span class="text-sm text-red-500">hy7hy7h</span>
+                            <span class="text-md text-red-500">Gali būti tik skaičiai</span>
                             @enderror
                         </td>
                         <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-6 py-4 font-medium   dark:text-white">

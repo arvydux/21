@@ -14,16 +14,31 @@ class CeburekSeeder extends Seeder
     {
         $products = [
             [
-                'name' => 'Čeburekas su kiauliena', 'price' => 4.5, 'sign' => 'K',
+                'name' => 'Čeburėkas su kiauliena', 'price' => 3.9, 'sign' => 'K',
             ],
             [
-                'name' => 'Čeburekas su aviena', 'price' => 4.0, 'sign' => 'A',
+                'name' => 'Čeburėkas su jautiena', 'price' => 4.5, 'sign' => 'J',
             ],
             [
-                'name' => 'Čeburekas su suriu', 'price' => 3.9, 'sign' => 'S',
+                'name' => 'Čeburėkas su aviena', 'price' => 4.9, 'sign' => 'A',
             ],
             [
-                'name' => 'Čeburekas su jautiena', 'price' => 5.0, 'sign' => 'J',
+                'name' => 'Čeburėkas Mix', 'price' => 4.5, 'sign' => 'M',
+            ],
+            [
+                'name' => 'Čeburėkas Šefo', 'price' => 6.2, 'sign' => 'Š',
+            ],
+            [
+                'name' => '2-jų rūšių sūriu', 'price' => 4.0, 'sign' => '2S',
+            ],
+            [
+                'name' => 'Saliamis + sūris', 'price' => 4.0, 'sign' => 'SS',
+            ],
+            [
+                'name' => 'Sūris + grybai', 'price' => 4.0, 'sign' => 'SS',
+            ],
+            [
+                'name' => 'Su kiauliena + sriuba', 'price' => 5.8, 'sign' => 'KS',
             ],
         ];
 
