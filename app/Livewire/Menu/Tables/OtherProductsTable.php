@@ -25,7 +25,10 @@ class OtherProductsTable extends Component
 
     public function save()
     {
-        // $this->validate();
+        $this->validate([
+            'name' => 'required',
+            'price' => 'required|numeric',
+        ]);
 
         if (is_null($this->simpleProduct)) {
             $position = \App\Models\Drink::max('position') + 1;

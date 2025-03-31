@@ -14,7 +14,7 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                'name' => 'Čeburekai', 'component_name' => 'ceburekai',
+                'name' => 'Čeburėkai', 'component_name' => 'ceburekai',
             ],
             [
                 'name' => 'Kibinai', 'component_name' => 'kibinai',
