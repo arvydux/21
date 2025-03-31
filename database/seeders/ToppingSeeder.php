@@ -16,19 +16,13 @@ class ToppingSeeder extends Seeder
     {
         $toppings = [
             [
-                'name' => 'Sūriu', 'price' => 1.0, 'sign' => 'S',
+                'name' => 'Suris', 'price' => 0.5, 'sign' => 'S',
             ],
             [
-                'name' => 'Grybai', 'price' => 0.6, 'sign' => 'G',
+                'name' => 'Jalapenai', 'price' => 0.6, 'sign' => 'J',
             ],
             [
-                'name' => 'Jelapenai', 'price' => 0.6, 'sign' => 'J',
-            ],
-            [
-                'name' => '2-jų rūšių sūris', 'price' => 1.2, 'sign' => '2S',
-            ],
-            [
-                'name' => 'Daugiau mėsos', 'price' => 0.8, 'sign' => 'DM',
+                'name' => 'Grybai', 'price' => 0.7, 'sign' => 'G',
             ],
         ];
 

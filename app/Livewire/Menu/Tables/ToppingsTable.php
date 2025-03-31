@@ -27,11 +27,7 @@ class ToppingsTable extends Component
 
     public function save()
     {
-        $this->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'sign' => 'required'
-        ]);
+        // $this->validate();
 
         if (is_null($this->product)) {
             $position = \App\Models\Topping::max('position') + 1;

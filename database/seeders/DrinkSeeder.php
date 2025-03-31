@@ -23,12 +23,6 @@ class DrinkSeeder extends Seeder
             [
                 'name' => '7Up', 'price' => 2.0,
             ],
-            [
-                'name' => 'Mangų ir apelsinų kokteilis ', 'price' => 3.5,
-            ],
-            [
-                'name' => 'Natūralus vištienos sultinys', 'price' => 2.5,
-            ],
         ];
 
         Drink::insert($products);

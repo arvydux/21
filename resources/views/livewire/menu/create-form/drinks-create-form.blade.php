@@ -9,9 +9,6 @@
                 Pavadinimas
             </label>
             <input wire:model="name" class="w-full rounded-md  g-white/80 px-4 py-1.5  pl-4  rounded-lg bg-white/80 shadow-sm focus:shadow text-gray-600"  />
-            @error('name')
-            <span class="text-md text-red-500">Pavadinimas turi būti užpildytas</span>
-            @enderror
         </div>
 
         <div class="w-full min-w-[200px] my-2">
@@ -19,9 +16,6 @@
                 Kaina
             </label>
             <input wire:model="price" class="w-full g-white/80 px-4 py-1.5  pl-4  rounded-lg bg-white/80 shadow-sm focus:shadow text-gray-600"  />
-            @error('price')
-            <span class="text-md text-red-500">Gali būti tik skaičiai</span>
-            @enderror
         </div>
 
         <div class="my-4">
