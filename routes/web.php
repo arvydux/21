@@ -17,6 +17,10 @@ Route::view('menu', 'menu')
    // ->middleware(['auth', 'verified'])
     ->name('menu');
 
+Route::view('orders', 'orders')
+    // ->middleware(['auth', 'verified'])
+    ->name('orders');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
