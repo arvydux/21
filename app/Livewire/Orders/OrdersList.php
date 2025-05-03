@@ -25,6 +25,8 @@ class OrdersList extends Component
 
     public function makeOrder()
     {
+        $this->makeOrderNumber();
+
         $this->dispatch('order-made');
     }
 
@@ -55,13 +57,12 @@ class OrdersList extends Component
 
     public function resetOrders()
     {
-        $this->makeOrderNumber();
         Order::truncate();
         $this->dispatch('change-order');
         $this->dispatch('reset-orders');
     }
 
-    private function makeOrderNumber()
+    private function makeOrderNumber(): int
     {
         $this->freeNumber = FreeNumbers::first()->number;
         OrderNumbers::create([
@@ -71,6 +72,8 @@ class OrdersList extends Component
         ]);
         FreeNumbers::first()->update(['number' => $this->freeNumber + 1]);
         $this->byPhone = false;
+
+        return $this->freeNumber;
     }
 
     public function mount()
