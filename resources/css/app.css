@@ -64,3 +64,21 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+.zoom-in-out-box {
+
+    background: orangered;
+    animation: zoom-in-zoom-out 1s ease infinite;
+}
+
+@keyframes zoom-in-zoom-out {
+    0% {
+        scale: 100%
+    }
+    50% {
+        scale: 110%;
+    }
+    100% {
+        scale: 100%;
+    }
+}

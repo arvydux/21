@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('drinks', function (Blueprint $table) {
+        Schema::create('order_numbers', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
-            $table->decimal('price', 8, 2);
-            $table->boolean('show')->default(true);
-            $table->integer('category')->default(3);
+            $table->integer('number')->default(0);
+            $table->boolean('is_ready')->default(0);
+            $table->boolean('by_phone')->default(0);
+            $table->boolean('is_taken')->default(0);
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('drinks');
+        Schema::dropIfExists('order_numbers');
     }
 };

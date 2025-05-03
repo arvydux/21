@@ -70,7 +70,9 @@ class Ceburekai extends Component
                     'name' => json_encode($productWithPrice),
                     'toppings' => json_encode($toppingsWithPrices),
                     'takeaway' => $this->takeaway,
+                    'package' => true,
                     'order_price' => $this->orderPrice,
+                    'category' => 1,
                 ]);
             }
         }
@@ -91,7 +93,9 @@ class Ceburekai extends Component
                     'name' => json_encode($productWithPrice),
                     'toppings' => json_encode($toppingsWithPrices),
                     'takeaway' => $this->takeaway,
+                    'package' => true,
                     'order_price' => $this->orderPrice,
+                    'category' => 1,
                 ]);
             }
         }

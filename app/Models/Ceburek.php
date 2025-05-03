@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Ceburek extends Model
 {
     //
-    protected $fillable = ['name', 'price', 'sign', 'show'];
+    protected $fillable = ['name', 'price', 'sign', 'show', 'category'];
 }

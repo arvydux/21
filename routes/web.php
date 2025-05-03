@@ -17,6 +17,10 @@ Route::view('menu', 'menu')
    // ->middleware(['auth', 'verified'])
     ->name('menu');
 
+Route::view('kitchen', 'kitchen')
+    // ->middleware(['auth', 'verified'])
+    ->name('kitchen');
+
 Route::view('orders', 'orders')
     // ->middleware(['auth', 'verified'])
     ->name('orders');

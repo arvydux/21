@@ -18,7 +18,8 @@ return new class extends Migration
             $table->integer('amount')->default(1);
             $table->decimal('order_price', 8, 2)->nullable();
             $table->boolean('takeaway')->default(false);
-            $table->timestamps();
+            $table->boolean('package')->default(false);
+            $table->integer('category')->default(4);$table->timestamps();
         });
     }
 

@@ -21,6 +21,9 @@ class OtherProducts extends Component
         } else {
             Order::create([
                 'name' => json_encode([[$productName => $productPrice]]),
+                'order_price' => $productPrice,
+                'package' => true,
+                'category' => 4,
             ]);
         }
 

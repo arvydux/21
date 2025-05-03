@@ -31,6 +31,13 @@ class TotalSumManager extends Component
                 }
             }
         }
+
+        $packages = 0;$ordersWithPackages =  Order::where('package', true)->get();
+        foreach ($ordersWithPackages as $order) {
+            $packages += $order->amount * 0.3;
+        }
+
+        $this->totalSum += $packages;
     }
 
     public function mount()

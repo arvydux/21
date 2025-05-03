@@ -2,6 +2,13 @@
 <div class="bg-white/80 flex flex-col  p-4 rounded-xl backdrop-blur-[2px] " >
     <div class="flex items-center mb-3 justify-between ">
         <h2 class="text-[#191919] text-xl font-medium leading-[30px]">Krepšelis ({{\App\Models\Order::all()->sum('amount')}})</h2>
+        <div class="flex items-right gap-2 ">
+            <flux:field variant="inline">
+                <flux:checkbox wire:model="byPhone" class="!mt-1 scale-150" />
+                <flux:label  class="!text-[#191919] !text-xl font-medium" >Užsakomas telefonu</flux:label>
+                <flux:error name="terms" />
+            </flux:field>
+        </div>
     </div>
 
     @foreach($orders as $order)
@@ -12,7 +19,6 @@
                         @foreach($name as $name => $price)
                             <h3 class="  text-[#191919] text-md font-normal  leading-[21px]">{{ $name }} <span
                                     class="relative justify-start text-[#191919] text-sm font-semibold "> {{ $price }} €</span>
-
                             </h3>
                         @endforeach
                     @endforeach
@@ -28,11 +34,18 @@
                             @endforeach
                         @endforeach
                     @endif
-                    @if (isset($order->toppings))
+                        @if($order->package)
+                            <p>
+                                    <span
+                                        class="relative justify-start text-[#7f7f7f] text-sm font-semibold  leading-[21px]">Pakuotės mokestis</span><span
+                                    class="relative justify-start text-[#191919] text-sm font-semibold  leading-[16.80px]"> 0.30 €</span>
+                            </p>
+                        @endif
+                    @if ($order->package)
                         <p>
                                     <span
                                         class="relative justify-start text-[#7f7f7f] text-md w-10  text-center text-gray-950 font-bold leading-[21px]">Pilna suma:</span><span
-                                class="relative justify-start text-[#191919] text-md font-semibold  leading-[16.80px]"> {{ $order->order_price }} € &times; {{ $order->amount }} = {{ $order->order_price * $order->amount }} €</span>
+                                class="relative justify-start text-[#191919] text-md font-semibold  leading-[16.80px]"> {{ $order->order_price  + 0.30 }} € &times; {{ $order->amount }} = {{ ($order->order_price + 0.30) * $order->amount }} €</span>
                         </p>
                             <p>
                                     <span
@@ -44,7 +57,7 @@
                             <p>
                                     <span
                                         class="relative justify-start text-[#7f7f7f] text-md w-10  text-center text-gray-950 font-bold leading-[21px]">Pilna suma:</span><span
-                                    class="relative justify-start text-[#191919] text-md font-semibold  leading-[16.80px]"> {{ $price }} € &times; {{ $order->amount }} = {{ $price * $order->amount }} €</span>
+                                    class="relative justify-start text-[#191919] text-md font-semibold  leading-[16.80px]"> {{ $price}} € &times; {{ $order->amount }} = {{ $price * $order->amount }} €</span>
                             </p>
                     @endif
                 </div>
@@ -106,12 +119,12 @@
                     </defs>
                 </svg>
             </div>--}}
+
+    <livewire:orders.category-sum/>
     <div class="">
-        <div class=" py-6 flex justify-between items-center">
-            <div class="font-semibold text-lg  text-[#191919]">Iš viso</div>
-            <div class="font-semibold text-4xl text-[#191919]"><livewire:orders.total-sum-manager/></div>
-
-
+        <div class=" py-2 flex justify-between items-center">
+            <div class="font-semibold text-3xl  text-[#191919]">Iš viso</div>
+            <div class="font-semibold text-3xl text-[#191919]"><livewire:orders.total-sum-manager/></div>
         </div>
         <flux:modal.trigger name="make-order">
             <button wire:click="makeOrder"
@@ -128,6 +141,13 @@
             <div class="space-y-6">
                 <livewire:sign-orders/>
             </div>
+        </flux:modal>
+        <flux:modal.trigger name="see-orders" class="bg-yellow-300">
+            <flux:button class="w-full mt-3 px-10 py-8 bg-emerald-600/10 !rounded-2xl">Užsakymai</flux:button>
+        </flux:modal.trigger>
+
+        <flux:modal name="see-orders" variant="flyout" class="bg-yellow-300" >
+            <livewire:kasa-orders/>
         </flux:modal>
     </div>
 </div>

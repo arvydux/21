@@ -2,7 +2,10 @@
 
 namespace App\Livewire\Orders;
 
+use AllowDynamicProperties;
 use App\Models\Order;
+use App\Models\FreeNumbers;
+use App\Models\OrderNumbers;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -10,12 +13,14 @@ class OrdersList extends Component
 {
     public $orders = [];
     public $toppings = [];
+    public int $freeNumber;
+    public bool $byPhone;
 
 
     #[on('change-order')]
     public function fetchOrders()
     {
-        $this->orders = Order::all();
+        $this->orders = Order::orderBy('category')->get();
     }
 
     public function makeOrder()
@@ -50,13 +55,27 @@ class OrdersList extends Component
 
     public function resetOrders()
     {
+        $this->makeOrderNumber();
         Order::truncate();
         $this->dispatch('change-order');
         $this->dispatch('reset-orders');
     }
 
+    private function makeOrderNumber()
+    {
+        $this->freeNumber = FreeNumbers::first()->number;
+        OrderNumbers::create([
+            'number' => $this->freeNumber,
+            'by_phone' => $this->byPhone,
+            'created_at' => now(),
+        ]);
+        FreeNumbers::first()->update(['number' => $this->freeNumber + 1]);
+        $this->byPhone = false;
+    }
+
     public function mount()
     {
+        $this->byPhone = false;
         $this->orders = Order::all();
     }
 

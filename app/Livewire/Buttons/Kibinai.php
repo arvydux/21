@@ -21,6 +21,8 @@ class Kibinai extends Component
         } else {
             Order::create([
                 'name' => json_encode([[$productName => $productPrice]]),
+                'order_price' => $productPrice,
+                'category' => 2,
             ]);
         }
 
