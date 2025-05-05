@@ -67,10 +67,11 @@ class OrdersList extends Component
 
     private function makeOrderNumber(): int
     {
-        // free number maximum value&+
+        // free number maximum value
         if (FreeNumbers::first()->number >= $this->limit) {
             FreeNumbers::first()->update(['number' => 1]);
-            OrderNumbers::truncate();
+            OrderNumbers::where('is_taken', true)
+                ->delete();
         }
         $this->freeNumber = FreeNumbers::first()->number;
         OrderNumbers::create([
