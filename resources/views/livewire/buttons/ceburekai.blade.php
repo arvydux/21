@@ -37,7 +37,7 @@
                 <ul class="grid w-full gap-6 md:grid-cols-2">
                     <li>
                         <input type="radio" id="hosting-big" name="hosting" wire:model="takeaway" value="0" class="hidden peer">
-                        <label for="hosting-big" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-emerald-600 dark:peer-checked:border-blue-600 peer-checked:text-emerald-700 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                        <label for="hosting-big" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer  peer-checked:border-emerald-600  peer-checked:text-emerald-700 hover:text-gray-600 hover:bg-gray-100 ">
                             <div class="block">
                                 <div class="w-full text-lg font-semibold">Vietoje</div>
                             </div>
@@ -48,7 +48,7 @@
                     </li>
                     <li>
                         <input type="radio" id="hosting-small" name="hosting" wire:model="takeaway" value="1" class="hidden peer" />
-                        <label for="hosting-small" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-emerald-600 dark:peer-checked:border-blue-600 peer-checked:text-emerald-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                        <label for="hosting-small" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-emerald-600 peer-checked:text-emerald-600 hover:text-gray-600 hover:bg-gray-100">
                             <div class="block">
                                 <div class="w-full text-lg font-semibold">Išsinešimui</div>
                             </div>
@@ -62,7 +62,7 @@
 
                 <div class="flex justify-center mt-auto w-full p-8 pb-0 gap-6">
                     <button type="submit" data-modal-toggle="edit-profile" x-on:click="$flux.modals().close()"
-                            class="rounded-xl cursor-pointer flex-1 bg-emerald-700 w-100 h-25 text-white inline-flex items-center  hover:bg-emerald-700 focus:ring-4 focus:outline-none  text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            class="rounded-xl cursor-pointer flex-1 bg-emerald-700 w-100 h-25 text-white inline-flex items-center  hover:bg-emerald-700 focus:ring-4 focus:outline-none  text-center ">
 
                         <div class="flex-1 text-2xl font-semibold  leading-tight">
                             Pridėti ir uždaryti
@@ -70,7 +70,7 @@
                     </button>
 
                     <button type="submit" data-modal-toggle="edit-profile"
-                            class="rounded-xl cursor-pointer flex-1 bg-emerald-700 w-100 h-25 text-white inline-flex items-center  hover:bg-emerald-700 focus:ring-4 focus:outline-none  text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            class="rounded-xl cursor-pointer flex-1 bg-emerald-700 w-100 h-25 text-white inline-flex items-center  hover:bg-emerald-700 focus:ring-4 focus:outline-none  text-center">
 
                         <div class="flex-1 text-2xl font-semibold  leading-tight">
                             Pridėti dar vieną

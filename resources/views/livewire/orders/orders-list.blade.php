@@ -1,4 +1,4 @@
-<div class="bg-white/80 flex flex-col  p-4 rounded-xl backdrop-blur-[2px] " >
+<div class="bg-white/80 flex flex-col  p-4 rounded-xl backdrop-blur-[2px] " xmlns:flux="http://www.w3.org/1999/html">
     <div class="flex items-center mb-3 justify-between ">
         <h2 class="text-[#191919] text-xl font-medium leading-[30px]">Krepšelis ({{\App\Models\Order::all()->sum('amount')}})</h2>
         <div class="flex items-right gap-2 ">
@@ -62,24 +62,49 @@
                 </div>
             </div>
 
+            <flux:modal.trigger  wire:click="openCommentForOrder({{ $order->id }})" name="add-comment-for-order-{{$order->id}}">
+                <button class="flex items-center justify-center w-10 h-10 rounded-full text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8-1.657 0-3.204-.402-4.5-1.1L3 19l1.1-3.5C3.402 14.204 3 12.657 3 11c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                </button>
+            </flux:modal.trigger>
+
+            <flux:modal name="add-comment-for-order-{{ $order->id }}" class="w-full">
+                <div class="space-y-6">
+                    <div>
+                        @foreach(json_decode($order->name, true) as $name)
+                            @foreach($name as $key => $value)
+                            @endforeach
+                        @endforeach
+                        <flux:heading size="lg">{{ $key }}</flux:heading>
+                    </div>
+
+                    <flux:textarea label="Komentarai bei pageidavimai." wire:model="comments" />
+
+                    <div class="flex">
+                        <flux:spacer />
+
+                        <flux:button wire:click="makeCommentForOrder({{ $order->id }})" x-on:click="$flux.modals().close()"
+                                     type="submit" variant="primary">Pridėti komentarus</flux:button>
+                    </div>
+                </div>
+            </flux:modal>
+
+
 
             <div class="flex items-center justify-center">
-                <button id="decrement-btn"  wire:click="removeOneOrder({{$order->id}})"
-                        class="flex justify-center items-center w-8 h-8 rounded-full text-white focus:outline-none bg-gray-700 hover:bg-gray-500">
+                <button wire:click="removeOneOrder({{$order->id}})" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-500 focus:outline-none">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                          xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
                     </svg>
                 </button>
-                @if(isset($order->toppings))
-                    <span  class="text-md w-4  text-center text-gray-950 font-bold mx-4">{{ $order->amount }}</span>
-                @else
-                    <span  class="text-md w-4  text-center text-gray-950 font-bold mx-4">{{ $order->amount }}</span>
-                @endif
-                <button id="increment-btn" wire:click="addOneOrder({{$order->id}})"
-                        class="flex justify-center items-center w-8 h-8 rounded-full text-white focus:outline-none bg-emerald-600 hover:bg-emerald-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                         xmlns="http://www.w3.org/2000/svg">
+
+                <span  class="text-md w-4  text-center text-gray-950 font-bold mx-4">{{ $order->amount }}</span>
+
+                <button wire:click="addOneOrder({{$order->id}})" class="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-600 hover:bg-emerald-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12M6 12h12"></path>
                     </svg>
                 </button>

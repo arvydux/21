@@ -17,6 +17,7 @@ class OrdersList extends Component
     public $toppings = [];
     public int $freeNumber;
     public bool $byPhone;
+    public $comments;
     private int $limit = 100;
 
 
@@ -24,6 +25,18 @@ class OrdersList extends Component
     public function fetchOrders()
     {
         $this->orders = Order::orderBy('category')->get();
+    }
+
+    public function openCommentForOrder($orderId)
+    {
+        $this->comments = Order::find($orderId)->comments;
+    }
+
+    public function makeCommentForOrder($orderId)
+    {
+        $order = Order::find($orderId);
+        $order->comments = $this->comments;
+        $order->save();
     }
 
     public function makeOrder()
