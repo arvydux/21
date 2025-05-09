@@ -1,20 +1,20 @@
-<div class="py-2">
+<div class="">
     @if($bakerySum)
         <div class=" flex justify-between items-center">
-            <div class="font-semibold text-lg  text-[#191919]">Kepiniai</div>
-            <div class="font-semibold text-2xl text-[#191919]">{{$bakerySum}} €</div>
+            <div class="font-semibold text-xs  text-[#191919]">Kepiniai</div>
+            <div class="font-semibold text-xs text-[#191919]">{{$bakerySum}} €</div>
         </div>
     @endif
     @if($drinksSum)
     <div class="flex justify-between items-center">
-        <div class="font-semibold text-lg  text-[#191919]">Gėrimai</div>
-        <div class="font-semibold text-2xl text-[#191919]">{{$drinksSum}} €</div>
+        <div class="font-semibold text-xs  text-[#191919]">Gėrimai</div>
+        <div class="font-semibold text-xs text-[#191919]">{{$drinksSum}} €</div>
     </div>
     @endif
     @if($packageSum)
         <div class="flex justify-between items-center">
-            <div class="font-semibold text-lg  text-[#191919]">Pakuotės</div>
-            <div class="font-semibold text-2xl text-[#191919]">{{$packageSum}} €</div>
+            <div class="font-semibold text-xs  text-[#191919]">Pakuotės</div>
+            <div class="font-semibold text-xs text-[#191919]">{{$packageSum}} €</div>
         </div>
     @endif
 </div>

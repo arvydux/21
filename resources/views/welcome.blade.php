@@ -11,7 +11,7 @@
                 aspect-video overflow-hidden rounded-xl  bg-gray-900/20 dark:border-neutral-700">
                                 <div
                                     class="flex grid content-center flex-col gap-2 h-full text-white/80 rounded-xl w-full">
-                                    <div class="font-semibold text-9xl">Kasa</div>
+                                    <div class="font-semibold text-6xl">Kasa</div>
                                 </div>
                             </div>
                         </a>
@@ -26,7 +26,7 @@
             aspect-video overflow-hidden rounded-xl  bg-gray-900/20 dark:border-neutral-700">
                                 <div
                                     class="flex grid content-center flex-col gap-2 h-full text-white/80 rounded-xl w-full">
-                                    <div class="font-semibold text-9xl">Meniu</div>
+                                    <div class="font-semibold text-6xl">Meniu</div>
                                 </div>
                             </div>
                         </a>
@@ -41,7 +41,7 @@
             aspect-video overflow-hidden rounded-xl  bg-gray-900/20 dark:border-neutral-700">
                                 <div
                                     class="flex grid content-center flex-col gap-2 h-full text-white/80 rounded-xl w-full">
-                                    <div class="font-semibold text-9xl">Virtuvė</div>
+                                    <div class="font-semibold text-6xl">Virtuvė</div>
                                 </div>
                             </div>
                         </a>
@@ -56,7 +56,7 @@
             aspect-video overflow-hidden rounded-xl  bg-gray-900/20 dark:border-neutral-700">
                                 <div
                                     class="flex grid content-center flex-col gap-2 h-full text-white/80 rounded-xl w-full">
-                                    <div class="font-semibold text-9xl">Užsakymai</div>
+                                    <div class="font-semibold text-6xl">Užsakymai</div>
                                 </div>
                             </div>
                         </a>

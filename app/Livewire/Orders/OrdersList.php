@@ -24,7 +24,7 @@ class OrdersList extends Component
     #[on('change-order')]
     public function fetchOrders()
     {
-        $this->orders = Order::orderBy('category')->get();
+        $this->orders = Order::orderBy('created_at', 'desc')->get();
     }
 
     public function openCommentForOrder($orderId)
@@ -175,7 +175,7 @@ class OrdersList extends Component
     public function mount()
     {
         $this->byPhone = false;
-        $this->orders = Order::all();
+        $this->orders = Order::orderBy('created_at', 'desc')->get();
     }
 
     public function render()

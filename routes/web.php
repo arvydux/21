@@ -5,25 +5,28 @@ use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class])->group(function () {
+    Route::get('/', function () {
+        return view('welcome');
+    })->name('home');
 
-Route::view('kasa', 'kasa')
-   // ->middleware(['auth', 'verified'])
-    ->name('kasa');
+    Route::view('kasa', 'kasa')
+        // ->middleware(['auth', 'verified'])
+        ->name('kasa');
 
-Route::view('menu', 'menu')
-   // ->middleware(['auth', 'verified'])
-    ->name('menu');
+    Route::view('menu', 'menu')
+        // ->middleware(['auth', 'verified'])
+        ->name('menu');
 
-Route::view('kitchen', 'kitchen')
-    // ->middleware(['auth', 'verified'])
-    ->name('kitchen');
+    Route::view('kitchen', 'kitchen')
+        // ->middleware(['auth', 'verified'])
+        ->name('kitchen');
 
-Route::view('orders', 'orders')
-    // ->middleware(['auth', 'verified'])
-    ->name('orders');
+    Route::view('orders', 'orders')
+        // ->middleware(['auth', 'verified'])
+        ->name('orders');
+
+});
 
 
 Route::middleware(['auth'])->group(function () {
