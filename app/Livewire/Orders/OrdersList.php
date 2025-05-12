@@ -105,8 +105,11 @@ class OrdersList extends Component
     private function printOrderForKitchen(int $freeOrder): void
     {
         try {
-            $profile = CapabilityProfile::load("TM-P80");
-            $connector = new NetworkPrintConnector("192.168.1.101", 9100);
+            $profile = CapabilityProfile::load(config('printers.profile_name'));
+            $connector = new NetworkPrintConnector(
+                config('printers.kitchen_printer.kitchen_printer_ip'),
+                config('printers.kitchen_printer.kitchen_printer_port')
+            );
             $printer = new Printer($connector, $profile);
             $printer -> setEmphasis(true);
             $printer->setTextSize(4, 4);
@@ -166,7 +169,7 @@ class OrdersList extends Component
     private function printOrderForClient(int $freeOrder): void
     {
         try {
-            $connector = new WindowsPrintConnector("smb://" . env('COMPUTER_PRINTER_NAME') . "/" . env('PRINTER_FOR_CLIENT_NAME'));
+            $connector = new WindowsPrintConnector("smb://" . config('printers.client_printer.computer_printer_name') . "/" . config('printers.client_printer.printer_for_client_name'));
             $printer = new Printer($connector);
 
             $printer->feed(2);
