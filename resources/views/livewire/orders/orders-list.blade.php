@@ -45,7 +45,7 @@
 
         <div class="bg-white/60 shadow-xl hover:shadow-2xl rounded-xl p-2 gap-1 mb-1 items-center">
             <div class="flex flex-1">
-                <div wire:click="removeOrder({{$order->id}})">
+                <div class="auto-rows-min w-7/10" wire:click="removeOrder({{$order->id}})">
                     @foreach(json_decode($order->name) as $name)
                         @foreach($name as $name => $price)
                             <h3 class="  text-[#191919] text-xs">{{ $name }} <span
@@ -89,7 +89,7 @@
 
                         </p>
                 </div>
-                <div class="absolute right-2 flex items-center gap-1 justify-end">
+                <div class="auto-rows-min w-3/10 flex items-center gap-1 justify-end">
                     <button wire:click="removeOneOrder({{$order->id}})" class="flex items-center justify-center w-6 h-6 rounded-full bg-gray-700 hover:bg-gray-500 focus:outline-none">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                              xmlns="http://www.w3.org/2000/svg">
