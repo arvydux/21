@@ -110,34 +110,44 @@ class OrdersList extends Component
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer->text($freeOrder . "\n");
             $printer->setTextSize(2, 1);
-            $printer->text("\n" . now() . "\n");
+            $printer->text("\n" . now('Europe/Vilnius') . "\n");
             $printer->text(str_repeat("-", 24) . "\n"); // Adjust 48 to match your printer's width
-            foreach (Order::where('category', 1)->orwhere('category', 4)->get() as $order) {
+            foreach (Order::where('category', 1)->orwhere('category', 4)->orderBy('category')->get() as $order) {
                 foreach (json_decode($order->name) as $name) {
                     foreach ($name as $name => $price) {
+                        $nameInNotLt = $this->convertTextFromLtToNotLt($name);
                         $printer->setJustification();
                         $printer -> setEmphasis(true);
                         $printer->setJustification();
-                        $printer->text($name . "\n");
+                        $printer->text($nameInNotLt . "\n");
                     }
                 }
 
                 if (isset($order->toppings)) {
+                    $printer->feed();
                     foreach (json_decode($order->toppings) as $topping) {
                         foreach ($topping as  $name => $toppingPrice) {
                             $printer->setJustification(Printer::JUSTIFY_RIGHT);
                             $printer->setTextSize(2, 1);
-                            $printer->text($name . "\n");
+                            $nameInNotLt = $this->convertTextFromLtToNotLt($name);
+                            $printer->text($nameInNotLt . "\n");
                         }
                     }
                 }
+                $printer->feed();
                 $printer->setJustification();
                 $printer->setTextSize(2, 1);
+                $printer->text($order->amount . ' vnt.' . "\n");
                 $takeaway = $order->takeaway ? 'Vietoje' : 'Išsinešimui';
                 $printer->text($takeaway . "\n");
-                $printer->text($order->amount . ' vnt.' . "\n");
+                $printer->feed();
+                  if ($order->comments) {
+                      $printer->setJustification(Printer::JUSTIFY_CENTER);
+                      $printer->text('Pageidavimai: ' . "\n");
+                      $printer->text($order->comments . "\n");
+                      $printer->feed();
+                  }
                 $printer->text(str_repeat("-", 24) . "\n"); // Adjust 48 to match your printer's width
-
             }
 
             $printer->cut();
@@ -155,15 +165,24 @@ class OrdersList extends Component
         try {
             $connector = new WindowsPrintConnector("smb://" . env('COMPUTER_PRINTER_NAME') . "/" . env('PRINTER_FOR_CLIENT_NAME'));
             $printer = new Printer($connector);
-            $printer -> setEmphasis(true);
-            $printer->setTextSize(4, 4);
+
+            $printer->feed(2);
+            $printer->setTextSize(8, 8);
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer->text($freeOrder . "\n");
             $printer->setTextSize(2, 1);
-            $printer->text("\n" . now() . "\n");
-            $printer->text(str_repeat("-", 24) . "\n"); // Adjust 48 to match your printer's width
+            $printer->text("\n" . now('Europe/Vilnius') . "\n");
+            $printer->text(str_repeat("-", 24) . "\n"); // Adjust 48 to match your printer's width*/
+            $printer->feed();
+
+            $printer->setTextSize(2, 2);
+            $totalSum = Cache::get('totalSum');
+            $printer -> text('Viso ' . $totalSum . ' EUR' . "\n");
+            $printer->feed();
+            $printer->setJustification(Printer::JUSTIFY_CENTER);            $printer -> feed();
+            $printer ->text("Nefiskalinis kvitas \n");
+            $printer ->feed(2);
             $printer->cut();
-            /* Close printer */
             $printer->close();
         }
         catch
