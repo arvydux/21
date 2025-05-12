@@ -8,6 +8,8 @@ use App\Models\OrderNumbers;
 use Exception;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Mike42\Escpos\CapabilityProfile;
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
 
@@ -103,8 +105,9 @@ class OrdersList extends Component
     private function printOrderForKitchen(int $freeOrder): void
     {
         try {
-            $connector = new WindowsPrintConnector("smb://" . env('COMPUTER_PRINTER_NAME') . "/" . env('PRINTER_FOR_KITCHEN_NAME'));
-            $printer = new Printer($connector);
+            $profile = CapabilityProfile::load("TM-P80");
+            $connector = new NetworkPrintConnector("192.168.1.101", 9100);
+            $printer = new Printer($connector, $profile);
             $printer -> setEmphasis(true);
             $printer->setTextSize(4, 4);
             $printer->setJustification(Printer::JUSTIFY_CENTER);
