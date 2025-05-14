@@ -10,8 +10,8 @@
                 aspect-video overflow-hidden rounded-xl {{ $order->by_phone ? 'bg-white' : 'bg-yellow-400/90' }}
                 {{ $order->by_phone ? 'zoom-in-out-box' : 'text-white' }}" >
             <div class="flex grid content-center flex-col gap-2 h-full rounded-xl w-full">
-                <div class=" font-semibold text-4xl">{{ $order->number }}</div>
-                <div class=" font-semibold text-xl">{{ (int)$order->minutes_since_created }} min.</div>
+                <div class=" font-semibold text-6xl">{{ $order->number }}</div>
+                <div class=" font-semibold text-2xl">{{ (int)$order->minutes_since_created }} min.</div>
             </div>
         </div>
         @endforeach
