@@ -6,6 +6,7 @@ use App\Models\FreeNumbers;
 use App\Models\Order;
 use App\Models\OrderNumbers;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Mike42\Escpos\CapabilityProfile;
