@@ -20,7 +20,7 @@
                 <div class="font-semibold text-8xl">Paruošti:</div>
             </div>
         </div>
-        @foreach(\App\Models\OrderNumbers::where('is_ready', true)->where('is_taken', true)->orderBy('updated_at', 'desc')->get() as $order)
+        @foreach(\App\Models\OrderNumbers::where('is_ready', true)->where('is_taken', false)->orderBy('updated_at', 'desc')->get() as $order)
             <div class="relative text-center shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
                 aspect-video overflow-hidden rounded-xl  bg-gray-900/20 bg-yellow-300/20  dark:border-neutral-700">
                 <div class="flex grid content-center flex-col gap-2 h-full text-white/80 rounded-xl w-full">
