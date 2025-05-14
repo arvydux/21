@@ -82,31 +82,32 @@
                                         class="relative justify-start text-[#7f7f7f] text-xs   text-center text-gray-950 font-bold leading-[21px]">Pilna suma:</span><span
                                 class="relative justify-start text-[#191919] text-xs font-semibold  leading-[16.80px]"> {{ $price}} € &times; {{ $order->amount }} = {{ $price * $order->amount }} €</span>
                     @endif
-                        <span
-                            class="relative left-10 justify-start text-[#7f7f7f] text-xs   text-center
-                                        text-gray-950 font-bold leading-[21px]">{{ $order->takeaway ? "Išsinešimui!" : 'Vietoje!' }}</span>
+                        <div
+                            class=" justify-start text-[#7f7f7f] text-xs   text-left
+                                        text-gray-950 font-bold leading-[21px]">{{ $order->takeaway ? "Išsinešimui!" : 'Vietoje!' }}
+                        </div>
 
 
                         </p>
                 </div>
                 <div class="auto-rows-min w-3/10 flex items-center gap-1 justify-end">
-                    <button wire:click="removeOneOrder({{$order->id}})" class="flex items-center justify-center w-6 h-6 rounded-full bg-gray-700 hover:bg-gray-500 focus:outline-none">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    <button wire:click="removeOneOrder({{$order->id}})" class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-700 hover:bg-gray-500 focus:outline-none">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                              xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
                         </svg>
                     </button>
 
-                    <span  class="text-xs  text-center text-gray-950 font-bold ">{{ $order->amount }}</span>
+                    <span  class="text-lg  m-1 text-center text-gray-950 font-bold ">{{ $order->amount }}</span>
 
-                    <button wire:click="addOneOrder({{$order->id}})" class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600 hover:bg-emerald-700 focus:outline-none">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <button wire:click="addOneOrder({{$order->id}})" class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-600 hover:bg-emerald-700 focus:outline-none">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12M6 12h12"></path>
                         </svg>
                     </button>
                     <flux:modal.trigger  class="flex items-center justify-center" wire:click="openCommentForOrder({{ $order->id }})" name="add-comment-for-order-{{$order->id}}">
-                        <button class="flex items-center justify-center w-6 h-6 rounded-full text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <button class="flex items-center justify-center ml-2 w-8 h-8 rounded-full text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8-1.657 0-3.204-.402-4.5-1.1L3 19l1.1-3.5C3.402 14.204 3 12.657 3 11c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                             </svg>
                         </button>
