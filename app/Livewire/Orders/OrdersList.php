@@ -23,7 +23,6 @@ class OrdersList extends Component
     public $comments;
     private int $limit = 100;
 
-
     #[on('change-order')]
     public function fetchOrders()
     {
@@ -194,7 +193,12 @@ class OrdersList extends Component
             echo "Couldn't print to this printer: " . $e->getMessage() . "\n";
         }
     }
-
+    private function convertTextFromLtToNotLt($text)
+    {
+        $search = ["Č", "ė", "ū", "ų", "š", "ž", "ą", "ė", "į", "ė", "ą", "ė", "į", "ū", "ų", "č", "ė", "ū", "ų"];
+        $replace = ["C", "e", "u", "u", "s", "z", "a", "e", "i", "e", "a", "e", "i", "u", "u", "c", "e", "u", "u"];
+        return str_replace($search, $replace, $text);
+    }
     public function mount()
     {
         $this->byPhone = false;
