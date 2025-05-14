@@ -3,6 +3,7 @@
 namespace App\Livewire\Orders;
 
 use App\Models\Order;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -38,6 +39,7 @@ class TotalSumManager extends Component
         }
 
         $this->totalSum += $packages;
+        Cache::put('totalSum', $this->totalSum, 60 * 60 * 24); // Cache for 24 hours
     }
 
     public function mount()
