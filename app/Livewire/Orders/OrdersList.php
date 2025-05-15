@@ -98,6 +98,7 @@ class OrdersList extends Component
         $this->byPhone = false;
         $this->printOrderForKitchen($this->freeNumber);
         $this->printOrderForClient($this->freeNumber);
+        $this->resetOrders();
 
         return $this->freeNumber;
     }
