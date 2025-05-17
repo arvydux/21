@@ -11,7 +11,6 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Mike42\Escpos\CapabilityProfile;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
-use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
 
 class OrdersList extends Component
@@ -22,6 +21,7 @@ class OrdersList extends Component
     public bool $byPhone;
     public $comments;
     private int $limit = 100;
+
 
     #[on('change-order')]
     public function fetchOrders()
@@ -107,22 +107,32 @@ class OrdersList extends Component
     {
         try {
             $profile = CapabilityProfile::load("TM-P80");
-            $connector = new NetworkPrintConnector("192.168.1.101", 9100);
+            $connector = new NetworkPrintConnector("192.168.1.100", 9100, 2);
             $printer = new Printer($connector, $profile);
             $printer -> setEmphasis(true);
             $printer->setTextSize(4, 4);
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer->text($freeOrder . "\n");
+            // change font
+            $printer-> setFont(1);
             $printer->setTextSize(2, 1);
             $printer->text("\n" . now('Europe/Vilnius') . "\n");
             $printer->text(str_repeat("-", 24) . "\n"); // Adjust 48 to match your printer's width
+            $printer->feed();
+            $printer->setJustification();
+            // eksperimental part
+            // space between lines
+            $printer->setLineSpacing(1);
+            // set font 0-default, 1-other
+            $printer-> setFont(0);
+
             foreach (Order::where('category', 1)->orwhere('category', 4)->orderBy('category')->get() as $order) {
                 foreach (json_decode($order->name) as $name) {
                     foreach ($name as $name => $price) {
                         $nameInNotLt = $this->convertTextFromLtToNotLt($name);
-                        $printer->setJustification();
-                        $printer -> setEmphasis(true);
-                        $printer->setJustification();
+                        // change font
+                        $printer-> setFont(0);
+                        $printer->setTextSize(2, 1);
                         $printer->text($nameInNotLt . "\n");
                     }
                 }
@@ -132,6 +142,8 @@ class OrdersList extends Component
                     foreach (json_decode($order->toppings) as $topping) {
                         foreach ($topping as  $name => $toppingPrice) {
                             $printer->setJustification(Printer::JUSTIFY_RIGHT);
+                            // change font
+                            $printer-> setFont(1);
                             $printer->setTextSize(2, 1);
                             $nameInNotLt = $this->convertTextFromLtToNotLt($name);
                             $printer->text($nameInNotLt . "\n");
@@ -140,58 +152,71 @@ class OrdersList extends Component
                 }
                 $printer->feed();
                 $printer->setJustification();
-                $printer->setTextSize(2, 1);
+                // change font
+                $printer-> setFont(1);
+                $printer->setTextSize(2, 2);
                 $printer->text($order->amount . ' vnt.' . "\n");
+                $printer->feed();
+
+                $printer->setTextSize(2, 1);
                 $takeaway = $order->takeaway ? 'Vietoje' : 'Išsinešimui';
                 $printer->text($takeaway . "\n");
-                $printer->feed();
-                  if ($order->comments) {
-                      $printer->setJustification(Printer::JUSTIFY_CENTER);
-                      $printer->text('Pageidavimai: ' . "\n");
-                      $printer->text($order->comments . "\n");
-                      $printer->feed();
-                  }
-                $printer->text(str_repeat("-", 24) . "\n"); // Adjust 48 to match your printer's width
-            }
+                // change font
+                $printer-> setFont(0);
+                $printer->setTextSize(2, 1);
 
+                if ($order->comments) {
+                    $printer->setJustification(Printer::JUSTIFY_CENTER);
+                    $printer->text('Pageidavimai: ' . "\n");
+                    $printer->text($order->comments . "\n");
+                    $printer->feed();
+                }
+                $printer->text(str_repeat("-", 24) . "\n"); // Adjust 48 to match your printer's width
+                $printer->feed();
+            }
+            $printer ->feed(4);
             $printer->cut();
             /* Close printer */
             $printer->close();
         }
         catch
         (Exception $e) {
-            echo "Couldn't print to this printer: " . $e->getMessage() . "\n";
+            echo "Couldn't print to kitchen this printer: " . $e->getMessage() . "\n";
         }
     }
 
     private function printOrderForClient(int $freeOrder): void
     {
         try {
-            $connector = new WindowsPrintConnector("smb://" . config('printers.client_printer.computer_printer_name') . "/" . config('printers.client_printer.printer_for_client_name'));
-            $printer = new Printer($connector);
+            $profile = CapabilityProfile::load("TM-P80");
+            $connector = new NetworkPrintConnector("192.168.1.101", 9100, 2);
+            $printer = new Printer($connector, $profile);
+            $printer -> setEmphasis(true);
 
-            $printer->feed(2);
-            $printer->setTextSize(8, 8);
+            $printer->feed();
+            $printer->setTextSize(6, 5);
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer->text($freeOrder . "\n");
+            // change font
+            $printer-> setFont(1);
             $printer->setTextSize(2, 1);
             $printer->text("\n" . now('Europe/Vilnius') . "\n");
             $printer->text(str_repeat("-", 24) . "\n"); // Adjust 48 to match your printer's width*/
             $printer->feed();
 
-            $printer->setTextSize(2, 2);
+            $printer ->text("Nefiskalinis kvitas \n");
+            $printer -> feed(2);
+
             $totalSum = Cache::get('totalSum');
             $printer -> text('Viso ' . $totalSum . ' EUR' . "\n");
-            $printer->feed();
-            $printer->setJustification(Printer::JUSTIFY_CENTER);            $printer -> feed();
-            $printer ->text("Nefiskalinis kvitas \n");
-            $printer ->feed(2);
+
+            $printer ->feed(4);
             $printer->cut();
             $printer->close();
         }
         catch
         (Exception $e) {
-            echo "Couldn't print to this printer: " . $e->getMessage() . "\n";
+            echo "Couldn't print to client printer: " . $e->getMessage() . "\n";
         }
     }
     private function convertTextFromLtToNotLt($text)
