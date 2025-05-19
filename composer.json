@@ -14,7 +14,8 @@
         "laravel/tinker": "^2.10.1",
         "livewire/flux": "^2.0",
         "livewire/volt": "^1.7",
-        "mike42/escpos-php": "^4.0"
+        "mike42/escpos-php": "^4.0",
+        "sentry/sentry-laravel": "^4.13"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
