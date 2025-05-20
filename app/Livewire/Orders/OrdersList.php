@@ -56,21 +56,26 @@ class OrdersList extends Component
         $this->dispatch('change-order');
     }
 
-    public function removeOneOrder($id)
+    public function removeOneOrder($id): void
     {
         $order = Order::find($id);
-        $order->amount -= 1;
-        $order->save();
-        if ($order->amount === 0){
-            $this->removeOrder($id);
+        if ($order !== null) {
+            $order->amount -= 1;
+            $order->save();
+            if ($order->amount === 0){
+                $this->removeOrder($id);
+            }
+            $this->dispatch('change-order');
         }
-        $this->dispatch('change-order');
     }
 
-    public function removeOrder($id)
+    public function removeOrder($id): void
     {
-        Order::find($id)->delete();
-        $this->dispatch('change-order');
+        $order = Order::find($id);
+        if ($order !== null) {
+            $order->delete();
+            $this->dispatch('change-order');
+        }
     }
 
     public function resetOrders()

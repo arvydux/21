@@ -3,8 +3,8 @@
         <h2 class="text-[#191919] text-xs font-medium leading-[30px]">Krepšelis ({{\App\Models\Order::all()->sum('amount')}})</h2>
         <div class="flex items-right gap-2 ">
             <flux:field variant="inline">
-                <flux:checkbox wire:model="byPhone" class=" scale-100" />
-                <flux:label  class="!text-[#191919] !text-xs font-medium" >Užsakomas telefonu</flux:label>
+                <flux:checkbox wire:model="byPhone" class=" scale-140" />
+                <flux:label  class="!text-[#191919] !text-md font-medium" >Užsakomas telefonu</flux:label>
                 <flux:error name="terms" />
             </flux:field>
         </div>
@@ -13,8 +13,8 @@
     <livewire:orders.category-sum/>
     <div class="">
         <div class=" flex justify-between items-center">
-            <div class="font-semibold text-md  text-[#191919]">Iš viso</div>
-            <div class="font-semibold text-md text-[#191919]"><livewire:orders.total-sum-manager/></div>
+            <div class="font-semibold text-md text-emerald-700">Iš viso</div>
+            <div class="font-semibold text-md text-emerald-700"><livewire:orders.total-sum-manager/></div>
         </div>
     </div>
 
@@ -32,7 +32,7 @@
         </button>
 
         <flux:modal.trigger name="see-orders" >
-            <flux:button class="!text-base !font-semibold !text-white/80 bg-emerald-600/10 !rounded-xl">Užsakymai
+            <flux:button class="!text-base !font-semibold !bg-gray-900 !rounded-xl">Užsakymai
             </flux:button>
         </flux:modal.trigger>
 
@@ -43,7 +43,7 @@
 
     @foreach($orders as $order)
 
-        <div class="bg-white/60 shadow-xl hover:shadow-2xl rounded-xl p-2 gap-1 mb-1 items-center">
+        <div class="bg-white/60 shadow-xl hover:shadow-2xl rounded-xl p-2 gap-1 mb-1 items-center" wire:key="order-{{ $order->id }}">
             <div class="flex flex-1">
                 <div class="auto-rows-min w-7/10" wire:click="removeOrder({{$order->id}})">
                     @foreach(json_decode($order->name) as $name)
@@ -91,23 +91,23 @@
                         </p>
                 </div>
                 <div class="auto-rows-min w-3/10 flex items-center gap-1 justify-end">
-                    <button wire:click="removeOneOrder({{$order->id}})" class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-700 hover:bg-gray-500 focus:outline-none">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    <button wire:click="removeOneOrder({{$order->id}})" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-500 focus:outline-none">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                              xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
                         </svg>
                     </button>
 
-                    <span  class="text-lg  m-1 text-center text-gray-950 font-bold ">{{ $order->amount }}</span>
+                    <span  class="text-2xl  m-1 text-center text-gray-950 font-bold ">{{ $order->amount }}</span>
 
-                    <button wire:click="addOneOrder({{$order->id}})" class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-600 hover:bg-emerald-700 focus:outline-none">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <button wire:click="addOneOrder({{$order->id}})" class="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-600 hover:bg-emerald-700 focus:outline-none">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12M6 12h12"></path>
                         </svg>
                     </button>
                     <flux:modal.trigger  class="flex items-center justify-center" wire:click="openCommentForOrder({{ $order->id }})" name="add-comment-for-order-{{$order->id}}">
-                        <button class="flex items-center justify-center ml-2 w-8 h-8 rounded-full text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <button class="flex items-center justify-center ml-2 w-10 h-10 rounded-full text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8-1.657 0-3.204-.402-4.5-1.1L3 19l1.1-3.5C3.402 14.204 3 12.657 3 11c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                             </svg>
                         </button>

@@ -15,7 +15,7 @@
         <flux:modal name="choose-toppings" class="w-full h-7/10 max-w-2xl  bg-white! rounded-xl shadow-xl blur-none">
             <form wire:submit.prevent="addOrder" >
                 <div class="p-2">
-                    <h3 class="text-md font-medium text-center text-gray-900 text-center ">Pasirinkti priedus:</h3>
+                    <h3 class="text-md m-4 font-medium text-center text-gray-900 text-center ">Pasirinkti priedus:</h3>
                     <ul class="grid flex items-center w-full gap-1 md:grid-cols-5">
                         @foreach(\App\Models\Topping::where('show', true)->get()  as $topping)
                             <li class="grid flex-1 h-full">
@@ -33,7 +33,7 @@
                 </div>
 
             <div class="">
-                <h3 class="mb-2 text-md font-medium text-center text-gray-900">Kur valgys?</h3>
+                <h3 class="m-6 text-md font-medium text-center text-gray-900">Kur valgys?</h3>
                 <ul class="grid w-full gap-2 md:grid-cols-2">
                     <li>
                         <input type="radio" id="hosting-big" name="hosting" wire:model="takeaway" value="0" class="hidden peer">
