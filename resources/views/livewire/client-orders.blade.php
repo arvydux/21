@@ -1,32 +1,63 @@
-<div wire:poll.5s class="grid md:grid-cols-2 auto-rows-min gap-4">
-    <div class="grid md:grid-cols-3 auto-rows-min gap-4 mr-8">
-        <div class="col-span-3">
-            <div class="flex grid content-center text-white/80 rounded-xl ">
-                <div class="font-semibold text-8xl">Gaminami:</div>
-            </div>
-        </div>
-        @foreach(\App\Models\OrderNumbers::where('is_ready', false)->get() as $order)
-            <div class="relative text-center shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
-                aspect-video overflow-hidden rounded-xl bg-yellow-400/90" >
-                <div class="flex grid content-center flex-col gap-2 h-full rounded-xl w-full">
-                    <div class="font-semibold text-8xl">{{ $order->number }}</div>
-                </div>
-            </div>
-        @endforeach
+<div  class="grid md:grid-cols-2 auto-rows-min gap-4">
+    <div id="unready-orders" class="grid md:grid-cols-3 auto-rows-min gap-4 mr-8">
     </div>
-    <div class="grid md:grid-cols-3 auto-rows-min gap-4  ml-8">
-        <div class="col-span-3">
-            <div class="flex grid content-center text-white/80 rounded-xl ">
-                <div class="font-semibold text-8xl">Paruošti:</div>
-            </div>
+    <div id="ready-orders" class="grid md:grid-cols-3 auto-rows-min gap-4  ml-8">
+    </div>
+</div>
+<script>
+    function fetchUnreadyOrders() {
+        fetch('/get-unready-orders')
+            .then(response => response.json())
+            .then(data => {
+                const ordersDiv = document.getElementById('unready-orders');
+                ordersDiv.innerHTML =`<div class="col-span-3">
+                    <div class="flex grid content-center text-white/80 rounded-xl ">
+                        <div class="font-semibold text-8xl">Gaminami:</div>
+                    </div>
+                </div>`;
+                data.forEach(order => {
+                    const orderHTML = `
+    <div class="relative text-center shadow-md hover:drop-shadow-2xl hover:shadow-md hover:scale-101
+                aspect-video overflow-hidden rounded-xl bg-yellow-400/90">
+        <div class="flex grid content-center flex-col gap-2 h-full rounded-xl w-full">
+            <div class="font-semibold text-8xl">${order.number}</div>
         </div>
-        @foreach(\App\Models\OrderNumbers::where('is_ready', true)->where('is_taken', false)->orderBy('updated_at', 'desc')->get() as $order)
+    </div>
+                `;
+                    ordersDiv.insertAdjacentHTML('beforeend', orderHTML);
+                });
+            });
+    }
+
+    function fetchReadyOrders() {
+        fetch('/get-ready-orders')
+            .then(response => response.json())
+            .then(data => {
+                const ordersDiv = document.getElementById('ready-orders');
+                ordersDiv.innerHTML =`<div class="col-span-3">
+                    <div class="flex grid content-center text-white/80 rounded-xl ">
+                        <div class="font-semibold text-8xl">Paruošti:</div>
+                    </div>
+                </div>`;
+                data.forEach(order => {
+                    const orderHTML = `
             <div class="relative text-center shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
                 aspect-video overflow-hidden rounded-xl  bg-gray-900/20 bg-yellow-300/20  dark:border-neutral-700">
                 <div class="flex grid content-center flex-col gap-2 h-full text-white/80 rounded-xl w-full">
-                    <div class="font-semibold text-8xl">{{ $order->number }}</div>
-                </div>
+<div class="font-semibold text-8xl">${order.number}</div></div>
             </div>
-        @endforeach
-    </div>
-</div>
+                `;
+                    ordersDiv.insertAdjacentHTML('beforeend', orderHTML);
+                });
+            });
+    }
+
+    // Fetch orders every 5 seconds
+    setInterval(fetchUnreadyOrders, 5000);
+    setInterval(fetchReadyOrders, 5000);
+
+    // Initial fetch
+    fetchUnreadyOrders();
+    fetchReadyOrders();
+</script>
+

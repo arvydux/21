@@ -141,3 +141,36 @@
 
     @endforeach
 </div>
+
+
+<script>
+
+
+    function fetchReadyOrders() {
+        fetch('/get-ready-orders')
+            .then(response => response.json())
+            .then(data => {
+                const ordersDiv = document.getElementById('ready-orders');
+                ordersDiv.innerHTML =``;
+                data.forEach(order => {
+                    const orderHTML = `<div wire:click="makeOrderTaken('${order.number}')"  class="relative text-center shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
+                aspect-video overflow-hidden rounded-xl  bg-emerald-600/80  dark:border-neutral-700">
+                <div class="flex grid content-center flex-col gap-2 h-full text-white/80 rounded-xl w-full">
+                    <div class="font-semibold text-8xl">${order.number}</div>
+                </div>
+            </div> `;
+                    ordersDiv.insertAdjacentHTML('beforeend', orderHTML);
+                });
+            });
+    }
+    // Initial fetch
+    //  fetchUnreadyOrders();
+      fetchReadyOrders();
+
+    // Fetch orders every 5 seconds
+    // setInterval(fetchUnreadyOrders, 5000);
+      setInterval(fetchReadyOrders, 5000);
+
+
+</script>
+

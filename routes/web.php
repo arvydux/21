@@ -3,6 +3,7 @@
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use App\Models\OrderNumbers;
 use Illuminate\Support\Facades\Route;
 
 Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class])->group(function () {
@@ -26,6 +27,13 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         // ->middleware(['auth', 'verified'])
         ->name('orders');
 
+    Route::get('/get-unready-orders', function () {
+        return OrderNumbers::where('is_ready', false)->get();
+    });
+
+    Route::get('/get-ready-orders', function () {
+        return OrderNumbers::where('is_ready', true)->where('is_taken', false)->orderBy('updated_at', 'desc')->get();
+    });
 });
 
 
