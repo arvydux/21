@@ -52,7 +52,7 @@
                                     class="relative justify-start text-[#191919] text-xs font-semibold "> {{ $price }} €</span>
                                 @if($order->package)
                                     <span class="relative justify-start text-[#191919] text-xs font-semibold  leading-[16.80px]">
-                                        + 0.30 €</span>
+                                        + {{$order->package}} €</span>
                                 @endif
                             </h3>
                         @endforeach
@@ -74,7 +74,7 @@
 
                                     <span
                                         class="relative justify-start text-[#7f7f7f] text-xs  text-center text-gray-950 font-bold leading-[21px]">Pilna suma:</span><span
-                                class="relative justify-start text-[#191919] text-xs font-semibold  leading-[16.80px]"> {{ $order->order_price  + 0.30 }} € &times; {{ $order->amount }} = {{ ($order->order_price + 0.30) * $order->amount }} €</span>
+                                class="relative justify-start text-[#191919] text-xs font-semibold  leading-[16.80px]"> {{ $order->order_price  + $order->package }} € &times; {{ $order->amount }} = {{ ($order->order_price + $order->package) * $order->amount }} €</span>
 
 
                     @else

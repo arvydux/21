@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('other_products', function (Blueprint $table) {
+        Schema::table('cebureks', function (Blueprint $table) {
             $table->decimal('package')->nullable();
         });
     }
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('other_products', function (Blueprint $table) {
+        Schema::table('cebureks', function (Blueprint $table) {
             $table->dropColumn('package'); // Remove the field if rolled back
         });
     }

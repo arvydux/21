@@ -11,6 +11,7 @@ class CebureksTable extends Component
     public \App\Models\Ceburek $product;
     public string $name;
     public string $price;
+    public ?float $package;
     public string $sign;
     public bool $show = false;
     public $products= [];
@@ -23,6 +24,7 @@ class CebureksTable extends Component
         $this->price = $this->product->price;
         $this->sign = $this->product->sign;
         $this->show = $this->product->show;
+        $this->package = $this->product->package;
     }
 
     public function save()
@@ -30,14 +32,13 @@ class CebureksTable extends Component
         $this->validate([
             'name' => 'required',
             'price' => 'required|numeric',
-            'sign' => 'required'
         ]);
 
         if (is_null($this->product)) {
             $position = \App\Models\Ceburek::max('position') + 1;
-            \App\Models\Ceburek::create(array_merge($this->only('name', 'price', 'show', 'sign'), ['position' => $position]));
+            \App\Models\Ceburek::create(array_merge($this->only('name', 'price', 'show', 'sign', 'package'), ['position' => $position]));
         } else {
-            $this->product->update($this->only('name', 'price', 'show', 'sign'));
+            $this->product->update($this->only('name', 'price', 'show', 'sign', 'package', 'package'));
         }
 
         $this->editedProductNameId = 0;

@@ -10,7 +10,8 @@ class OtherProductsTable extends Component
     public int $editedProductNameId = 0;
     public \App\Models\OtherProduct $simpleProduct;
     public string $name;
-    public string $price;
+    public float $price;
+    public ?float $package;
     public bool $show = false;
     public $simpleProducts= [];
 
@@ -21,6 +22,7 @@ class OtherProductsTable extends Component
         $this->name = $this->simpleProduct->name;
         $this->price = $this->simpleProduct->price;
         $this->show = $this->simpleProduct->show;
+        $this->package = $this->simpleProduct->package;
     }
 
     public function save()
@@ -31,10 +33,11 @@ class OtherProductsTable extends Component
         ]);
 
         if (is_null($this->simpleProduct)) {
-            $position = \App\Models\Drink::max('position') + 1;
-            \App\Models\OtherProduct::create(array_merge($this->only('name', 'price', 'show'), ['position' => $position]));
+            $position = \App\Models\OtherProduct::max('position') + 1;
+            \App\Models\OtherProduct::create(array_merge($this->only('name', 'price', 'show', 'package'), ['position' => $position]));
         } else {
-            $this->simpleProduct->update($this->only('name', 'price', 'show'));
+          //  dd($this->packagePrice);
+            $this->simpleProduct->update($this->only('name', 'price', 'show', 'package'));
         }
 
         $this->editedProductNameId = 0;

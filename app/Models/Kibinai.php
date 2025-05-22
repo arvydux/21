@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Kibinai extends Model
 {
     //
-    protected $fillable = ['name', 'price', 'show', 'takeaway'];
+    protected $fillable = ['name', 'price', 'show', 'takeaway', 'package'];
 }

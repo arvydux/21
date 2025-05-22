@@ -15,9 +15,9 @@ class CategorySum extends Component
     public function summarizePackages()
     {
         $this->packageSum = 0;
-        $ordersWithPackages =  Order::where('package', true)->get();
+        $ordersWithPackages =  Order::whereNotNull('package')->get();
         foreach ($ordersWithPackages as $order) {
-            $this->packageSum += $order->amount * 0.3;
+            $this->packageSum += $order->amount * $order->package;
         }
     }
 

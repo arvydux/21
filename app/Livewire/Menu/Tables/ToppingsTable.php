@@ -12,6 +12,7 @@ class ToppingsTable extends Component
     public string $name;
     public string $price;
     public string $sign;
+    public ?float $package;
     public bool $show = false;
     public $products= [];
 
@@ -23,6 +24,7 @@ class ToppingsTable extends Component
         $this->price = $this->product->price;
         $this->sign = $this->product->sign;
         $this->show = $this->product->show;
+        $this->package = $this->product->package;
     }
 
     public function save()
@@ -35,9 +37,9 @@ class ToppingsTable extends Component
 
         if (is_null($this->product)) {
             $position = \App\Models\Topping::max('position') + 1;
-            \App\Models\Topping::create(array_merge($this->only('name', 'price', 'show', 'sign'), ['position' => $position]));
+            \App\Models\Topping::create(array_merge($this->only('name', 'price', 'show', 'sign', 'package'), ['position' => $position]));
         } else {
-            $this->product->update($this->only('name', 'price', 'show', 'sign'));
+            $this->product->update($this->only('name', 'price', 'show', 'sign', 'package'));
         }
 
         $this->editedProductNameId = 0;

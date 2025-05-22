@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Buttons;
 
+use App\Models\Ceburek;
 use App\Models\Order;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -70,7 +71,7 @@ class Ceburekai extends Component
                     'name' => json_encode($productWithPrice),
                     'toppings' => json_encode($toppingsWithPrices),
                     'takeaway' => $this->takeaway,
-                    'package' => true,
+                    'package' => Ceburek::where('name', $this->productName)->first()->package,
                     'order_price' => $this->orderPrice,
                     'category' => 1,
                 ]);
@@ -83,7 +84,6 @@ class Ceburekai extends Component
                 ->whereJsonContains('toppings', $toppingsWithPrices)
                 ->where('takeaway', $this->takeaway)
                 ->first() ?? null;
-            //dd($toppingsWithPrices, $sameOrder);
             if ($sameOrder) {
                 Order::where('id', $sameOrder->id)->update([
                     'amount' => $sameOrder->amount + 1,
@@ -93,7 +93,7 @@ class Ceburekai extends Component
                     'name' => json_encode($productWithPrice),
                     'toppings' => json_encode($toppingsWithPrices),
                     'takeaway' => $this->takeaway,
-                    'package' => true,
+                    'package' => Ceburek::where('name', $this->productName)->first()->package,
                     'order_price' => $this->orderPrice,
                     'category' => 1,
                 ]);

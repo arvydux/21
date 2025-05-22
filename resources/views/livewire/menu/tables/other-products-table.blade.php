@@ -1,7 +1,7 @@
 <div class="relative gap-3 mt-10 overflow-x-auto shadow-md sm:rounded-lg text-white/80">
     <div class="flex h-full w-full flex-1  gap-4 rounded-xl">
         <div class="auto-rows-min gap-4 w-3/4" data-tabs-toggle="#default-tab-content" role="tablist">
-            <table class="w-full text-sm text-left  dark:text-gray-400 table-fixed">
+            <table class="w-full text-sm text-left  text-gray-400 table-fixed">
                 <thead class="text-xs uppercase bg-emerald-700/70">
                 <tr>
                     <th scope="col" class="px-6 py-3">
@@ -14,6 +14,9 @@
                         Rodyti
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        Pakuotės kaina
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         Veiksmai
                     </th>
                 </tr>
@@ -21,25 +24,25 @@
                 <tbody>
                 @foreach($simpleProducts as $productName)
                     <tr class="border-b border-green-500/30 bg-white/10">
-                        <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-6 py-4 font-medium   dark:text-white">
+                        <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-6 py-4 font-medium   text-white">
                             {{ $productName->name }}
                         </th>
                         <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                            <input type="text" wire:model.live.debounce="name" id="name" class="bg-white/80 px-4 py-1.5  pl-4 rounded-lg  sm:text-base " >
+                            <input type="text" wire:model.live.debounce="name" id="name" class="bg-white/80 px-4 w-40 py-1.5  pl-4 rounded-lg  sm:text-base " >
                             @error('name')
                             <span class="text-md text-red-500">Pavadinimas turi būti užpildytas</span>
                             @enderror
                         </td>
-                        <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-6 py-4 font-medium   dark:text-white">
+                        <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-4 py-4 font-medium   text-white">
                             {{ number_format($productName->price, 2) }} €
                         </th>
                         <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                            <input type="text" wire:model.live.debounce="price" id="price" class="bg-white/80 px-4 py-1.5  pl-4  rounded-lg  sm:text-base " >
+                            <input type="number" wire:model.live.debounce="price" id="price" class="bg-white/80 px-4 py-1.5  w-40 pl-4  rounded-lg  sm:text-base" min="0" >
                             @error('price')
                             <span class="text-md text-red-500">Gali būti tik skaičiai</span>
                             @enderror
                         </td>
-                        <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-6 py-4 font-medium   dark:text-white">
+                        <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-6 py-4 font-medium   text-white">
                             @if($productName->show)
                                 <div class="flex items-center">
                                     <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Taip
@@ -59,6 +62,15 @@
                                     </div>
                                 </label>
                             </div>
+                        </td>
+                        <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-6 py-4 font-medium   text-white">
+                            {{ $productName->package ?? 0 }} €
+                        </th>
+                        <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
+                            <input type="number" min="0" wire:model="package" id="package-price" class="bg-white/80 px-4 py-1.5 w-30 pl-4 rounded-lg  sm:text-base " >
+                            @error('package-price')
+                            <span class="text-md text-red-500">Pakuotės kaina turi būti užpildytas</span>
+                            @enderror
                         </td>
                         <td class="px-6 py-4">
                             @if($editedProductNameId === $productName->id)

@@ -10,11 +10,11 @@
                     <th scope="col" class="px-6  w-[180px]  py-3">
                         Kaina
                     </th>
-                    <th scope="col" class="px-0  w-[80px] py-3">
-                        Žymėjimas
-                    </th>
                     <th scope="col" class="px-16 w-[180px] py-3">
                         Rodyti
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Pakuotės kaina
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Veiksmai
@@ -28,7 +28,7 @@
                             {{ $productName->name }}
                         </th>
                         <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                            <input type="text" wire:model.live.debounce="name" id="name" class="bg-white/80 px-4 py-1.5  pl-4 rounded-lg  sm:text-base " >
+                            <input type="text" wire:model.live.debounce="name" id="name" class="bg-white/80 px-4 py-1.5 w-40 pl-4 rounded-lg  sm:text-base " >
                             @error('name')
                             <span class="text-md text-red-500">Pavadinimas turi būti užpildytas</span>
                             @enderror
@@ -40,17 +40,6 @@
                             <input type="text" wire:model.live.debounce="price" id="price" class="w-[100px]  bg-white/80 px-4 py-1.5  pl-4  rounded-lg  sm:text-base " >
                             @error('price')
                             <span class="text-md text-red-500">Gali būti tik skaičiai</span>
-                            @enderror
-                        </td>
-                        <th scope="row"
-                            class="@if($editedProductNameId === $productName->id) hidden @endif px-4 py-4 w-[50px] font-medium   dark:text-white">
-                            {{ $productName->sign }}
-                        </th>
-                        <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-0 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                            <input type="text" wire:model.live.debounce="sign" id="sign"
-                                   class="bg-white/80 py-1.5  pl-4  w-[50px] rounded-lg  sm:text-base ">
-                            @error('sign')
-                            <span class="text-sm text-red-500">Žymėjimas turi būti užpildytas</span></span>
                             @enderror
                         </td>
                         <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-16 py-4 font-medium   dark:text-white">
@@ -73,6 +62,15 @@
                                     </div>
                                 </label>
                             </div>
+                        </td>
+                        <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-6 py-4 font-medium   text-white">
+                            {{ $productName->package ?? 0 }} €
+                        </th>
+                        <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
+                            <input type="number" min="0"  wire:model="package" id="package-price" class="bg-white/80 px-4 py-1.5 w-30 pl-4 rounded-lg  sm:text-base " >
+                            @error('package-price')
+                            <span class="text-md text-red-500">Pakuotės kaina turi būti užpildytas</span>
+                            @enderror
                         </td>
                         <td class="px-6 py-4">
                             @if($editedProductNameId === $productName->id)

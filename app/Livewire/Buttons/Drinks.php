@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Buttons;
 
+use App\Models\Drink;
 use App\Models\Order;
 use Livewire\Component;
 
@@ -22,6 +23,8 @@ class Drinks extends Component
             Order::create([
                 'name' => json_encode([[$productName => $productPrice]]),
                 'order_price' => $productPrice,
+                'package' => Drink::where('name', $productName)->first()->package,
+
                 'category' => 3,
             ]);
         }

@@ -11,6 +11,7 @@ class KibinaiTable extends Component
     public \App\Models\Kibinai $simpleProduct;
     public string $name;
     public string $price;
+    public ?float $package;
     public bool $show = false;
     public $simpleProducts= [];
 
@@ -21,6 +22,7 @@ class KibinaiTable extends Component
         $this->name = $this->simpleProduct->name;
         $this->price = $this->simpleProduct->price;
         $this->show = $this->simpleProduct->show;
+        $this->package = $this->simpleProduct->package;
     }
 
     public function save()
@@ -32,9 +34,9 @@ class KibinaiTable extends Component
 
         if (is_null($this->simpleProduct)) {
             $position = \App\Models\Kibinai::max('position') + 1;
-            \App\Models\Kibinai::create(array_merge($this->only('name', 'price', 'show'), ['position' => $position]));
+            \App\Models\Kibinai::create(array_merge($this->only('name', 'price', 'show', 'package'), ['position' => $position]));
         } else {
-            $this->simpleProduct->update($this->only('name', 'price', 'show'));
+            $this->simpleProduct->update($this->only('name', 'price', 'show', 'package'));
         }
 
         $this->editedProductNameId = 0;

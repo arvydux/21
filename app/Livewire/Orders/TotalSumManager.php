@@ -33,9 +33,10 @@ class TotalSumManager extends Component
             }
         }
 
-        $packages = 0;$ordersWithPackages =  Order::where('package', true)->get();
+        $packages = 0;
+        $ordersWithPackages = Order::whereNotNull('package')->get();
         foreach ($ordersWithPackages as $order) {
-            $packages += $order->amount * 0.3;
+            $packages += $order->amount * $order->package;
         }
 
         $this->totalSum += $packages;

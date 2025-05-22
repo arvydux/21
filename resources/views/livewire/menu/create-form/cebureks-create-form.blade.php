@@ -24,16 +24,6 @@
             @enderror
         </div>
 
-        <div class="w-[50px] min-w-[20px] my-2">
-            <label class="block mb-2 font-medium font-normal text-gray-600">
-                Žymėjimas
-            </label>
-            <input wire:model="sign" class="w-full g-white/80 px-4 py-1.5  pl-4  rounded-lg bg-white/80 shadow-sm focus:shadow text-gray-600"  />
-        </div>
-        @error('sign')
-        <span class="text-md text-red-500">Žymėjimas turi būti užpildytas</span>
-        @enderror
-
         <div class="my-4">
             <button wire:click="save"
                     class="w-full px-10 py-4 bg-emerald-700 rounded-2xl text-white/80 text-base font-semibold  leading-tight">

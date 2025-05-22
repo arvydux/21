@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('other_products', function (Blueprint $table) {
-            $table->decimal('package')->nullable();
+        Schema::table('orders', function (Blueprint $table) {
+            $table->decimal('package', 8, 2)->nullable()->change(); // Change column definition
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('other_products', function (Blueprint $table) {
-            $table->dropColumn('package'); // Remove the field if rolled back
+        Schema::table('orders', function (Blueprint $table) {
+            $table->boolean('package')->change(); // Revert to the original definition
         });
     }
 };

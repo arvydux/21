@@ -22,6 +22,7 @@ class Kibinai extends Component
             Order::create([
                 'name' => json_encode([[$productName => $productPrice]]),
                 'order_price' => $productPrice,
+                'package' => \App\Models\Kibinai::where('name', $productName)->first()->package,
                 'category' => 2,
             ]);
         }

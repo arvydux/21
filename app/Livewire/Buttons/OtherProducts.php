@@ -3,6 +3,7 @@
 namespace App\Livewire\Buttons;
 
 use App\Models\Order;
+use App\Models\OtherProduct;
 use Livewire\Component;
 
 class OtherProducts extends Component
@@ -22,7 +23,7 @@ class OtherProducts extends Component
             Order::create([
                 'name' => json_encode([[$productName => $productPrice]]),
                 'order_price' => $productPrice,
-                'package' => true,
+                'package' => OtherProduct::where('name', $productName)->first()->package,
                 'category' => 4,
             ]);
         }

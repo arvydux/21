@@ -14,6 +14,9 @@
                         Rodyti
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        Pakuotės kaina
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         Veiksmai
                     </th>
                 </tr>
@@ -25,7 +28,7 @@
                             {{ $productName->name }}
                         </th>
                         <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                            <input type="text" wire:model.live.debounce="name" id="name" class="bg-white/80 px-4 py-1.5  pl-4 rounded-lg  sm:text-base " >
+                            <input type="text" wire:model.live.debounce="name" id="name" class="bg-white/80 px-4 py-1.5 w-40 pl-4 rounded-lg  sm:text-base " >
                             @error('name')
                             <span class="text-md text-red-500">Pavadinimas turi būti užpildytas</span>
                             @enderror
@@ -34,7 +37,7 @@
                             {{ number_format($productName->price, 2) }} €
                         </th>
                         <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                            <input type="text" wire:model.live.debounce="price" id="price" class="bg-white/80 px-4 py-1.5  pl-4  rounded-lg  sm:text-base " >
+                            <input type="text" wire:model.live.debounce="price" id="price" class="bg-white/80 px-4 py-1.5 w-40 pl-4  rounded-lg  sm:text-base " >
                             @error('price')
                             <span class="text-md text-red-500">Gali būti tik skaičiai</span>
                             @enderror
@@ -59,6 +62,15 @@
                                     </div>
                                 </label>
                             </div>
+                        </td>
+                        <th scope="row" class="@if($editedProductNameId === $productName->id) hidden @endif px-6 py-4 font-medium   text-white">
+                            {{ $productName->package ?? 0 }} €
+                        </th>
+                        <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
+                            <input type="number" min="0"  wire:model="package" id="package-price" class="bg-white/80 px-4 py-1.5 w-30 pl-4 rounded-lg  sm:text-base " >
+                            @error('package-price')
+                            <span class="text-md text-red-500">Pakuotės kaina turi būti užpildytas</span>
+                            @enderror
                         </td>
                         <td class="px-6 py-4">
                             @if($editedProductNameId === $productName->id)
