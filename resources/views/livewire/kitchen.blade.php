@@ -6,7 +6,7 @@
             </div>
         </div>
         @foreach(\App\Models\OrderNumbers::where('is_ready', false)->get() as $order)
-        <div wire:click="makeOrderReady('{{ $order->number }}')"  class="relative text-center shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
+        <div onclick="setTimeout(playAlert, 5000)" wire:click="makeOrderReady('{{ $order->number }}')"  class="relative text-center shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
                 aspect-video overflow-hidden rounded-xl {{ $order->by_phone ? 'bg-white' : 'bg-yellow-400/90' }}
                 {{ $order->by_phone ? 'zoom-in-out-box' : 'text-white' }}" >
             <div class="flex grid content-center flex-col gap-2 h-full rounded-xl w-full">
@@ -32,3 +32,10 @@
         @endforeach
     </div>
 </div>
+<script>
+    function playAlert() {
+        const audio = new Audio('/12.mp3');
+        audio.play();
+    }
+
+</script>
