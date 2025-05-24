@@ -164,7 +164,7 @@ class OrdersList extends Component
                 $printer->feed();
 
                 $printer->setTextSize(2, 1);
-                $takeaway = $order->takeaway ? 'Vietoje' : 'Išsinešimui';
+                $takeaway = $order->takeaway ? 'Išsinešimui' : 'Vietoje';
                 $printer->text($takeaway . "\n");
                 // change font
                 $printer-> setFont(0);
