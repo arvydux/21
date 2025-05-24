@@ -11,7 +11,7 @@ class ReadyOrders extends Component
 
     public function makeOrderTaken($number): void
     {
-        OrderNumbers::where('number', $number)->update(['is_taken' => true]);
+        OrderNumbers::where('number', $number)->update(['is_ready' => true]);
     }
 
 }
