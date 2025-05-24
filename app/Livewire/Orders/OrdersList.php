@@ -110,10 +110,11 @@ class OrdersList extends Component
             'created_at' => now(),
         ]);
         FreeNumbers::first()->update(['number' => $this->freeNumber + 1]);
-        $this->byPhone = false;
+        
         $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
         $this->printOrderForClient($this->freeNumber, $this->byPhone);
         $this->resetOrders();
+	$this->byPhone = false;
 
         return $this->freeNumber;
     }
@@ -148,6 +149,7 @@ class OrdersList extends Component
                         // change font
                         $printer-> setFont(1);
                         $printer->setTextSize(2, 2);
+              	  	$printer->text($order->amount . ' -');
                         $printer->text($nameInNotLt . "\n");
                     }
                 }
@@ -170,9 +172,6 @@ class OrdersList extends Component
                 // change font
                 $printer-> setFont(1);
                 $printer->setTextSize(2, 2);
-                $printer->text($order->amount . ' vnt.' . "\n");
-                $printer->feed();
-
                 $printer->setTextSize(2, 2);
                 $takeaway = $order->takeaway ? 'Išsinešimui' : 'Vietoje';
                 $printer->text($takeaway . "\n");
@@ -193,7 +192,7 @@ class OrdersList extends Component
             if ($byPhone) {
                 $printer->setTextSize(2, 2);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
-                $printer->text('Telefonu: ' . "\n");
+                $printer->text('Telefonu ' . "\n");
             }
             $printer ->feed(1);
             $printer->cut();
@@ -235,7 +234,7 @@ class OrdersList extends Component
             if ($byPhone) {
                 $printer->setTextSize(2, 2);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
-                $printer->text('Telefonu: ' . "\n");
+                $printer->text('Telefonu ' . "\n");
             }
             $printer ->feed(1);
             $printer->cut();
