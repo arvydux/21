@@ -122,7 +122,7 @@ class OrdersList extends Component
     {
         try {
             $profile = CapabilityProfile::load("TM-P80");
-            $connector = new NetworkPrintConnector("192.168.1.100", 9100, 2);
+            $connector = new NetworkPrintConnector("192.168.32.100", 9100, 2);
             $printer = new Printer($connector, $profile);
             $printer -> setEmphasis(true);
             $printer->setTextSize(4, 4);
@@ -210,7 +210,7 @@ class OrdersList extends Component
     {
         try {
             $profile = CapabilityProfile::load("TM-P80");
-            $connector = new NetworkPrintConnector("192.168.1.101", 9100, 2);
+            $connector = new NetworkPrintConnector("192.168.32.101", 9100, 2);
             $printer = new Printer($connector, $profile);
             $printer -> setEmphasis(true);
 
