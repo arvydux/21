@@ -78,6 +78,16 @@ class OrdersList extends Component
         }
     }
 
+    public function changeTakeaway($id): void
+    {
+        $order = Order::find($id);
+        if ($order) {
+            $order->takeaway = !$order->takeaway;
+            $order->save();
+        }
+        $this->dispatch('change-order');
+    }
+
     public function resetOrders()
     {
         Order::truncate();
