@@ -45,7 +45,7 @@
 
         <div class="bg-white/60 shadow-xl hover:shadow-2xl rounded-xl p-2 gap-1 mb-1 items-center" wire:key="order-{{ $order->id }}">
             <div class="flex flex-1">
-                <div class="auto-rows-min w-7/10" wire:click="removeOrder({{$order->id}})">
+                <div class="auto-rows-min w-7/10" wire:click="changeTakeaway({{$order->id}})">
                     @foreach(json_decode($order->name) as $name)
                         @foreach($name as $name => $price)
                             <h3 class="  text-[#191919] text-xs">{{ $name }} <span
