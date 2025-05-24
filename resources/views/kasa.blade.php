@@ -17,4 +17,5 @@
             <livewire:orders.orders-list/>
         </div>
     </div>
+        <livewire:ready-orders/>
 </x-layouts.app>
