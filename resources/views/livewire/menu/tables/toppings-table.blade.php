@@ -37,7 +37,7 @@
                             {{ number_format($productName->price, 2) }} €
                         </th>
                         <td class="@if($editedProductNameId !== $productName->id) hidden @endif px-4 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                            <input type="text" wire:model.live.debounce="price" id="price" class="w-[100px]  bg-white/80 px-4 py-1.5  pl-4  rounded-lg  sm:text-base " >
+                            <input type="number" wire:model="price" id="price" class="w-[100px]  bg-white/80 px-4 py-1.5  pl-4  rounded-lg  sm:text-base " >
                             @error('price')
                             <span class="text-md text-red-500">Gali būti tik skaičiai</span>
                             @enderror

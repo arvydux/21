@@ -15,14 +15,13 @@ class CebureksCreateForm extends Component
         $this->validate([
             'name' => 'required',
             'price' => 'required|numeric',
-            'sign' => 'required|max:1',
         ]);
 
         // Save to database
         \App\Models\Ceburek::create([
             'name' => $this->name,
             'price' => $this->price,
-            'sign' => $this->sign,
+            'sign' => 'A',
         ]);
 
         // Reset form

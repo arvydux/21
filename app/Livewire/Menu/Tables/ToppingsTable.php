@@ -10,9 +10,9 @@ class ToppingsTable extends Component
     public int $editedProductNameId = 0;
     public \App\Models\Topping $product;
     public string $name;
-    public string $price;
+    public float $price;
     public string $sign;
-    public ?float $package;
+    public ?float $package = null;
     public bool $show = false;
     public $products= [];
 

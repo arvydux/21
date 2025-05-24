@@ -10,8 +10,8 @@ class CebureksTable extends Component
     public int $editedProductNameId = 0;
     public \App\Models\Ceburek $product;
     public string $name;
-    public string $price;
-    public ?float $package;
+    public float $price;
+    public ?float $package = null;
     public string $sign;
     public bool $show = false;
     public $products= [];
