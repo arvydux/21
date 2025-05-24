@@ -11,7 +11,7 @@ class OtherProductsTable extends Component
     public \App\Models\OtherProduct $simpleProduct;
     public string $name;
     public float $price;
-    public ?float $package;
+    public ?float $package = null;
     public bool $show = false;
     public $simpleProducts= [];
 
