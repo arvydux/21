@@ -101,14 +101,14 @@ class OrdersList extends Component
         ]);
         FreeNumbers::first()->update(['number' => $this->freeNumber + 1]);
         $this->byPhone = false;
-        $this->printOrderForKitchen($this->freeNumber);
-        $this->printOrderForClient($this->freeNumber);
+        $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
+        $this->printOrderForClient($this->freeNumber, $this->byPhone);
         $this->resetOrders();
 
         return $this->freeNumber;
     }
 
-    private function printOrderForKitchen(int $freeOrder): void
+    private function printOrderForKitchen(int $freeOrder, bool $byPhone): void
     {
         try {
             $profile = CapabilityProfile::load("TM-P80");
@@ -136,8 +136,8 @@ class OrdersList extends Component
                     foreach ($name as $name => $price) {
                         $nameInNotLt = $this->convertTextFromLtToNotLt($name);
                         // change font
-                        $printer-> setFont(0);
-                        $printer->setTextSize(2, 1);
+                        $printer-> setFont(1);
+                        $printer->setTextSize(2, 2);
                         $printer->text($nameInNotLt . "\n");
                     }
                 }
@@ -149,7 +149,7 @@ class OrdersList extends Component
                             $printer->setJustification(Printer::JUSTIFY_RIGHT);
                             // change font
                             $printer-> setFont(1);
-                            $printer->setTextSize(2, 1);
+                            $printer->setTextSize(2, 2);
                             $nameInNotLt = $this->convertTextFromLtToNotLt($name);
                             $printer->text($nameInNotLt . "\n");
                         }
@@ -163,7 +163,7 @@ class OrdersList extends Component
                 $printer->text($order->amount . ' vnt.' . "\n");
                 $printer->feed();
 
-                $printer->setTextSize(2, 1);
+                $printer->setTextSize(2, 2);
                 $takeaway = $order->takeaway ? 'Išsinešimui' : 'Vietoje';
                 $printer->text($takeaway . "\n");
                 // change font
@@ -179,7 +179,13 @@ class OrdersList extends Component
                 $printer->text(str_repeat("-", 24) . "\n"); // Adjust 48 to match your printer's width
                 $printer->feed();
             }
-            $printer ->feed(4);
+            $printer ->feed(1);
+            if ($byPhone) {
+                $printer->setTextSize(2, 2);
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->text('Telefonu: ' . "\n");
+            }
+            $printer ->feed(1);
             $printer->cut();
             /* Close printer */
             $printer->close();
@@ -190,7 +196,7 @@ class OrdersList extends Component
         }
     }
 
-    private function printOrderForClient(int $freeOrder): void
+    private function printOrderForClient(int $freeOrder, bool $byPhone): void
     {
         try {
             $profile = CapabilityProfile::load("TM-P80");
@@ -215,7 +221,13 @@ class OrdersList extends Component
             $totalSum = Cache::get('totalSum');
             $printer -> text('Viso ' . $totalSum . ' EUR' . "\n");
 
-            $printer ->feed(4);
+            $printer ->feed(1);
+            if ($byPhone) {
+                $printer->setTextSize(2, 2);
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->text('Telefonu: ' . "\n");
+            }
+            $printer ->feed(1);
             $printer->cut();
             $printer->close();
         }
