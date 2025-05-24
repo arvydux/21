@@ -7,6 +7,13 @@
                     <div class="font-semibold text-6xl">{{ $order->number }}</div>
                 </div>
             </div>
+                    <script>
+                function playAlert() {
+                    const audio = new Audio('/14.mp3');
+                    audio.play();
+                }
+                playAlert();
+            </script>
         @endforeach
     </div>
 </div>
