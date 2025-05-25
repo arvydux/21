@@ -110,9 +110,9 @@ class OrdersList extends Component
             'created_at' => now(),
         ]);
         FreeNumbers::first()->update(['number' => $this->freeNumber + 1]);
-        
-        $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
-        $this->printOrderForClient($this->freeNumber, $this->byPhone);
+
+       // $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
+       // $this->printOrderForClient($this->freeNumber, $this->byPhone);
         $this->resetOrders();
 	$this->byPhone = false;
 
