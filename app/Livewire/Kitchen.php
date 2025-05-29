@@ -12,13 +12,11 @@ class Kitchen extends Component
     {
         OrderNumbers::where('number', $number)->update(['is_ready' => true]);
         Cache::put('playSound', 1, 60 * 60 * 24); // Cache for 24 hours
-        $this->skipRender();
     }
 
     public function makeOrderNotReady($number): void
     {
         OrderNumbers::where('number', $number)->update(['is_ready' => false]);
-        $this->skipRender();
     }
 
     public function render()
