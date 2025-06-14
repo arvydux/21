@@ -4,6 +4,7 @@ namespace App\Livewire\Buttons;
 
 use App\Models\Ceburek;
 use App\Models\Order;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -19,6 +20,7 @@ class Ceburekai extends Component
     public $productName;
 
     public $takeaway = true;
+    public Collection $cebureks;
 
     #[on('chooseProductName')]
     public function getProductName($name): void
@@ -104,8 +106,22 @@ class Ceburekai extends Component
         $this->toppings = [];
     }
 
+    public function updateOrder($list)
+    {
+        foreach ($list as $item) {
+            $product = $this->cebureks->firstWhere('id', $item['value']);
+
+            if ($product['position'] != $item['order']) {
+                Ceburek::where('id', $item['value'])->update(['position' => $item['order']]);
+            }
+        }
+    }
+
     public function render()
     {
+        $products = Ceburek::orderBy('position')->paginate(10);
+        $this->cebureks = collect($products->items());
+
         return view('livewire.buttons.ceburekai');
     }
 }

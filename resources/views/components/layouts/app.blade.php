@@ -9,4 +9,6 @@
             {{ $slot }}
         </flux:main>
     @endif
+        @livewireScripts
+        <script src="https://unpkg.com/@nextapps-be/livewire-sortablejs@0.4.1/dist/livewire-sortable.js"></script>
 </x-layouts.app.header>
