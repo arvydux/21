@@ -3,12 +3,15 @@
 namespace App\Livewire\Buttons;
 
 use App\Models\Order;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class Kibinai extends Component
 {
     public $productName;
     public $selectedProductName = '';
+    public Collection $kibinai;
+
     public function addProduct($productName, $productPrice)
     {
         $this->selectedProductName = $productName;
@@ -30,8 +33,22 @@ class Kibinai extends Component
         $this->dispatch('change-order', orderName:$productName);
     }
 
+    public function updateOrder($list)
+    {
+        foreach ($list as $item) {
+            $product = $this->kibinai->firstWhere('id', $item['value']);
+
+            if ($product['position'] != $item['order']) {
+                \App\Models\Kibinai::where('id', $item['value'])->update(['position' => $item['order']]);
+            }
+        }
+    }
+
     public function render()
     {
+        $products = \App\Models\Kibinai::orderBy('position')->paginate(10);
+        $this->kibinai = collect($products->items());
+
         return view('livewire.buttons.kibinai');
     }
 }

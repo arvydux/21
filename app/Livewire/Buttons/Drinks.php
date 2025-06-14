@@ -4,12 +4,14 @@ namespace App\Livewire\Buttons;
 
 use App\Models\Drink;
 use App\Models\Order;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class Drinks extends Component
 {
     public $productName;
     public $selectedProductName = '';
+    public Collection $drinks;
     public function addProduct($productName, $productPrice)
     {
         $this->selectedProductName = $productName;
@@ -32,8 +34,22 @@ class Drinks extends Component
         $this->dispatch('change-order', orderName:$productName);
     }
 
+    public function updateOrder($list)
+    {
+        foreach ($list as $item) {
+            $product = $this->drinks->firstWhere('id', $item['value']);
+
+            if ($product['position'] != $item['order']) {
+                Drink::where('id', $item['value'])->update(['position' => $item['order']]);
+            }
+        }
+    }
+
     public function render()
     {
+        $products = Drink::orderBy('position')->paginate(10);
+        $this->drinks = collect($products->items());
+
         return view('livewire.buttons.drinks');
     }
 }

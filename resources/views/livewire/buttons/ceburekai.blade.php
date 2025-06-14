@@ -1,5 +1,6 @@
-<div class="grid md:grid-cols-3 auto-rows-min gap-4 mt-4">
-    @foreach(\App\Models\Ceburek::where('show', true)->get() as $productName)
+<div wire:sortable="updateOrder" class="grid md:grid-cols-3 auto-rows-min gap-4 mt-4">
+    @foreach(\App\Models\Ceburek::where('show', true)->orderBy('position')->get() as $productName)
+        <div wire:sortable.handle  wire:sortable.item="{{ $productName->id }}" wire:key="{{ $loop->index }}">
         <flux:modal.trigger name="choose-toppings">
             <div  wire:click="getProductName('{{ $productName->name }}')" class="relative text-center  shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
             aspect-video overflow-hidden rounded-xl  dark:border-neutral-700">
@@ -11,6 +12,7 @@
                 </div>
             </div>
         </flux:modal.trigger>
+        </div>
     @endforeach
         <flux:modal name="choose-toppings" class="w-full h-7/10 max-w-2xl  bg-white! rounded-xl shadow-xl blur-none">
             <form wire:submit.prevent="addOrder" >
