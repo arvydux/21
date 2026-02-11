@@ -4,6 +4,7 @@ namespace App\Livewire\Buttons;
 
 use App\Models\Ceburek;
 use App\Models\Order;
+use App\Models\Topping;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -114,6 +115,13 @@ class Ceburekai extends Component
             if ($product['position'] != $item['order']) {
                 Ceburek::where('id', $item['value'])->update(['position' => $item['order']]);
             }
+        }
+    }
+
+    public function updateToppingOrder($list)
+    {
+        foreach ($list as $item) {
+            Topping::where('id', $item['value'])->update(['position' => $item['order']]);
         }
     }
 

@@ -1,6 +1,6 @@
-<div wire:sortable="updateOrder" class="grid md:grid-cols-3 auto-rows-min gap-4 mt-4">
+<div x-data x-init="initSwapSortable($el, $wire, 'updateOrder')" class="grid md:grid-cols-3 auto-rows-min gap-4 mt-4">
     @foreach(\App\Models\Ceburek::where('show', true)->orderBy('position')->get() as $productName)
-        <div wire:sortable.handle  wire:sortable.item="{{ $productName->id }}" wire:key="{{ $loop->index }}">
+        <div data-sortable-id="{{ $productName->id }}" wire:key="ceburek-{{ $productName->id }}">
         <flux:modal.trigger name="choose-toppings">
             <div  wire:click="getProductName('{{ $productName->name }}')" class="relative text-center  shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
             aspect-video overflow-hidden rounded-xl  dark:border-neutral-700">
@@ -18,9 +18,9 @@
             <form wire:submit.prevent="addOrder" >
                 <div class="p-2">
                     <h3 class="text-md m-4 font-medium text-center text-gray-900 text-center ">Pasirinkti priedus:</h3>
-                    <ul class="grid flex items-center w-full gap-1 md:grid-cols-5">
-                        @foreach(\App\Models\Topping::where('show', true)->get()  as $topping)
-                            <li class="grid flex-1 h-full">
+                    <ul x-data x-init="initSwapSortable($el, $wire, 'updateToppingOrder')" class="grid flex items-center w-full gap-1 md:grid-cols-5">
+                        @foreach(\App\Models\Topping::where('show', true)->orderBy('position')->get()  as $topping)
+                            <li data-sortable-id="{{ $topping->id }}" wire:key="topping-{{ $topping->id }}" class="grid flex-1 h-full">
                                 <input type="checkbox" id="{{$topping->name}}" value="{{$topping->name}}" wire:model="toppings"
                                        class="hidden peer">
                                 <label for="{{$topping->name}}"
