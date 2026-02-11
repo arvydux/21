@@ -12,3 +12,4 @@
     npm run build
     php artisan migrate:fresh --seed
     php artisan serve
+    npm run build
