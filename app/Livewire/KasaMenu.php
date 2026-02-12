@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Category;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Renderless;
 use Livewire\Component;
 
 class KasaMenu extends Component
@@ -17,14 +18,11 @@ class KasaMenu extends Component
         $this->dispatch('category-button-clicked', $buttonName);
     }
 
+    #[Renderless]
     public function updateOrder($list)
     {
         foreach ($list as $item) {
-            $product = $this->categories->firstWhere('id', $item['value']);
-
-            if ($product['position'] != $item['order']) {
-                Category::where('id', $item['value'])->update(['position' => $item['order']]);
-            }
+            Category::where('id', $item['value'])->update(['position' => $item['order']]);
         }
     }
 

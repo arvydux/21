@@ -5,6 +5,7 @@ namespace App\Livewire\Buttons;
 use App\Models\Order;
 use App\Models\OtherProduct;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Renderless;
 use Livewire\Component;
 
 class OtherProducts extends Component
@@ -34,14 +35,11 @@ class OtherProducts extends Component
         $this->dispatch('change-order', orderName:$productName);
     }
 
+    #[Renderless]
     public function updateOrder($list)
     {
         foreach ($list as $item) {
-            $product = $this->otherProducts->firstWhere('id', $item['value']);
-
-            if ($product['position'] != $item['order']) {
-                OtherProduct::where('id', $item['value'])->update(['position' => $item['order']]);
-            }
+            OtherProduct::where('id', $item['value'])->update(['position' => $item['order']]);
         }
     }
 

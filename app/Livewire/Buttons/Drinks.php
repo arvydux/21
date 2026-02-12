@@ -5,6 +5,7 @@ namespace App\Livewire\Buttons;
 use App\Models\Drink;
 use App\Models\Order;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Renderless;
 use Livewire\Component;
 
 class Drinks extends Component
@@ -34,14 +35,11 @@ class Drinks extends Component
         $this->dispatch('change-order', orderName:$productName);
     }
 
+    #[Renderless]
     public function updateOrder($list)
     {
         foreach ($list as $item) {
-            $product = $this->drinks->firstWhere('id', $item['value']);
-
-            if ($product['position'] != $item['order']) {
-                Drink::where('id', $item['value'])->update(['position' => $item['order']]);
-            }
+            Drink::where('id', $item['value'])->update(['position' => $item['order']]);
         }
     }
 

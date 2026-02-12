@@ -40,7 +40,7 @@
                     draggable: '[data-sortable-id]',
                     onEnd(evt) {
                         if (evt.oldIndex === evt.newIndex) return;
-                        let items = [...el.querySelectorAll('[data-sortable-id]')];
+                        let items = [...el.querySelectorAll(':scope > [data-sortable-id]')];
                         let order = items.map((item, index) => ({
                             value: item.dataset.sortableId,
                             order: index + 1

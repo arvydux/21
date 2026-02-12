@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Topping;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Renderless;
 use Livewire\Component;
 
 class Ceburekai extends Component
@@ -107,17 +108,15 @@ class Ceburekai extends Component
         $this->toppings = [];
     }
 
+    #[Renderless]
     public function updateOrder($list)
     {
         foreach ($list as $item) {
-            $product = $this->cebureks->firstWhere('id', $item['value']);
-
-            if ($product['position'] != $item['order']) {
-                Ceburek::where('id', $item['value'])->update(['position' => $item['order']]);
-            }
+            Ceburek::where('id', $item['value'])->update(['position' => $item['order']]);
         }
     }
 
+    #[Renderless]
     public function updateToppingOrder($list)
     {
         foreach ($list as $item) {
