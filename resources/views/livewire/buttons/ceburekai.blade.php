@@ -21,10 +21,10 @@
                     <ul x-data x-init="initSwapSortable($el, $wire, 'updateToppingOrder')" class="grid w-full gap-2 md:grid-cols-5">
                         @foreach(\App\Models\Topping::where('show', true)->orderBy('position')->get()  as $topping)
                             <li data-sortable-id="{{ $topping->id }}" wire:key="topping-{{ $topping->id }}">
-                                <input type="checkbox" id="{{$topping->name}}" value="{{$topping->name}}" wire:model="toppings"
+                                <input type="checkbox" id="{{$topping->name}}" value="{{$topping->name}}" wire:model.live="toppings"
                                        class="hidden peer">
                                 <label for="{{$topping->name}}"
-                                       class="flex items-center justify-center aspect-square w-full p-1 bg-linear-to-br from-slate-600 to-slate-800 text-white/90 rounded-xl cursor-pointer transition-all duration-200 shadow-md hover:from-slate-500 hover:to-slate-700 hover:shadow-lg hover:-translate-y-0.5 peer-checked:from-emerald-500 peer-checked:to-teal-600 peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-emerald-500/30 peer-checked:-translate-y-0.5 peer-checked:ring-2 peer-checked:ring-emerald-400/50 peer-checked:ring-offset-1 font-bold leading-tight">
+                                       class="flex items-center justify-center aspect-square w-full p-1 bg-linear-to-br from-slate-600 to-slate-800 text-white/90 rounded-xl cursor-pointer transition-all duration-200 shadow-md hover:from-slate-500 hover:to-slate-700 hover:shadow-lg hover:-translate-y-0.5 peer-checked:from-emerald-500 peer-checked:to-teal-600 peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-emerald-500/30 peer-checked:-translate-y-0.5 peer-checked:ring-2 peer-checked:ring-emerald-400/50 peer-checked:ring-offset-1 peer-checked:hover:from-emerald-500 peer-checked:hover:to-teal-600 font-bold leading-tight">
                                     <div class="text-center text-sm">
                                         {{$topping->name}}
                                     </div>
