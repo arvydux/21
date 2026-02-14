@@ -14,31 +14,40 @@ class CeburekSeeder extends Seeder
     {
         $products = [
             [
-                'name' => 'Čeburėkas su kiauliena', 'price' => 3.9, 'sign' => 'K',
+                'name' => 'Sūris + grybai', 'price' => 4.50, 'sign' => 'SG',
             ],
             [
-                'name' => 'Čeburėkas su jautiena', 'price' => 4.5, 'sign' => 'J',
+                'name' => '2-jų rūšių sūris', 'price' => 4.50, 'sign' => '2S',
             ],
             [
-                'name' => 'Čeburėkas su aviena', 'price' => 4.9, 'sign' => 'A',
+                'name' => 'Saliamis + sūris', 'price' => 4.50, 'sign' => 'SS',
             ],
             [
-                'name' => 'Čeburėkas Mix', 'price' => 4.5, 'sign' => 'M',
+                'name' => 'Čeburėkas su kiauliena', 'price' => 4.50, 'sign' => 'K',
             ],
             [
-                'name' => 'Čeburėkas Šefo', 'price' => 6.2, 'sign' => 'Š',
+                'name' => 'Čeburėkas su jautiena', 'price' => 5.20, 'sign' => 'J',
             ],
             [
-                'name' => '2-jų rūšių sūriu', 'price' => 4.0, 'sign' => '2S',
+                'name' => 'Čeburėkas su vištiena', 'price' => 5.20, 'sign' => 'V',
             ],
             [
-                'name' => 'Saliamis + sūris', 'price' => 4.0, 'sign' => 'SS',
+                'name' => 'Čeburėkas Mix', 'price' => 5.20, 'sign' => 'M',
             ],
             [
-                'name' => 'Sūris + grybai', 'price' => 4.0, 'sign' => 'SS',
+                'name' => 'Čeburėkas su aviena', 'price' => 5.90, 'sign' => 'A',
             ],
             [
-                'name' => 'Su kiauliena + sriuba', 'price' => 5.8, 'sign' => 'KS',
+                'name' => 'Čeburėkas Maišytas', 'price' => 5.90, 'sign' => 'MA',
+            ],
+            [
+                'name' => 'Čeburėkas Šefo', 'price' => 6.80, 'sign' => 'Š',
+            ],
+            [
+                'name' => 'Čeburėkas Gurmaniškas', 'price' => 6.80, 'sign' => 'G',
+            ],
+            [
+                'name' => 'Čeburėkas Pachmo', 'price' => 7.50, 'sign' => 'P',
             ],
         ];
 
