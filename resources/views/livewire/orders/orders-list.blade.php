@@ -1,12 +1,12 @@
 <div class="flex flex-col p-2 rounded-2xl"
-     style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);"
+     style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25);"
      xmlns:flux="http://www.w3.org/1999/html">
     <div class="flex items-center justify-between ">
-        <h2 class="text-white text-xs font-semibold leading-[30px] tracking-wide">Krepšelis ({{\App\Models\Order::all()->sum('amount')}})</h2>
+        <h2 class="text-white text-sm font-extrabold leading-[30px] tracking-wide antialiased">Krepšelis ({{\App\Models\Order::all()->sum('amount')}})</h2>
         <div class="flex items-right gap-2 ">
             <flux:field variant="inline">
                 <flux:checkbox wire:model="byPhone" class=" scale-140" />
-                <flux:label  class="!text-white/80 !text-md font-medium" >Užsakomas telefonu</flux:label>
+                <flux:label  class="!text-white/80 !text-md !font-extrabold !tracking-wide antialiased" >Užsakomas telefonu</flux:label>
                 <flux:error name="terms" />
             </flux:field>
         </div>
@@ -15,8 +15,8 @@
     <livewire:orders.category-sum/>
     <div class="">
         <div class=" flex justify-between items-center">
-            <div class="font-extrabold text-md text-emerald-400">Iš viso</div>
-            <div class="font-extrabold text-md text-emerald-400"><livewire:orders.total-sum-manager/></div>
+            <div class="font-extrabold text-md text-emerald-400 tracking-wide antialiased">Iš viso</div>
+            <div class="font-extrabold text-md text-emerald-400 tracking-wide antialiased"><livewire:orders.total-sum-manager/></div>
         </div>
     </div>
 
@@ -24,18 +24,19 @@
 
     <div class="grid md:grid-cols-3 auto-rows-min gap-1">
         <button wire:click="makeOrder"
-                class="rounded-xl text-white text-base font-bold leading-tight transition-all duration-200 hover:scale-[1.03] active:scale-[0.97]"
-                style="background: rgba(16, 185, 129, 0.5); border: 1px solid rgba(16, 185, 129, 0.5); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);">
+                class="rounded-2xl text-white text-base font-extrabold tracking-wide antialiased leading-tight transition-all duration-200 hover:scale-[1.03] active:scale-[0.97]"
+                style="background: rgba(16, 185, 129, 0.5); border: 1px solid rgba(16, 185, 129, 0.5); box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25);">
             Užsakyti
         </button>
 
         <button wire:click="resetOrders"
-                class="bg-black/25 border border-white/15 rounded-xl text-white text-base font-bold leading-tight transition-all duration-200 hover:bg-black/35 hover:scale-[1.03] active:scale-[0.97]">
+                class="bg-black/25 border border-white/25 rounded-2xl text-white text-base font-extrabold tracking-wide antialiased leading-tight transition-all duration-200 hover:bg-black/35 hover:scale-[1.03] active:scale-[0.97]"
+                style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);">
             Valyti
         </button>
 
         <flux:modal.trigger name="see-orders" >
-            <flux:button class="!text-base !font-bold !bg-black/25 !border !border-white/15 !rounded-xl !text-white hover:!bg-black/35">Užsakymai
+            <flux:button class="!text-base !font-extrabold !tracking-wide !bg-black/25 !border !border-white/25 !rounded-2xl !text-white hover:!bg-black/35" style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);">Užsakymai
             </flux:button>
         </flux:modal.trigger>
 
@@ -46,15 +47,15 @@
 
     @foreach($orders as $order)
 
-        <div class="rounded-xl p-2 gap-1 mb-1 items-center border border-emerald-200/30 transition-all duration-200 hover:shadow-lg" style="background: rgba(255, 255, 255, 0.85); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);" wire:key="order-{{ $order->id }}">
+        <div class="rounded-2xl p-2 gap-1 mb-1 items-center border border-white/25 transition-all duration-200 hover:shadow-lg" style="background: rgba(255, 255, 255, 0.85); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);" wire:key="order-{{ $order->id }}">
             <div class="flex flex-1">
                 <div class="auto-rows-min w-7/10" wire:click="changeTakeaway({{$order->id}})">
                     @foreach(json_decode($order->name) as $name)
                         @foreach($name as $name => $price)
-                            <h3 class="text-emerald-900 text-xs">{{ $name }} <span
-                                    class="relative justify-start text-emerald-900 text-xs font-semibold"> {{ $price }} €</span>
+                            <h3 class="text-emerald-900 text-sm font-extrabold tracking-wide antialiased">{{ $name }} <span
+                                    class="text-emerald-900 text-sm font-extrabold"> {{ $price }} €</span>
                                 @if($order->package)
-                                    <span class="relative justify-start text-emerald-900 text-xs font-semibold leading-[16.80px]">
+                                    <span class="text-emerald-900 text-sm font-extrabold">
                                         + {{$order->package}} €</span>
                                 @endif
                             </h3>
@@ -66,8 +67,8 @@
                             @foreach($topping as $name => $toppingPrice)
                                 <p class="h-4">
                                     <span
-                                        class="relative justify-start text-emerald-700/60 text-xs font-normal leading-[21px]">{{ $name }}</span><span
-                                        class="relative justify-start text-emerald-900 text-xs font-semibold leading-[16.80px]"> {{ $toppingPrice }} €</span>
+                                        class="text-emerald-700/60 text-xs font-semibold tracking-wide antialiased">{{ $name }}</span><span
+                                        class="text-emerald-900 text-xs font-bold tracking-wide"> {{ $toppingPrice }} €</span>
                                 </p>
                             @endforeach
                         @endforeach
@@ -76,17 +77,17 @@
                         @if ($order->package)
 
                             <span
-                                class="relative justify-start text-emerald-700/60 text-xs text-center font-bold leading-[21px]">Pilna suma:</span><span
-                                class="relative justify-start text-emerald-900 text-xs font-semibold leading-[16.80px]"> {{ $order->order_price  + $order->package }} € &times; {{ $order->amount }} = {{ ($order->order_price + $order->package) * $order->amount }} €</span>
+                                class="text-emerald-700/60 text-xs font-bold tracking-wide antialiased">Pilna suma:</span><span
+                                class="text-emerald-900 text-xs font-extrabold tracking-wide"> {{ $order->order_price  + $order->package }} € &times; {{ $order->amount }} = {{ ($order->order_price + $order->package) * $order->amount }} €</span>
 
 
                         @else
                             <span
-                                class="relative justify-start text-emerald-700/60 text-xs text-center font-bold leading-[21px]">Pilna suma:</span><span
-                                class="relative justify-start text-emerald-900 text-xs font-semibold leading-[16.80px]"> {{ $price}} € &times; {{ $order->amount }} = {{ $price * $order->amount }} €</span>
+                                class="text-emerald-700/60 text-xs font-bold tracking-wide antialiased">Pilna suma:</span><span
+                                class="text-emerald-900 text-xs font-extrabold tracking-wide"> {{ $price}} € &times; {{ $order->amount }} = {{ $price * $order->amount }} €</span>
                     @endif
                     <div
-                        class="justify-start text-emerald-600 text-xs text-left font-bold leading-[21px]">{{ $order->takeaway ? "Išsinešimui!" : 'Vietoje!' }}
+                        class="text-emerald-600 text-xs text-left font-extrabold tracking-wide antialiased">{{ $order->takeaway ? "Išsinešimui!" : 'Vietoje!' }}
                     </div>
 
 
