@@ -12,10 +12,10 @@
             </div>
         </div>
         @foreach(\App\Models\OrderNumbers::where('is_ready', false)->get() as $order)
-            <div class="relative text-center shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
-                aspect-video overflow-hidden rounded-xl bg-yellow-400/90" >
-                <div class="flex grid content-center flex-col gap-2 h-full rounded-xl w-full">
-                    <div class="font-semibold text-8xl">{{ $order->number }}</div>
+            <div class="relative text-center aspect-video overflow-hidden rounded-2xl transition-transform hover:scale-105"
+                 style="background: linear-gradient(135deg, #f7971e, #ffd200); box-shadow: 0 8px 32px rgba(255, 210, 0, 0.4);">
+                <div class="flex grid content-center flex-col gap-2 h-full rounded-2xl w-full">
+                    <div class="font-bold text-8xl text-gray-900">{{ $order->number }}</div>
                 </div>
             </div>
         @endforeach
@@ -27,10 +27,10 @@
             </div>
         </div>
         @foreach(\App\Models\OrderNumbers::where('is_ready', true)->where('is_taken', false)->orderBy('updated_at', 'desc')->get() as $order)
-            <div class="relative text-center shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
-                aspect-video overflow-hidden rounded-xl  bg-gray-900/20 bg-yellow-300/20  dark:border-neutral-700">
-                <div class="flex grid content-center flex-col gap-2 h-full text-white/80 rounded-xl w-full">
-                    <div class="font-semibold text-8xl">{{ $order->number }}</div>
+            <div class="relative text-center aspect-video overflow-hidden rounded-2xl transition-transform hover:scale-105"
+                 style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 8px 32px rgba(48, 207, 208, 0.25);">
+                <div class="flex grid content-center flex-col gap-2 h-full rounded-2xl w-full">
+                    <div class="font-bold text-8xl text-white">{{ $order->number }}</div>
                 </div>
             </div>
         @endforeach
