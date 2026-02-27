@@ -1,4 +1,4 @@
-<div x-data x-init="initSwapSortable($el, $wire, 'updateOrder')" class="grid md:grid-cols-3 auto-rows-min gap-4 mt-4">
+<div x-data x-init="initSwapSortable($el, $wire, 'updateOrder')" class="grid md:grid-cols-4 auto-rows-min gap-4 mt-4">
     @foreach(\App\Models\Ceburek::where('show', true)->orderBy('position')->get() as $productName)
         <div data-sortable-id="{{ $productName->id }}" wire:key="ceburek-{{ $productName->id }}">
         <flux:modal.trigger name="choose-toppings">
@@ -10,7 +10,7 @@
                 style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);">
                 <div class="flex grid content-center flex-col gap-2 h-full text-white rounded-2xl w-full">
                     <button>
-                        <div class="font-extrabold text-2xl tracking-wide antialiased" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">{{ $productName->name }}</div>
+                        <div class="font-extrabold text-lg tracking-wide antialiased" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">{{ $productName->name }}</div>
                     </button>
                 </div>
             </div>
