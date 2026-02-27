@@ -8,7 +8,7 @@
                 transition-all duration-300"
             style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);">
             <div class="flex grid content-center flex-col gap-2 h-full text-white rounded-2xl w-full">
-                <div class="font-extrabold text-2xl tracking-wide antialiased" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">{{ $productName->name }}</div>
+                <div class="font-extrabold text-lg tracking-wide antialiased" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">{{ $productName->name }}</div>
             </div>
         </div>
     @endforeach
