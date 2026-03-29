@@ -1,11 +1,11 @@
 <div x-data="{ koreguoti: false, editingProduct: '', editingProductId: null, editingLeft: '' }" x-init="initSwapSortable($el, $wire, 'updateOrder')" @koreguoti-changed.window="koreguoti = $event.detail.active" class="grid md:grid-cols-4 auto-rows-min gap-2 mt-4">
     @foreach(\App\Models\Ceburek::orderBy('position')->get() as $productName)
         <div data-sortable-id="{{ $productName->id }}" wire:key="ceburek-{{ $productName->id }}"
-             @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); editingProduct = '{{ $productName->name }}'; editingProductId = {{ $productName->id }}; editingLeft = ''; $flux.modal('koreguoti-edit').show(); }">
+             @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ({{ $productName->attention ? 'true' : 'false' }}) { $wire.toggleAttention({{ $productName->id }}); } else { editingProduct = '{{ $productName->name }}'; editingProductId = {{ $productName->id }}; editingLeft = ''; $flux.modal('koreguoti-edit').show(); } }">
         <flux:modal.trigger name="choose-toppings">
             <div wire:click="getProductName('{{ $productName->name }}')" class="relative text-center aspect-[3/2] overflow-hidden rounded-2xl cursor-pointer
-                {{ $productName->attention ? 'bg-red-500/70' : ($productName->show ? 'bg-white/10' : 'bg-red-400') }} backdrop-blur-lg border border-white/25
-                hover:bg-white/20 hover:scale-[1.03] hover:-translate-y-0.5
+                {{ $productName->attention ? 'bg-red-500/70 hover:bg-red-500/70' : ($productName->show ? 'bg-white/10 hover:bg-white/20' : 'bg-red-400 hover:bg-red-400') }} backdrop-blur-lg border border-white/25
+                hover:scale-[1.03] hover:-translate-y-0.5
                 active:scale-[0.98]
                 transition-all duration-300"
                 style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);">

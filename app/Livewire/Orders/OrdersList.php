@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Orders;
 
+use App\Models\Ceburek;
 use App\Models\FreeNumbers;
 use App\Models\Order;
 use App\Models\OrderNumbers;
@@ -120,10 +121,29 @@ class OrdersList extends Component
 
        // $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
        // $this->printOrderForClient($this->freeNumber, $this->byPhone);
+        $this->decrementCeburekLeft();
         $this->resetOrders();
 	$this->byPhone = false;
 
         return $this->freeNumber;
+    }
+
+    private function decrementCeburekLeft(): void
+    {
+        foreach (Order::where('category', 1)->get() as $order) {
+            foreach (json_decode($order->name, true) as $item) {
+                foreach ($item as $productName => $price) {
+                    $ceburek = Ceburek::where('name', $productName)
+                        ->where('attention', true)
+                        ->whereNotNull('left')
+                        ->first();
+                    if ($ceburek) {
+                        $ceburek->left = max(0, $ceburek->left - $order->amount);
+                        $ceburek->save();
+                    }
+                }
+            }
+        }
     }
 
     private function printOrderForKitchen(int $freeOrder, bool $byPhone): void

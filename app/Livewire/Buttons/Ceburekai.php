@@ -46,6 +46,9 @@ class Ceburekai extends Component
         $this->allToppings = \App\Models\Topping::all();
     }
 
+    #[On('reset-orders')]
+    public function refreshProducts(): void {}
+
     #[on('simple-product-added')]
     public function addOrder()
     {
