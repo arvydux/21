@@ -3,7 +3,7 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
+    <body class="min-h-screen {{ Route::is('orders') ? 'bg-[#020617] m-0 p-0 overflow-hidden' : 'bg-white dark:bg-zinc-800' }}">
 
         {{ $slot }}
 

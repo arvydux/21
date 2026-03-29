@@ -2,20 +2,26 @@
     @foreach(\App\Models\Ceburek::orderBy('position')->get() as $productName)
         <div data-sortable-id="{{ $productName->id }}" wire:key="ceburek-{{ $productName->id }}"
              @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ({{ $productName->attention ? 'true' : 'false' }}) { $wire.toggleAttention({{ $productName->id }}); } else { editingProduct = '{{ $productName->name }}'; editingProductId = {{ $productName->id }}; editingLeft = ''; $flux.modal('koreguoti-edit').show(); } }">
+        @if(!is_numeric($productName->name))
         <flux:modal.trigger name="choose-toppings">
-            <div wire:click="getProductName('{{ $productName->name }}')" class="relative text-center aspect-[3/2] overflow-hidden rounded-2xl cursor-pointer
+        @endif
+            <div wire:click="{{ is_numeric($productName->name) ? '' : 'getProductName(\'' . $productName->name . '\')' }}" class="relative text-center aspect-[3/2] overflow-hidden rounded-2xl
+                {{ is_numeric($productName->name) ? 'cursor-default pointer-events-none' : 'cursor-pointer' }}
                 {{ $productName->attention ? 'bg-red-500/70 hover:bg-red-500/70' : ($productName->show ? 'bg-white/10 hover:bg-white/20' : 'bg-red-400 hover:bg-red-400') }} backdrop-blur-lg border border-white/25
-                hover:scale-[1.03] hover:-translate-y-0.5
-                active:scale-[0.98]
+                {{ !is_numeric($productName->name) ? 'hover:scale-[1.03] hover:-translate-y-0.5 active:scale-[0.98]' : '' }}
                 transition-all duration-300"
                 style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);">
                 <div class="flex grid content-center flex-col gap-2 h-full text-white rounded-2xl w-full">
                     <button>
-                        <div class="font-extrabold text-base tracking-wide antialiased" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">{{ $productName->name }}{{ $productName->attention && $productName->left !== null ? ' - ' . $productName->left : '' }}</div>
+                        @if(!is_numeric($productName->name))
+                            <div class="font-extrabold text-base tracking-wide antialiased" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">{{ $productName->name }}{{ $productName->attention && $productName->left !== null ? ' - ' . $productName->left : '' }}</div>
+                        @endif
                     </button>
                 </div>
             </div>
+        @if(!is_numeric($productName->name))
         </flux:modal.trigger>
+        @endif
         </div>
     @endforeach
         <flux:modal name="choose-toppings" class="w-full max-w-2xl bg-white! rounded-xl shadow-2xl blur-none">
