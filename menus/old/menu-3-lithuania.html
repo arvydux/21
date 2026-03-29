@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meniu</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Cormorant+SC:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0 auto;
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    color: #f0e8d8;
+    background: #3a2a1a;
+    position: relative;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    overflow: hidden;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 19mm 16mm 10mm 16mm;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* === WOOD BACKGROUND IMAGE === */
+  .wood-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+  }
+
+  .wood-bg img {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 297mm;
+    height: 297mm;
+    object-fit: cover;
+    object-position: center center;
+    transform: rotate(270deg);
+    transform-origin: center center;
+  }
+
+  /* Dark overlay for readability */
+  .wood-bg::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(20, 12, 5, 0.55);
+  }
+
+  /* === ORNAMENTAL BORDER === */
+  .border-outer {
+    position: absolute;
+    top: 7mm; left: 7mm; right: 7mm; bottom: 7mm;
+    border: 1.8pt solid #9e8840;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .border-inner {
+    position: absolute;
+    top: 9.8mm; left: 9.8mm; right: 9.8mm; bottom: 9.8mm;
+    border: 0.5pt solid #6b5c30;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* === CORNER ORNAMENTS === */
+  .corner {
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    z-index: 2;
+  }
+  .corner svg { width: 100%; height: 100%; }
+  .c-tl { top: 5.5mm; left: 5.5mm; }
+  .c-tr { top: 5.5mm; right: 5.5mm; transform: scaleX(-1); }
+  .c-bl { bottom: 5.5mm; left: 5.5mm; transform: scaleY(-1); }
+  .c-br { bottom: 5.5mm; right: 5.5mm; transform: scale(-1, -1); }
+
+  /* All content above background */
+  .brand, .header, .columns, .footer { position: relative; z-index: 2; }
+
+  /* === HEADER === */
+  .header {
+    text-align: center;
+    margin-bottom: 2mm;
+  }
+
+  .header h1 {
+    font-family: 'Cormorant SC', serif;
+    font-size: 20pt;
+    font-weight: 600;
+    color: #d4a84b;
+    letter-spacing: 10px;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 1mm;
+  }
+
+  .header-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8.5pt;
+    font-style: italic;
+    color: #9e8840;
+    letter-spacing: 4px;
+    font-weight: 400;
+    margin-bottom: 1mm;
+  }
+
+  .header-rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1mm;
+  }
+
+  .header-rule .hl {
+    width: 80px;
+    height: 1px;
+    background: #d4a84b;
+  }
+
+  .header-rule .hd {
+    width: 6px;
+    height: 6px;
+    background: #d4a84b;
+    transform: rotate(45deg);
+  }
+
+  .header-rule .hdot {
+    width: 3px;
+    height: 3px;
+    background: #d4a84b;
+    border-radius: 50%;
+  }
+
+  /* === TWO COLUMNS === */
+  .columns {
+    display: flex;
+    gap: 8mm;
+    position: relative;
+  }
+
+  .columns::after {
+    content: '';
+    position: absolute;
+    top: 4mm;
+    bottom: 4mm;
+    left: 50%;
+    width: 1px;
+    background: #6b5c30;
+  }
+
+  .column { flex: 1; }
+
+  /* === SECTION === */
+  .section { margin-bottom: 2.2mm; }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 1mm;
+  }
+
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 13.5pt;
+    font-weight: 700;
+    color: #f5efe2;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    display: inline-block;
+  }
+
+  .section-rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 1mm;
+  }
+
+  .section-rule .sl { width: 30px; height: 0.5px; background: #d4a84b; }
+  .section-rule .sd { width: 4px; height: 4px; background: #d4a84b; transform: rotate(45deg); }
+  .section-rule .sdot { width: 2.5px; height: 2.5px; border-radius: 50%; background: #d4a84b; }
+
+  /* === SUBSECTION LABEL === */
+  .subsection {
+    font-family: 'Cormorant SC', serif;
+    font-size: 9pt;
+    color: #d4a84b;
+    text-align: center;
+    letter-spacing: 3px;
+    text-transform: lowercase;
+    margin: 2mm 0 0.8mm 0;
+    font-weight: 600;
+  }
+
+  .subsection::before,
+  .subsection::after {
+    content: '\2014';
+    color: #7a6a3a;
+    margin: 0 5px;
+    font-size: 8pt;
+  }
+
+  .subsection:first-of-type { margin-top: 0; }
+
+  /* === MENU ITEMS === */
+  .menu-item {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 0.9mm;
+    line-height: 1.45;
+  }
+
+  .item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11.5pt;
+    font-weight: 600;
+    color: #ede5d5;
+    white-space: nowrap;
+  }
+
+  .item-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 9pt;
+    font-style: italic;
+    color: #b8a888;
+    margin-left: 3px;
+    white-space: nowrap;
+    font-weight: 400;
+  }
+
+  .item-dots {
+    flex: 1;
+    border-bottom: 0.7px dotted #7a6a3a;
+    margin: 0 4px;
+    min-width: 10px;
+    position: relative;
+    bottom: 3px;
+  }
+
+  .item-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 11.5pt;
+    font-weight: 600;
+    color: #e8c55a;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+  }
+
+  /* === PREMIUM ITEMS === */
+  .premium .item-name {
+    color: #f5efe2;
+    font-weight: 700;
+  }
+
+  .premium .item-name::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #d4a84b;
+    transform: rotate(45deg);
+    margin-right: 4px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  .premium .item-price { color: #e8c55a; font-weight: 700; }
+
+  /* === COMBO === */
+  .combo {
+    padding: 1.2mm 2.5mm;
+    border-radius: 2px;
+    margin-left: -2.5mm;
+    margin-right: -2.5mm;
+    border-left: 1.5px solid #8a7838;
+  }
+
+  .combo .item-name { font-weight: 700; color: #f5efe2; }
+
+  .combo-label {
+    font-family: 'Cormorant SC', serif;
+    font-size: 6.5pt;
+    letter-spacing: 1.5px;
+    color: #d4a84b;
+    font-weight: 600;
+    margin-left: 4px;
+    white-space: nowrap;
+    text-transform: lowercase;
+  }
+
+  /* === FOOTER === */
+  .footer {
+    text-align: center;
+    margin-top: 1mm;
+  }
+
+  .footer-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 1.5mm;
+  }
+
+  .footer-ornament .fo-line {
+    width: 50px;
+    height: 0.5px;
+    background: #d4a84b;
+  }
+
+  .footer-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 14pt;
+    font-weight: 500;
+    font-style: italic;
+    color: #d4a84b;
+    letter-spacing: 4px;
+  }
+
+  .footer-info {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 7.5pt;
+    color: #8a7838;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2mm;
+  }
+
+  /* === BRAND TITLE === */
+  .brand {
+    text-align: center;
+    margin-bottom: 1mm;
+  }
+
+  .brand h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28pt;
+    font-weight: 700;
+    color: #f5efe2;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .brand-rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 2mm;
+  }
+
+  .brand-rule .bl {
+    width: 60px;
+    height: 1px;
+    background: #d4a84b;
+  }
+
+  .brand-rule .bd {
+    width: 5px;
+    height: 5px;
+    background: #d4a84b;
+    transform: rotate(45deg);
+  }
+
+  .brand-rule .bdot {
+    width: 3px;
+    height: 3px;
+    background: #d4a84b;
+    border-radius: 50%;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Wood background -->
+  <div class="wood-bg">
+    <img src="../prusakovu-bg.jpg" alt="">
+  </div>
+
+  <!-- Ornamental borders -->
+  <div class="border-outer"></div>
+  <div class="border-inner"></div>
+
+  <!-- Corner ornaments -->
+  <div class="corner c-tl">
+    <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 3 C3 3, 3 22, 3 22 C3 30, 8 35, 16 35" stroke="#9e8840" stroke-width="0.9" fill="none"/>
+      <path d="M3 3 C3 3, 22 3, 22 3 C30 3, 35 8, 35 16" stroke="#9e8840" stroke-width="0.9" fill="none"/>
+      <path d="M7 7 C7 7, 7 18, 7 18 C7 23, 10 26, 15 26" stroke="#6b5c30" stroke-width="0.5" fill="none"/>
+      <path d="M7 7 C7 7, 18 7, 18 7 C23 7, 26 10, 26 15" stroke="#6b5c30" stroke-width="0.5" fill="none"/>
+      <circle cx="3" cy="3" r="2.2" fill="#9e8840"/>
+      <circle cx="7" cy="7" r="1" fill="#6b5c30"/>
+      <circle cx="35" cy="16" r="1.2" fill="#8a7838"/>
+      <circle cx="16" cy="35" r="1.2" fill="#8a7838"/>
+    </svg>
+  </div>
+  <div class="corner c-tr">
+    <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 3 C3 3, 3 22, 3 22 C3 30, 8 35, 16 35" stroke="#9e8840" stroke-width="0.9" fill="none"/>
+      <path d="M3 3 C3 3, 22 3, 22 3 C30 3, 35 8, 35 16" stroke="#9e8840" stroke-width="0.9" fill="none"/>
+      <path d="M7 7 C7 7, 7 18, 7 18 C7 23, 10 26, 15 26" stroke="#6b5c30" stroke-width="0.5" fill="none"/>
+      <path d="M7 7 C7 7, 18 7, 18 7 C23 7, 26 10, 26 15" stroke="#6b5c30" stroke-width="0.5" fill="none"/>
+      <circle cx="3" cy="3" r="2.2" fill="#9e8840"/>
+      <circle cx="7" cy="7" r="1" fill="#6b5c30"/>
+      <circle cx="35" cy="16" r="1.2" fill="#8a7838"/>
+      <circle cx="16" cy="35" r="1.2" fill="#8a7838"/>
+    </svg>
+  </div>
+  <div class="corner c-bl">
+    <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 3 C3 3, 3 22, 3 22 C3 30, 8 35, 16 35" stroke="#9e8840" stroke-width="0.9" fill="none"/>
+      <path d="M3 3 C3 3, 22 3, 22 3 C30 3, 35 8, 35 16" stroke="#9e8840" stroke-width="0.9" fill="none"/>
+      <path d="M7 7 C7 7, 7 18, 7 18 C7 23, 10 26, 15 26" stroke="#6b5c30" stroke-width="0.5" fill="none"/>
+      <path d="M7 7 C7 7, 18 7, 18 7 C23 7, 26 10, 26 15" stroke="#6b5c30" stroke-width="0.5" fill="none"/>
+      <circle cx="3" cy="3" r="2.2" fill="#9e8840"/>
+      <circle cx="7" cy="7" r="1" fill="#6b5c30"/>
+      <circle cx="35" cy="16" r="1.2" fill="#8a7838"/>
+      <circle cx="16" cy="35" r="1.2" fill="#8a7838"/>
+    </svg>
+  </div>
+  <div class="corner c-br">
+    <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 3 C3 3, 3 22, 3 22 C3 30, 8 35, 16 35" stroke="#9e8840" stroke-width="0.9" fill="none"/>
+      <path d="M3 3 C3 3, 22 3, 22 3 C30 3, 35 8, 35 16" stroke="#9e8840" stroke-width="0.9" fill="none"/>
+      <path d="M7 7 C7 7, 7 18, 7 18 C7 23, 10 26, 15 26" stroke="#6b5c30" stroke-width="0.5" fill="none"/>
+      <path d="M7 7 C7 7, 18 7, 18 7 C23 7, 26 10, 26 15" stroke="#6b5c30" stroke-width="0.5" fill="none"/>
+      <circle cx="3" cy="3" r="2.2" fill="#9e8840"/>
+      <circle cx="7" cy="7" r="1" fill="#6b5c30"/>
+      <circle cx="35" cy="16" r="1.2" fill="#8a7838"/>
+      <circle cx="16" cy="35" r="1.2" fill="#8a7838"/>
+    </svg>
+  </div>
+
+  <!-- Brand title -->
+  <div class="brand">
+    <h2>Prusakovų užkandinė</h2>
+    <div class="brand-rule">
+      <span class="bdot"></span>
+      <span class="bl"></span>
+      <span class="bd"></span>
+      <span class="bl"></span>
+      <span class="bdot"></span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top-ornament">
+      <svg width="180" height="16" viewBox="0 0 180 16" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="8" x2="60" y2="8" stroke="#8a7838" stroke-width="0.4"/>
+        <circle cx="65" cy="8" r="1.5" fill="#8a7838"/>
+        <path d="M72 8 L78 2 L84 8 L78 14 Z" fill="none" stroke="#9e8840" stroke-width="0.7"/>
+        <circle cx="78" cy="8" r="1.5" fill="#9e8840"/>
+        <path d="M88 8 C90 5, 92 5, 94 8 C92 11, 90 11, 88 8Z" fill="#5a4e2a"/>
+        <path d="M98 8 L104 2 L110 8 L104 14 Z" fill="none" stroke="#9e8840" stroke-width="0.7"/>
+        <circle cx="104" cy="8" r="1.5" fill="#9e8840"/>
+        <circle cx="117" cy="8" r="1.5" fill="#8a7838"/>
+        <line x1="122" y1="8" x2="180" y2="8" stroke="#8a7838" stroke-width="0.4"/>
+      </svg>
+    </div>
+    <h1>Meniu</h1>
+<div class="header-rule">
+      <span class="hdot"></span>
+      <span class="hl"></span>
+      <span class="hd"></span>
+      <span class="hl"></span>
+      <span class="hdot"></span>
+    </div>
+  </div>
+
+  <div class="columns">
+    <!-- ========== LEFT COLUMN ========== -->
+    <div class="column">
+
+      <!-- CEBUREKAI -->
+      <div class="section">
+        <div class="section-header"><h2>Čeburekai</h2></div>
+        <div class="section-rule">
+          <span class="sdot"></span><span class="sl"></span><span class="sd"></span><span class="sl"></span><span class="sdot"></span>
+        </div>
+
+        <div class="subsection">su sūriu</div>
+
+        <div class="menu-item">
+          <span class="item-name">Sūris + grybai</span>
+          <span class="item-dots"></span>
+          <span class="item-price">4,50 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">2-jų rūšių sūris</span>
+          <span class="item-dots"></span>
+          <span class="item-price">4,50 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Saliamis + sūris</span>
+          <span class="item-dots"></span>
+          <span class="item-price">4,50 &euro;</span>
+        </div>
+
+        <div class="subsection">su mėsa</div>
+
+        <div class="menu-item">
+          <span class="item-name">Kiauliena</span>
+          <span class="item-dots"></span>
+          <span class="item-price">4,50 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Jautiena</span>
+          <span class="item-dots"></span>
+          <span class="item-price">5,20 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Vištiena</span>
+          <span class="item-dots"></span>
+          <span class="item-price">5,20 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Mix</span>
+          <span class="item-desc">(kiaul. + jaut.)</span>
+          <span class="item-dots"></span>
+          <span class="item-price">5,20 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Aviena</span>
+          <span class="item-dots"></span>
+          <span class="item-price">5,90 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Maišytas</span>
+          <span class="item-desc">(jaut. + aviena)</span>
+          <span class="item-dots"></span>
+          <span class="item-price">5,90 &euro;</span>
+        </div>
+
+        <div class="subsection">firminis</div>
+
+        <div class="menu-item premium">
+          <span class="item-name">Šefo</span>
+          <span class="item-desc">(kiaul, jaut, gryb, jalap, 2r. sūris)</span>
+          <span class="item-dots"></span>
+          <span class="item-price">6,80 &euro;</span>
+        </div>
+        <div class="menu-item premium">
+          <span class="item-name">Gurmaniškas</span>
+          <span class="item-desc">(višt, špinatai, pomid, sūris)</span>
+          <span class="item-dots"></span>
+          <span class="item-price">6,80 &euro;</span>
+        </div>
+        <div class="menu-item premium">
+          <span class="item-name">Pachmo</span>
+          <span class="item-dots"></span>
+          <span class="item-price">7,50 &euro;</span>
+        </div>
+      </div>
+
+      <!-- PRIEDAI -->
+      <div class="section">
+        <div class="section-header"><h2>Priedai</h2></div>
+        <div class="section-rule">
+          <span class="sdot"></span><span class="sl"></span><span class="sd"></span><span class="sl"></span><span class="sdot"></span>
+        </div>
+
+        <div class="menu-item">
+          <span class="item-name">Sūris</span>
+          <span class="item-dots"></span>
+          <span class="item-price">1,00 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">2-jų rūšių sūris</span>
+          <span class="item-dots"></span>
+          <span class="item-price">1,20 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Grybai</span>
+          <span class="item-dots"></span>
+          <span class="item-price">0,60 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Jelapenai</span>
+          <span class="item-dots"></span>
+          <span class="item-price">0,60 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Daugiau mėsos</span>
+          <span class="item-dots"></span>
+          <span class="item-price">0,80 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Saliamis</span>
+          <span class="item-dots"></span>
+          <span class="item-price">0,80 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Alyvuogės</span>
+          <span class="item-dots"></span>
+          <span class="item-price">0,60 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Mar. agurkai</span>
+          <span class="item-dots"></span>
+          <span class="item-price">0,60 &euro;</span>
+        </div>
+      </div>
+
+      <!-- KIBINAI -->
+      <div class="section">
+        <div class="section-header"><h2>Kibinai</h2></div>
+        <div class="section-rule">
+          <span class="sdot"></span><span class="sl"></span><span class="sd"></span><span class="sl"></span><span class="sdot"></span>
+        </div>
+
+        <div class="menu-item">
+          <span class="item-name">Kibinas su kiauliena</span>
+          <span class="item-dots"></span>
+          <span class="item-price">1,90 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Kibinas su vištiena</span>
+          <span class="item-dots"></span>
+          <span class="item-price">2,10 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Kibinas su kopūstais</span>
+          <span class="item-dots"></span>
+          <span class="item-price">1,90 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Spurga</span>
+          <span class="item-dots"></span>
+          <span class="item-price">1,00 &euro;</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========== RIGHT COLUMN ========== -->
+    <div class="column">
+
+      <!-- KITI PATIEKALAI -->
+      <div class="section">
+        <div class="section-header"><h2>Kiti patiekalai</h2></div>
+        <div class="section-rule">
+          <span class="sdot"></span><span class="sl"></span><span class="sd"></span><span class="sl"></span><span class="sdot"></span>
+        </div>
+
+        <div class="menu-item">
+          <span class="item-name">Bulviniai blynai</span>
+          <span class="item-dots"></span>
+          <span class="item-price">4,80 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Gruzdinti koldūnai</span>
+          <span class="item-dots"></span>
+          <span class="item-price">3,80 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Bulvių ir vištienos rutuliukai</span>
+          <span class="item-dots"></span>
+          <span class="item-price">4,80 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Svogūnų žiedai</span>
+          <span class="item-dots"></span>
+          <span class="item-price">3,80 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Bulvytės fri</span>
+          <span class="item-dots"></span>
+          <span class="item-price">2,70 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Bulvytės fri MIX</span>
+          <span class="item-dots"></span>
+          <span class="item-price">3,40 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Sūrio lazdelės</span>
+          <span class="item-dots"></span>
+          <span class="item-price">5,50 &euro;</span>
+        </div>
+      </div>
+
+      <!-- SRIUBOS -->
+      <div class="section">
+        <div class="section-header"><h2>Sriubos</h2></div>
+        <div class="section-rule">
+          <span class="sdot"></span><span class="sl"></span><span class="sd"></span><span class="sl"></span><span class="sdot"></span>
+        </div>
+
+        <div class="menu-item">
+          <span class="item-name">Dienos sriuba</span>
+          <span class="item-dots"></span>
+          <span class="item-price">3,50 &euro;</span>
+        </div>
+        <div class="menu-item combo">
+          <span class="item-name">Dienos sriuba</span>
+          <span class="item-desc">(perkant čebureką)</span>
+          <span class="item-dots"></span>
+          <span class="item-price">2,60 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Natūralus vištienos sultinys</span>
+          <span class="item-dots"></span>
+          <span class="item-price">2,50 &euro;</span>
+        </div>
+      </div>
+
+      <!-- KOMPLEKTAI -->
+      <div class="section">
+        <div class="section-header"><h2>Komplektai</h2></div>
+        <div class="section-rule">
+          <span class="sdot"></span><span class="sl"></span><span class="sd"></span><span class="sl"></span><span class="sdot"></span>
+        </div>
+
+        <div class="menu-item combo">
+          <span class="item-name">Kiauliena + sriuba</span>
+          <span class="combo-label">rinkinys</span>
+          <span class="item-dots"></span>
+          <span class="item-price">5,80 &euro;</span>
+        </div>
+      </div>
+
+      <!-- GERIMAI -->
+      <div class="section">
+        <div class="section-header"><h2>Gėrimai</h2></div>
+        <div class="section-rule">
+          <span class="sdot"></span><span class="sl"></span><span class="sd"></span><span class="sl"></span><span class="sdot"></span>
+        </div>
+
+        <div class="menu-item">
+          <span class="item-name">Pepsi</span>
+          <span class="item-dots"></span>
+          <span class="item-price">2,00 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Mirinda</span>
+          <span class="item-dots"></span>
+          <span class="item-price">2,00 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">7Up</span>
+          <span class="item-dots"></span>
+          <span class="item-price">2,00 &euro;</span>
+        </div>
+        <div class="menu-item">
+          <span class="item-name">Mangų ir apelsinų kokteilis</span>
+          <span class="item-dots"></span>
+          <span class="item-price">3,50 &euro;</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-ornament">
+      <span class="fo-line"></span>
+      <svg width="28" height="16" viewBox="0 0 28 16" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 8 L14 2 L20 8 L14 14 Z" fill="none" stroke="#9e8840" stroke-width="0.7"/>
+        <circle cx="14" cy="8" r="2" fill="#9e8840"/>
+      </svg>
+      <span class="fo-line"></span>
+    </div>
+    <div class="footer-text">Skanaus!</div>
+    <div class="footer-info">Kainos nurodytos su PVM</div>
+  </div>
+
+</div>
+</body>
+</html>

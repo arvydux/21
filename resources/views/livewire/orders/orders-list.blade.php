@@ -3,16 +3,25 @@
      xmlns:flux="http://www.w3.org/1999/html">
     <div class="flex items-center justify-between ">
         <h2 class="text-white text-sm font-extrabold leading-[30px] tracking-wide antialiased">Krepšelis ({{\App\Models\Order::all()->sum('amount')}})</h2>
-        <button wire:click="$toggle('byPhone')"
-                class="px-3 py-1 rounded-2xl text-sm font-extrabold tracking-wide antialiased transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] flex items-center gap-1.5"
-                style="{{ $byPhone
-                    ? 'background: rgba(16, 185, 129, 0.5); border: 1px solid rgba(16, 185, 129, 0.5); color: white; box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25);'
-                    : 'background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.25); color: rgba(255, 255, 255, 0.6); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);' }}">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-            </svg>
-            Telefonu
-        </button>
+        <div class="flex items-center gap-1.5">
+            <button wire:click="toggleKoreguoti"
+                    class="px-3 py-1 rounded-2xl text-sm font-extrabold tracking-wide antialiased transition-all duration-200 hover:scale-[1.03] active:scale-[0.97]"
+                    style="{{ $koreguoti
+                        ? 'background: rgba(239, 68, 68, 0.85); border: 1px solid rgba(255, 100, 100, 0.9); color: white; box-shadow: 0 8px 32px rgba(239, 68, 68, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35);'
+                        : 'background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.25); color: rgba(255, 255, 255, 0.6); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);' }}">
+                Koreguoti
+            </button>
+            <button wire:click="$toggle('byPhone')"
+                    class="px-3 py-1 rounded-2xl text-sm font-extrabold tracking-wide antialiased transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] flex items-center gap-1.5"
+                    style="{{ $byPhone
+                        ? 'background: rgba(16, 185, 129, 0.5); border: 1px solid rgba(16, 185, 129, 0.5); color: white; box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25);'
+                        : 'background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.25); color: rgba(255, 255, 255, 0.6); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);' }}">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                </svg>
+                Telefonu
+            </button>
+        </div>
     </div>
 
     <livewire:orders.category-sum/>

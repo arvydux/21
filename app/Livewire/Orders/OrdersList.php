@@ -19,6 +19,13 @@ class OrdersList extends Component
     public $toppings = [];
     public int $freeNumber;
     public bool $byPhone;
+    public bool $koreguoti;
+
+    public function toggleKoreguoti(): void
+    {
+        $this->koreguoti = !$this->koreguoti;
+        $this->dispatch('koreguoti-changed', active: $this->koreguoti);
+    }
     public $comments;
     private int $limit = 100;
 
@@ -254,6 +261,7 @@ class OrdersList extends Component
     public function mount()
     {
         $this->byPhone = false;
+        $this->koreguoti = false;
         $this->orders = Order::orderBy('created_at', 'desc')->get();
     }
 

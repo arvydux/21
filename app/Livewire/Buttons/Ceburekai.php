@@ -108,6 +108,23 @@ class Ceburekai extends Component
         $this->toppings = [];
     }
 
+    public function toggleAttention(int $id, ?int $left = null): void
+    {
+        $ceburek = Ceburek::find($id);
+        if ($ceburek) {
+            if ($ceburek->attention) {
+                $ceburek->attention = false;
+                $ceburek->left = null;
+            } else {
+                $ceburek->attention = true;
+                if ($left !== null) {
+                    $ceburek->left = $left;
+                }
+            }
+            $ceburek->save();
+        }
+    }
+
     #[Renderless]
     public function updateOrder($list)
     {
