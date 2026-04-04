@@ -27,6 +27,10 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         // ->middleware(['auth', 'verified'])
         ->name('orders');
 
+    Route::view('settings', 'settings')
+        // ->middleware(['auth', 'verified'])
+        ->name('settings');
+
     Route::get('/get-unready-orders', function () {
         return OrderNumbers::where('is_ready', false)->get();
     });
@@ -36,13 +40,5 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     });
 });
 
-
-Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', 'settings/profile');
-
-    Route::get('settings/profile', Profile::class)->name('settings.profile');
-    Route::get('settings/password', Password::class)->name('settings.password');
-    Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
-});
 
 require __DIR__.'/auth.php';
