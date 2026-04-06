@@ -119,8 +119,8 @@ class OrdersList extends Component
         ]);
         FreeNumbers::first()->update(['number' => $this->freeNumber + 1]);
 
-       // $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
-       // $this->printOrderForClient($this->freeNumber, $this->byPhone);
+        $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
+        $this->printOrderForClient($this->freeNumber, $this->byPhone);
         $this->decrementCeburekLeft();
         $this->resetOrders();
 	$this->byPhone = false;

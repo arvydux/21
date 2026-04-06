@@ -1,18 +1,4 @@
 <div class="w-screen h-screen grid md:grid-cols-2 auto-rows-min gap-x-16 gap-y-4 bg-gradient-to-tr from-lime-600 via-emerald-600 to-teal-800 p-8">
-    @if(\App\Models\OrderNumbers::count() === 0)
-        <video id="temporaryDiv" style="display: none; z-index: 9999;" autoplay muted
-               class="absolute top-0 left-0 object-cover w-full h-full -z-10">
-            <source src="{{ asset('5.mp4') }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <script>
-            const div = document.getElementById('temporaryDiv');
-            div.style.display = 'block';
-            setTimeout(() => {
-                div.style.display = 'none';
-            }, 300000);
-        </script>
-    @else
         <div class="grid md:grid-cols-3 auto-rows-min gap-4">
             <div class="col-span-3">
                 <div class="flex grid content-center text-white/80 rounded-xl">
@@ -45,6 +31,5 @@
                 </div>
             @endforeach
         </div>
-    @endif
 
 </div>

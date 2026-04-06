@@ -2,7 +2,7 @@
 <div class="fixed bottom-0 left-0 w-full text-center p-2">
     <div wire:poll.5s  class="grid md:grid-cols-10 auto-rows-min gap-1" >
         @foreach(\App\Models\OrderNumbers::where('is_ready', true)->where('is_taken', false)->orderBy('updated_at', 'desc')->get() as $order)
-            <div onclick="playAlert()" wire:click="makeOrderTaken('{{ $order->number }}')"  class="text-center shadow-md p-3 hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
+            <div wire:click="makeOrderTaken('{{ $order->number }}')"  class="text-center shadow-md p-3 hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
                     aspect-video overflow-hidden rounded-xl  bg-emerald-800/80  dark:border-neutral-700">
                 <div class="flex grid content-center flex-col gap-2 h-full text-white/80 rounded-xl w-full">
                     <div class="font-semibold text-6xl">{{ $order->number }}</div>
@@ -21,11 +21,11 @@
             @if(Cache::get('playSound') || (($firstTime === true)))
                 <div>
                     @if($firstTime)
-                        <button id="myButton" wire:click="setFirstTime(false)" onclick="playAlert()">
+                        <button id="myButton" wire:click="setFirstTime" onclick="playAlert()">
                             Aktyvuoti garsa
                         </button>
                     @else
-                    <button id="myButton" wire:doubleclick="notNotFirstTime()" onclick="playAlert()">
+                    <button id="myButton" wire:dblclick="notNotFirstTime" onclick="playAlert()">
 
                     </button>
                     @endif
@@ -43,7 +43,8 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         setInterval(() => {
-            document.getElementById('myButton').click();
+            const btn = document.getElementById('myButton');
+            if (btn) btn.click();
         }, 5000); // 5000ms = 5 seconds
     });
 </script>

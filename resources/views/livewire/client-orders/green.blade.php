@@ -1,21 +1,5 @@
 <div class="w-screen h-screen flex" style="background: radial-gradient(circle at 50% 50%, rgba(226,232,240,0.2) 0%, rgba(226,232,240,0.1) 25%, rgba(226,232,240,0.05) 35%, transparent 50%), #000;">
 
-    @if(\App\Models\OrderNumbers::count() === 0)
-        <video id="temporaryDiv" style="display:none; z-index:9999;" autoplay muted class="absolute inset-0 object-cover w-full h-full">
-            <source src="{{ asset('5.mp4') }}" type="video/mp4">
-        </video>
-        <script>
-            const div = document.getElementById('temporaryDiv');
-            div.style.display = 'block';
-            setTimeout(() => { div.style.display = 'none'; }, 300000);
-        </script>
-    @else
-
-    @php
-        $gaminamiOrders = \App\Models\OrderNumbers::where('is_ready', false)->get();
-        $paruostiOrders = \App\Models\OrderNumbers::where('is_ready', true)->where('is_taken', false)->orderBy('updated_at', 'desc')->get();
-    @endphp
-
     {{-- LEFT: Gaminami --}}
     <div class="flex-1 flex flex-col min-w-0 p-10 pr-6 gap-5">
         <div style="font-family: 'Manrope', sans-serif; font-weight: 800; font-size: clamp(2.2rem, 4.5vw, 3.8rem); color: #e2e8f0; letter-spacing: 0.04em; line-height: 1;">GAMINAMI</div>
@@ -47,5 +31,4 @@
         </div>
     </div>
 
-    @endif
 </div>
