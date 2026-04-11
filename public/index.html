@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prusakovų užkandinė — Meniu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+SC:wght@500;600&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --cream:  #F9F5ED;
+  --dark:   #1C1008;
+  --brown:  #2C1A08;
+  --gold:   #B89650;
+  --gold2:  #D4BC7A;
+  --rust:   #7A3B1E;
+  --taupe:  #7A6040;
+  --amber:  #5A3A1A;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  background: var(--cream);
+  color: var(--dark);
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url('prusakovu-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.05;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────
+   STICKY HEADER
+───────────────────────────────────────────── */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(249, 245, 237, 0.97);
+  border-bottom: 1px solid rgba(184, 150, 80, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.header-inner {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 12px 16px 10px;
+  text-align: center;
+}
+
+.brand-name {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(14px, 4.5vw, 20px);
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--dark);
+  display: block;
+  line-height: 1;
+}
+
+.brand-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 6px 0 10px;
+}
+.br-line    { width: 40px; height: 0.8px; background: linear-gradient(to right, transparent, var(--gold) 40%, var(--gold) 60%, transparent); }
+.br-diamond { width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+.br-dot     { width: 2.5px; height: 2.5px; background: var(--gold2); border-radius: 50%; flex-shrink: 0; }
+
+/* ─────────────────────────────────────────────
+   LANGUAGE SWITCHER
+───────────────────────────────────────────── */
+.lang-switcher {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.lang-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--taupe);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lang-btn.active {
+  background: var(--gold);
+  color: var(--cream);
+  border-color: var(--gold);
+}
+
+.lang-btn:hover:not(.active) {
+  background: rgba(184, 150, 80, 0.12);
+  color: var(--brown);
+}
+
+.pdf-btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* ─────────────────────────────────────────────
+   JUMP BAR
+───────────────────────────────────────────── */
+.jump-bar {
+  position: sticky;
+  z-index: 90;
+  background: rgba(249, 245, 237, 0.96);
+  border-bottom: 1px solid rgba(212, 188, 122, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.jump-inner {
+  display: flex;
+  gap: 7px;
+  padding: 8px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+.jump-inner::-webkit-scrollbar { display: none; }
+
+.jump-pill {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 5px 13px;
+  border: 1px solid rgba(184, 150, 80, 0.45);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--taupe);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.jump-pill.active {
+  background: var(--gold);
+  color: var(--cream);
+  border-color: var(--gold);
+}
+
+.jump-pill:hover:not(.active) {
+  background: rgba(184, 150, 80, 0.12);
+  color: var(--brown);
+  border-color: var(--gold);
+}
+
+/* ─────────────────────────────────────────────
+   MAIN WRAP
+───────────────────────────────────────────── */
+.menu-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 14px 48px;
+}
+
+/* ─────────────────────────────────────────────
+   LANGUAGE PANELS + FADE
+───────────────────────────────────────────── */
+.lang-panel { display: none; }
+
+@keyframes panelFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.lang-panel.active {
+  display: block;
+  animation: panelFadeIn 0.35s ease forwards;
+}
+
+/* ─────────────────────────────────────────────
+   HERO STRIP
+───────────────────────────────────────────── */
+.menu-hero {
+  position: relative;
+  height: 155px;
+  margin: 14px 0 6px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(184, 150, 80, 0.35);
+  box-shadow: 0 4px 20px rgba(44, 26, 8, 0.15);
+}
+
+.menu-hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('prusakovu-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.55) sepia(0.15);
+  transform: scale(1.03);
+}
+
+.menu-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(28, 16, 8, 0.45) 0%,
+    rgba(28, 16, 8, 0.15) 50%,
+    rgba(28, 16, 8, 0.5) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.hero-rule {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.hero-line    { width: 38px; height: 0.7px; background: rgba(212, 188, 122, 0.75); }
+.hero-diamond { width: 4px; height: 4px; background: var(--gold2); transform: rotate(45deg); flex-shrink: 0; }
+.hero-dot     { width: 2px; height: 2px; background: rgba(212, 188, 122, 0.6); border-radius: 50%; flex-shrink: 0; }
+
+.hero-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(14px, 4.5vw, 20px);
+  font-weight: 400;
+  color: rgba(249, 245, 237, 0.95);
+  letter-spacing: 10px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 8px rgba(28, 16, 8, 0.6);
+}
+
+/* ─────────────────────────────────────────────
+   SECTION CARDS
+───────────────────────────────────────────── */
+.section {
+  background: rgba(255, 252, 247, 0.88);
+  border: 1px solid rgba(184, 150, 80, 0.22);
+  border-top: 2px solid rgba(184, 150, 80, 0.55);
+  border-radius: 5px;
+  padding: 14px 14px 12px;
+  margin-top: 13px;
+  box-shadow: 0 2px 18px rgba(44, 26, 8, 0.07), 0 1px 4px rgba(44, 26, 8, 0.04);
+  scroll-margin-top: 150px; /* updated by JS */
+}
+
+.section-head {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.section-head h2 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(11.5px, 3vw, 13.5px);
+  font-weight: 700;
+  color: var(--brown);
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+.sd-line    { width: 40px; height: 0.6px; background: var(--gold); }
+.sd-diamond { width: 3.5px; height: 3.5px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+.sd-dot     { width: 2px; height: 2px; background: var(--gold2); border-radius: 50%; flex-shrink: 0; }
+
+/* ─────────────────────────────────────────────
+   SUBSECTION
+───────────────────────────────────────────── */
+.subsection {
+  font-family: 'Cormorant SC', serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--amber);
+  text-align: center;
+  letter-spacing: 2px;
+  margin: 10px 0 3px;
+}
+.subsection::before,
+.subsection::after {
+  content: '—';
+  color: var(--gold);
+  margin: 0 5px;
+  font-size: 9px;
+}
+
+/* ─────────────────────────────────────────────
+   MENU ITEMS + TAP HIGHLIGHT
+───────────────────────────────────────────── */
+.menu-item {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 7px;
+  margin: 0 -7px;
+  border-radius: 4px;
+  line-height: 1.25;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  cursor: default;
+}
+
+.menu-item:hover,
+.menu-item:active {
+  background: rgba(184, 150, 80, 0.1);
+}
+
+.item-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(15px, 4.2vw, 17px);
+  font-weight: 600;
+  color: var(--dark);
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.item-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(12.5px, 3.4vw, 14px);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--taupe);
+  margin-left: 4px;
+  white-space: nowrap;
+  flex-shrink: 1;
+}
+
+.item-dots {
+  flex: 1;
+  border-bottom: 0.6px dotted #C8B890;
+  margin: 0 6px 3px;
+  min-width: 10px;
+}
+
+/* ── PRICE BADGE ── */
+.item-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(14px, 3.8vw, 16px);
+  font-weight: 700;
+  color: var(--rust);
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  background: rgba(122, 59, 30, 0.07);
+  border: 1px solid rgba(122, 59, 30, 0.18);
+  border-radius: 20px;
+  padding: 1px 9px 2px;
+  margin-left: 3px;
+  line-height: 1.5;
+}
+
+/* ── ITEM BLOCK ── */
+.item-block { margin-bottom: 2px; }
+.item-block-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(12px, 3.2vw, 13.5px);
+  font-style: italic;
+  color: var(--taupe);
+  padding-left: 10px;
+  margin-top: 1px;
+  line-height: 1.3;
+}
+
+/* ── PREMIUM ── */
+.premium {
+  padding-left: 10px;
+  border-left: 2px solid var(--gold);
+  border-radius: 0 4px 4px 0;
+}
+.premium .item-name  { font-weight: 700; }
+.premium .item-price { font-weight: 700; }
+
+/* ── COMBO ── */
+.combo .item-name { font-style: italic; }
+
+/* ─────────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────────── */
+.menu-footer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 0.7px solid var(--gold2);
+}
+
+.footer-notice {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--taupe);
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.footer-orn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.fo-line { width: 40px; height: 0.5px; background: var(--gold); }
+
+.footer-word {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  color: var(--brown);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ══ STICKY HEADER ══ -->
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <span class="brand-name">Prusakovų užkandinė</span>
+    <div class="brand-rule">
+      <span class="br-dot"></span><span class="br-line"></span><span class="br-diamond"></span><span class="br-line"></span><span class="br-dot"></span>
+    </div>
+    <div class="lang-switcher">
+      <button class="lang-btn" data-lang="lt" onclick="setLang('lt')">LT</button>
+      <button class="lang-btn" data-lang="ru" onclick="setLang('ru')">RU</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+      <a class="lang-btn pdf-btn" href="menu-6-merged.pdf" download>
+        <svg width="10" height="12" viewBox="0 0 10 12" fill="none" style="flex-shrink:0"><path d="M1 1h5.5l2.5 2.5V11H1V1z" stroke="currentColor" stroke-width="0.85" fill="none"/><path d="M6 1v3h3" stroke="currentColor" stroke-width="0.85" fill="none"/><path d="M3.5 6.5v2.5M3.5 9l-1-1M3.5 9l1-1" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/></svg>
+        PDF
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ══ CATEGORY JUMP BAR ══ -->
+<nav class="jump-bar" id="jump-bar">
+  <div class="jump-inner" id="jump-inner"></div>
+</nav>
+
+<main class="menu-wrap">
+
+<!-- ══════════════════════════════════
+     LITHUANIAN
+══════════════════════════════════ -->
+<div class="lang-panel" id="lang-lt">
+
+  <div class="menu-hero">
+    <div class="menu-hero-bg"></div>
+    <div class="menu-hero-overlay">
+      <div class="hero-rule">
+        <span class="hero-dot"></span><span class="hero-line"></span><span class="hero-diamond"></span><span class="hero-line"></span><span class="hero-dot"></span>
+      </div>
+      <div class="hero-title">Meniu</div>
+      <div class="hero-rule">
+        <span class="hero-dot"></span><span class="hero-line"></span><span class="hero-diamond"></span><span class="hero-line"></span><span class="hero-dot"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ČEBUREKAI -->
+  <div class="section" id="lt-s0">
+    <div class="section-head"><h2>Čeburekai</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+
+    <div class="subsection">su sūriu</div>
+    <div class="menu-item"><span class="item-name">Sūris + grybai</span><span class="item-dots"></span><span class="item-price">4,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">2-jų rūšių sūris</span><span class="item-dots"></span><span class="item-price">4,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Saliamis + sūris</span><span class="item-dots"></span><span class="item-price">4,50 &euro;</span></div>
+
+    <div class="subsection">su mėsa</div>
+    <div class="menu-item"><span class="item-name">Kiauliena</span><span class="item-dots"></span><span class="item-price">4,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Vištiena</span><span class="item-dots"></span><span class="item-price">5,20 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Mix</span><span class="item-desc">(kiaul. + jaut.)</span><span class="item-dots"></span><span class="item-price">5,20 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Jautiena</span><span class="item-dots"></span><span class="item-price">5,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Maišytas</span><span class="item-desc">(jaut. + aviena)</span><span class="item-dots"></span><span class="item-price">5,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Aviena</span><span class="item-dots"></span><span class="item-price">6,20 &euro;</span></div>
+
+    <div class="subsection">firminis</div>
+    <div class="item-block">
+      <div class="menu-item premium"><span class="item-name">Šefo</span><span class="item-dots"></span><span class="item-price">6,80 &euro;</span></div>
+      <div class="item-block-desc">(kiauliena, jautiena, grybai, jalapenai, 2r. sūris)</div>
+    </div>
+    <div class="item-block">
+      <div class="menu-item premium"><span class="item-name">Gurmaniškas</span><span class="item-dots"></span><span class="item-price">6,80 &euro;</span></div>
+      <div class="item-block-desc">(vištiena, špinatai, pomidorai, sūris)</div>
+    </div>
+    <div class="item-block">
+      <div class="menu-item premium"><span class="item-name">Pachmo</span><span class="item-dots"></span><span class="item-price">7,50 &euro;</span></div>
+      <div class="item-block-desc">(kiaul., jaut., saliamis, alyv., grybai, mar. agurkai, du sūriai)</div>
+    </div>
+  </div>
+
+  <!-- PRIEDAI -->
+  <div class="section" id="lt-s1">
+    <div class="section-head"><h2>Priedai</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Grybai</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Jelapenai</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Saliamis</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Alyvuogės</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Mar. agurkai</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Sūris</span><span class="item-dots"></span><span class="item-price">1,00 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Daugiau mėsos</span><span class="item-dots"></span><span class="item-price">1,00 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">2-jų rūšių sūris</span><span class="item-dots"></span><span class="item-price">1,20 &euro;</span></div>
+  </div>
+
+  <!-- SRIUBOS -->
+  <div class="section" id="lt-s2">
+    <div class="section-head"><h2>Sriubos</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Natūralus vištienos sultinys</span><span class="item-dots"></span><span class="item-price">2,50 &euro;</span></div>
+    <div class="menu-item combo"><span class="item-name">Dienos sriuba</span><span class="item-desc">(perkant čebureką)</span><span class="item-dots"></span><span class="item-price">2,60 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Dienos sriuba</span><span class="item-dots"></span><span class="item-price">3,50 &euro;</span></div>
+  </div>
+
+  <!-- KITI PATIEKALAI -->
+  <div class="section" id="lt-s3">
+    <div class="section-head"><h2>Kiti patiekalai</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="item-block">
+      <div class="menu-item"><span class="item-name">Padažas</span><span class="item-dots"></span><span class="item-price">1,00 &euro;</span></div>
+      <div class="item-block-desc">(česnakinis, pikantiškas kečupas)</div>
+    </div>
+    <div class="menu-item"><span class="item-name">Bulvytės fri</span><span class="item-dots"></span><span class="item-price">2,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Bulvytės fri MIX</span><span class="item-dots"></span><span class="item-price">3,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Gruzdinti koldūnai</span><span class="item-dots"></span><span class="item-price">3,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Svogūnų žiedai</span><span class="item-dots"></span><span class="item-price">3,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Bulviniai blynai</span><span class="item-dots"></span><span class="item-price">4,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Bulvių ir vištienos rutuliukai</span><span class="item-dots"></span><span class="item-price">4,90 &euro;</span></div>
+  </div>
+
+  <!-- KIBINAI -->
+  <div class="section" id="lt-s4">
+    <div class="section-head"><h2>Kibinai</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Varškės spurga</span><span class="item-dots"></span><span class="item-price">1,00 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Kibinas su kiauliena</span><span class="item-dots"></span><span class="item-price">1,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Kibinas su kopūstais</span><span class="item-dots"></span><span class="item-price">1,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Kibinas su varške ir persikais</span><span class="item-dots"></span><span class="item-price">1,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Kibinas su vištiena</span><span class="item-dots"></span><span class="item-price">2,10 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Kibinas su kiauliena ir sūriu</span><span class="item-dots"></span><span class="item-price">2,30 &euro;</span></div>
+  </div>
+
+  <!-- KOMPLEKTAI -->
+  <div class="section" id="lt-s5">
+    <div class="section-head"><h2>Komplektai</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item combo"><span class="item-name">Čeburekas su kiauliena ir sriuba</span><span class="item-dots"></span><span class="item-price">6,00 &euro;</span></div>
+    <div class="menu-item combo"><span class="item-name">Čeburekas su kiauliena + vištienos sultinys</span><span class="item-dots"></span><span class="item-price">6,00 &euro;</span></div>
+    <div class="menu-item combo"><span class="item-name">Pietūs</span><span class="item-desc">(11:00 – 14:00)</span><span class="item-dots"></span><span class="item-price">6,00 &euro;</span></div>
+  </div>
+
+  <!-- GĖRIMAI -->
+  <div class="section" id="lt-s6">
+    <div class="section-head"><h2>Gėrimai</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Pepsi, Mirinda, 7UP</span><span class="item-dots"></span><span class="item-price">1,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Tauras gira</span><span class="item-dots"></span><span class="item-price">2,20 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Vilkmergės</span><span class="item-dots"></span><span class="item-price">2,50 &euro;</span></div>
+  </div>
+
+  <!-- KARŠTI GĖRIMAI -->
+  <div class="section" id="lt-s7">
+    <div class="section-head"><h2>Karšti gėrimai</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Kava su pienu, latte, cappuccino</span><span class="item-dots"></span><span class="item-price">2,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Espresso, juoda kava</span><span class="item-dots"></span><span class="item-price">2,20 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Arbata</span><span class="item-desc">(įvairių skonių)</span><span class="item-dots"></span><span class="item-price">1,20 &euro;</span></div>
+  </div>
+
+  <div class="menu-footer">
+    <div class="footer-notice">&#9670;&ensp;Pakuotės mokestis įskaičiuotas į kainą.&ensp;&#9670;</div>
+    <div class="footer-orn">
+      <span class="fo-line"></span>
+      <svg width="20" height="11" viewBox="0 0 26 14"><path d="M7 7 L13 1 L19 7 L13 13 Z" fill="none" stroke="#B89650" stroke-width="0.9"/><circle cx="13" cy="7" r="2" fill="#B89650"/></svg>
+      <span class="fo-line"></span>
+    </div>
+    <div class="footer-word">Skanaus</div>
+  </div>
+
+</div><!-- /lang-lt -->
+
+
+<!-- ══════════════════════════════════
+     RUSSIAN
+══════════════════════════════════ -->
+<div class="lang-panel" id="lang-ru">
+
+  <div class="menu-hero">
+    <div class="menu-hero-bg"></div>
+    <div class="menu-hero-overlay">
+      <div class="hero-rule">
+        <span class="hero-dot"></span><span class="hero-line"></span><span class="hero-diamond"></span><span class="hero-line"></span><span class="hero-dot"></span>
+      </div>
+      <div class="hero-title">Меню</div>
+      <div class="hero-rule">
+        <span class="hero-dot"></span><span class="hero-line"></span><span class="hero-diamond"></span><span class="hero-line"></span><span class="hero-dot"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЧЕБУРЕКИ -->
+  <div class="section" id="ru-s0">
+    <div class="section-head"><h2>Чебуреки</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+
+    <div class="subsection">с сыром</div>
+    <div class="menu-item"><span class="item-name">Сыр + грибы</span><span class="item-dots"></span><span class="item-price">4,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">2 вида сыра</span><span class="item-dots"></span><span class="item-price">4,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Салями + сыр</span><span class="item-dots"></span><span class="item-price">4,50 &euro;</span></div>
+
+    <div class="subsection">с мясом</div>
+    <div class="menu-item"><span class="item-name">Свинина</span><span class="item-dots"></span><span class="item-price">4,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Курица</span><span class="item-dots"></span><span class="item-price">5,20 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Микс</span><span class="item-desc">(свин. + говяд.)</span><span class="item-dots"></span><span class="item-price">5,20 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Говядина</span><span class="item-dots"></span><span class="item-price">5,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Смешанный</span><span class="item-desc">(говяд. + баранина)</span><span class="item-dots"></span><span class="item-price">5,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Баранина</span><span class="item-dots"></span><span class="item-price">6,20 &euro;</span></div>
+
+    <div class="subsection">фирменный</div>
+    <div class="item-block">
+      <div class="menu-item premium"><span class="item-name">От шефа</span><span class="item-dots"></span><span class="item-price">6,80 &euro;</span></div>
+      <div class="item-block-desc">(свин, говяд, грибы, халап, 2в. сыр)</div>
+    </div>
+    <div class="item-block">
+      <div class="menu-item premium"><span class="item-name">Гурманский</span><span class="item-dots"></span><span class="item-price">6,80 &euro;</span></div>
+      <div class="item-block-desc">(кур, шпинат, помид, сыр)</div>
+    </div>
+    <div class="item-block">
+      <div class="menu-item premium"><span class="item-name">Пахмо</span><span class="item-dots"></span><span class="item-price">7,50 &euro;</span></div>
+      <div class="item-block-desc">(свин., говяд., салями, оливки, грибы, мар. огурцы, два сыра)</div>
+    </div>
+  </div>
+
+  <!-- ДОБАВКИ -->
+  <div class="section" id="ru-s1">
+    <div class="section-head"><h2>Добавки</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Грибы</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Халапеньо</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Салями</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Оливки</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Мар. огурцы</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Сыр</span><span class="item-dots"></span><span class="item-price">1,00 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Больше мяса</span><span class="item-dots"></span><span class="item-price">1,00 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">2 вида сыра</span><span class="item-dots"></span><span class="item-price">1,20 &euro;</span></div>
+  </div>
+
+  <!-- СУПЫ -->
+  <div class="section" id="ru-s2">
+    <div class="section-head"><h2>Супы</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Натуральный куриный бульон</span><span class="item-dots"></span><span class="item-price">2,50 &euro;</span></div>
+    <div class="menu-item combo"><span class="item-name">Суп дня</span><span class="item-desc">(при покупке чебурека)</span><span class="item-dots"></span><span class="item-price">2,60 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Суп дня</span><span class="item-dots"></span><span class="item-price">3,50 &euro;</span></div>
+  </div>
+
+  <!-- ДРУГИЕ БЛЮДА -->
+  <div class="section" id="ru-s3">
+    <div class="section-head"><h2>Другие блюда</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="item-block">
+      <div class="menu-item"><span class="item-name">Соус</span><span class="item-dots"></span><span class="item-price">1,00 &euro;</span></div>
+      <div class="item-block-desc">(чесночный, пикантный кетчуп)</div>
+    </div>
+    <div class="menu-item"><span class="item-name">Картофель фри</span><span class="item-dots"></span><span class="item-price">2,70 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Картофель фри MIX</span><span class="item-dots"></span><span class="item-price">3,40 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Жареные колдуны</span><span class="item-dots"></span><span class="item-price">3,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Луковые кольца</span><span class="item-dots"></span><span class="item-price">3,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Картофельные блины</span><span class="item-dots"></span><span class="item-price">4,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Картоф. и куриные шарики</span><span class="item-dots"></span><span class="item-price">4,80 &euro;</span></div>
+  </div>
+
+  <!-- КИБИНЫ -->
+  <div class="section" id="ru-s4">
+    <div class="section-head"><h2>Кибины</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Творожный пончик</span><span class="item-dots"></span><span class="item-price">1,00 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Кибин со свининой</span><span class="item-dots"></span><span class="item-price">1,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Кибин с капустой</span><span class="item-dots"></span><span class="item-price">1,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Кибин с творогом и персиками</span><span class="item-dots"></span><span class="item-price">1,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Кибин с курицей</span><span class="item-dots"></span><span class="item-price">2,10 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Кибин со свининой и сыром</span><span class="item-dots"></span><span class="item-price">2,30 &euro;</span></div>
+  </div>
+
+  <!-- КОМПЛЕКТЫ -->
+  <div class="section" id="ru-s5">
+    <div class="section-head"><h2>Комплекты</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item combo"><span class="item-name">Чебурек со свининой и суп</span><span class="item-dots"></span><span class="item-price">6,00 &euro;</span></div>
+    <div class="menu-item combo"><span class="item-name">Чебурек со свининой + куриный бульон</span><span class="item-dots"></span><span class="item-price">6,00 &euro;</span></div>
+    <div class="menu-item combo"><span class="item-name">Обед</span><span class="item-desc">(11:00 – 14:00)</span><span class="item-dots"></span><span class="item-price">6,00 &euro;</span></div>
+  </div>
+
+  <!-- НАПИТКИ -->
+  <div class="section" id="ru-s6">
+    <div class="section-head"><h2>Напитки</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Pepsi, Mirinda, 7UP</span><span class="item-dots"></span><span class="item-price">1,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Квас «Tauras gira»</span><span class="item-dots"></span><span class="item-price">2,20 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Vilkmergės</span><span class="item-dots"></span><span class="item-price">2,50 &euro;</span></div>
+  </div>
+
+  <!-- ГОРЯЧИЕ НАПИТКИ -->
+  <div class="section" id="ru-s7">
+    <div class="section-head"><h2>Горячие напитки</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Кофе с молоком, латте, капучино</span><span class="item-dots"></span><span class="item-price">2,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Эспрессо, чёрный кофе</span><span class="item-dots"></span><span class="item-price">2,20 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Чай</span><span class="item-desc">(различных вкусов)</span><span class="item-dots"></span><span class="item-price">1,20 &euro;</span></div>
+  </div>
+
+  <div class="menu-footer">
+    <div class="footer-notice">&#9670;&ensp;Налог на упаковку включён в цену.&ensp;&#9670;</div>
+    <div class="footer-orn">
+      <span class="fo-line"></span>
+      <svg width="20" height="11" viewBox="0 0 26 14"><path d="M7 7 L13 1 L19 7 L13 13 Z" fill="none" stroke="#B89650" stroke-width="0.9"/><circle cx="13" cy="7" r="2" fill="#B89650"/></svg>
+      <span class="fo-line"></span>
+    </div>
+    <div class="footer-word">Приятного аппетита</div>
+  </div>
+
+</div><!-- /lang-ru -->
+
+
+<!-- ══════════════════════════════════
+     ENGLISH
+══════════════════════════════════ -->
+<div class="lang-panel" id="lang-en">
+
+  <div class="menu-hero">
+    <div class="menu-hero-bg"></div>
+    <div class="menu-hero-overlay">
+      <div class="hero-rule">
+        <span class="hero-dot"></span><span class="hero-line"></span><span class="hero-diamond"></span><span class="hero-line"></span><span class="hero-dot"></span>
+      </div>
+      <div class="hero-title">Menu</div>
+      <div class="hero-rule">
+        <span class="hero-dot"></span><span class="hero-line"></span><span class="hero-diamond"></span><span class="hero-line"></span><span class="hero-dot"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHEBUREKI -->
+  <div class="section" id="en-s0">
+    <div class="section-head"><h2>Chebureki</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+
+    <div class="subsection">with cheese</div>
+    <div class="menu-item"><span class="item-name">Cheese &amp; Mushrooms</span><span class="item-dots"></span><span class="item-price">4,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Two-Cheese Blend</span><span class="item-dots"></span><span class="item-price">4,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Salami &amp; Cheese</span><span class="item-dots"></span><span class="item-price">4,50 &euro;</span></div>
+
+    <div class="subsection">with meat</div>
+    <div class="menu-item"><span class="item-name">Pork</span><span class="item-dots"></span><span class="item-price">4,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Chicken</span><span class="item-dots"></span><span class="item-price">5,20 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Mix</span><span class="item-desc">(pork + beef)</span><span class="item-dots"></span><span class="item-price">5,20 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Beef</span><span class="item-dots"></span><span class="item-price">5,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Mixed</span><span class="item-desc">(beef + lamb)</span><span class="item-dots"></span><span class="item-price">5,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Lamb</span><span class="item-dots"></span><span class="item-price">6,20 &euro;</span></div>
+
+    <div class="subsection">signature</div>
+    <div class="item-block">
+      <div class="menu-item premium"><span class="item-name">Chef's Special</span><span class="item-dots"></span><span class="item-price">6,80 &euro;</span></div>
+      <div class="item-block-desc">(pork, beef, mushrooms, jalapeños, two-cheese)</div>
+    </div>
+    <div class="item-block">
+      <div class="menu-item premium"><span class="item-name">Gourmet</span><span class="item-dots"></span><span class="item-price">6,80 &euro;</span></div>
+      <div class="item-block-desc">(chicken, spinach, tomatoes, cheese)</div>
+    </div>
+    <div class="item-block">
+      <div class="menu-item premium"><span class="item-name">Pachmo</span><span class="item-dots"></span><span class="item-price">7,50 &euro;</span></div>
+      <div class="item-block-desc">(pork, beef, salami, olives, mushrooms, pickles, two cheeses)</div>
+    </div>
+  </div>
+
+  <!-- ADD-ONS -->
+  <div class="section" id="en-s1">
+    <div class="section-head"><h2>Add-ons</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Mushrooms</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Jalapeños</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Salami</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Olives</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Pickles</span><span class="item-dots"></span><span class="item-price">0,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Cheese</span><span class="item-dots"></span><span class="item-price">1,00 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Extra Meat</span><span class="item-dots"></span><span class="item-price">1,00 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Two-Cheese Blend</span><span class="item-dots"></span><span class="item-price">1,20 &euro;</span></div>
+  </div>
+
+  <!-- SOUPS -->
+  <div class="section" id="en-s2">
+    <div class="section-head"><h2>Soups</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Natural Chicken Broth</span><span class="item-dots"></span><span class="item-price">2,50 &euro;</span></div>
+    <div class="menu-item combo"><span class="item-name">Soup of the Day</span><span class="item-desc">(with cheburek purchase)</span><span class="item-dots"></span><span class="item-price">2,60 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Soup of the Day</span><span class="item-dots"></span><span class="item-price">3,50 &euro;</span></div>
+  </div>
+
+  <!-- OTHER DISHES -->
+  <div class="section" id="en-s3">
+    <div class="section-head"><h2>Other Dishes</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="item-block">
+      <div class="menu-item"><span class="item-name">Sauce</span><span class="item-dots"></span><span class="item-price">1,00 &euro;</span></div>
+      <div class="item-block-desc">(garlic, spicy ketchup)</div>
+    </div>
+    <div class="menu-item"><span class="item-name">French Fries</span><span class="item-dots"></span><span class="item-price">2,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">French Fries MIX</span><span class="item-dots"></span><span class="item-price">3,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Fried Dumplings</span><span class="item-dots"></span><span class="item-price">3,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Onion Rings</span><span class="item-dots"></span><span class="item-price">3,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Potato Pancakes</span><span class="item-dots"></span><span class="item-price">4,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Potato &amp; Chicken Balls</span><span class="item-dots"></span><span class="item-price">4,90 &euro;</span></div>
+  </div>
+
+  <!-- KIBINAI -->
+  <div class="section" id="en-s4">
+    <div class="section-head"><h2>Kibinai</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Cottage Cheese Doughnut</span><span class="item-dots"></span><span class="item-price">1,00 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Kibinas with Pork</span><span class="item-dots"></span><span class="item-price">1,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Kibinas with Cabbage</span><span class="item-dots"></span><span class="item-price">1,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Kibinas with Cottage Cheese &amp; Peaches</span><span class="item-dots"></span><span class="item-price">1,90 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Kibinas with Chicken</span><span class="item-dots"></span><span class="item-price">2,10 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Kibinas with Pork &amp; Cheese</span><span class="item-dots"></span><span class="item-price">2,30 &euro;</span></div>
+  </div>
+
+  <!-- MEAL DEALS -->
+  <div class="section" id="en-s5">
+    <div class="section-head"><h2>Meal Deals</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item combo"><span class="item-name">Pork Cheburek &amp; Soup</span><span class="item-dots"></span><span class="item-price">6,00 &euro;</span></div>
+    <div class="menu-item combo"><span class="item-name">Pork Cheburek + Chicken Broth</span><span class="item-dots"></span><span class="item-price">6,00 &euro;</span></div>
+    <div class="menu-item combo"><span class="item-name">Lunch</span><span class="item-desc">(11:00 – 14:00)</span><span class="item-dots"></span><span class="item-price">6,00 &euro;</span></div>
+  </div>
+
+  <!-- DRINKS -->
+  <div class="section" id="en-s6">
+    <div class="section-head"><h2>Drinks</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Pepsi, Mirinda, 7UP</span><span class="item-dots"></span><span class="item-price">1,80 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Tauras Kvass</span><span class="item-dots"></span><span class="item-price">2,20 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Vilkmergės</span><span class="item-dots"></span><span class="item-price">2,50 &euro;</span></div>
+  </div>
+
+  <!-- HOT DRINKS -->
+  <div class="section" id="en-s7">
+    <div class="section-head"><h2>Hot Drinks</h2></div>
+    <div class="section-divider"><span class="sd-dot"></span><span class="sd-line"></span><span class="sd-diamond"></span><span class="sd-line"></span><span class="sd-dot"></span></div>
+    <div class="menu-item"><span class="item-name">Coffee with milk, latte, cappuccino</span><span class="item-dots"></span><span class="item-price">2,50 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Espresso, black coffee</span><span class="item-dots"></span><span class="item-price">2,20 &euro;</span></div>
+    <div class="menu-item"><span class="item-name">Tea</span><span class="item-desc">(various flavours)</span><span class="item-dots"></span><span class="item-price">1,20 &euro;</span></div>
+  </div>
+
+  <div class="menu-footer">
+    <div class="footer-notice">&#9670;&ensp;Packaging fee included in the price.&ensp;&#9670;</div>
+    <div class="footer-orn">
+      <span class="fo-line"></span>
+      <svg width="20" height="11" viewBox="0 0 26 14"><path d="M7 7 L13 1 L19 7 L13 13 Z" fill="none" stroke="#B89650" stroke-width="0.9"/><circle cx="13" cy="7" r="2" fill="#B89650"/></svg>
+      <span class="fo-line"></span>
+    </div>
+    <div class="footer-word">Enjoy your meal</div>
+  </div>
+
+</div><!-- /lang-en -->
+
+</main>
+
+<script>
+(function () {
+  var currentLang = 'lt';
+  var scrollObserver = null;
+
+  function updateStickyOffsets() {
+    var headerH = document.getElementById('site-header').offsetHeight;
+    var jumpBar = document.getElementById('jump-bar');
+    jumpBar.style.top = headerH + 'px';
+    var totalOffset = headerH + jumpBar.offsetHeight + 8;
+    document.querySelectorAll('.section[id]').forEach(function (sec) {
+      sec.style.scrollMarginTop = totalOffset + 'px';
+    });
+    return totalOffset;
+  }
+
+  function buildJumpBar(lang) {
+    var panel = document.getElementById('lang-' + lang);
+    var sections = panel.querySelectorAll('.section[id]');
+    var inner = document.getElementById('jump-inner');
+    inner.innerHTML = '';
+    sections.forEach(function (sec) {
+      var h2 = sec.querySelector('h2');
+      if (!h2) { return; }
+      var a = document.createElement('a');
+      a.href = '#' + sec.id;
+      a.className = 'jump-pill';
+      a.textContent = h2.textContent.trim();
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.getElementById(sec.id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      inner.appendChild(a);
+    });
+    var first = inner.querySelector('.jump-pill');
+    if (first) { first.classList.add('active'); }
+  }
+
+  function setupScrollObserver(lang) {
+    if (scrollObserver) { scrollObserver.disconnect(); }
+    var panel = document.getElementById('lang-' + lang);
+    var sections = panel.querySelectorAll('.section[id]');
+
+    scrollObserver = new IntersectionObserver(function (entries) {
+      var topEntry = null;
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          if (!topEntry || entry.boundingClientRect.top < topEntry.boundingClientRect.top) {
+            topEntry = entry;
+          }
+        }
+      });
+      if (!topEntry) { return; }
+      var activeId = topEntry.target.id;
+      document.querySelectorAll('.jump-pill').forEach(function (pill) {
+        var isActive = pill.getAttribute('href') === '#' + activeId;
+        pill.classList.toggle('active', isActive);
+        if (isActive) {
+          pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      });
+    }, { rootMargin: '-130px 0px -55% 0px', threshold: 0 });
+
+    sections.forEach(function (sec) { scrollObserver.observe(sec); });
+  }
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-panel').forEach(function (el) { el.classList.remove('active'); });
+    document.querySelectorAll('[data-lang]').forEach(function (btn) { btn.classList.remove('active'); });
+    document.getElementById('lang-' + lang).classList.add('active');
+    var btn = document.querySelector('[data-lang="' + lang + '"]');
+    if (btn) { btn.classList.add('active'); }
+    document.documentElement.lang = lang;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    buildJumpBar(lang);
+    updateStickyOffsets();
+    setTimeout(function () { setupScrollObserver(lang); }, 450);
+    try { localStorage.setItem('menu-lang', lang); } catch (e) {}
+  }
+
+  // expose globally for onclick attributes
+  window.setLang = setLang;
+
+  // init
+  var initLang = 'lt';
+  try {
+    var saved = localStorage.getItem('menu-lang');
+    if (saved && ['lt', 'ru', 'en'].indexOf(saved) !== -1) { initLang = saved; }
+  } catch (e) {}
+
+  setLang(initLang);
+
+  window.addEventListener('resize', function () { updateStickyOffsets(); });
+}());
+</script>
+
+</body>
+</html>
