@@ -1,7 +1,7 @@
-<div x-data="{ koreguoti: false, editingProduct: '', editingProductId: null, editingLeft: '' }" x-init="initSwapSortable($el, $wire, 'updateOrder')" @koreguoti-changed.window="koreguoti = $event.detail.active" class="grid md:grid-cols-4 auto-rows-min gap-2 mt-4">
+<div x-data="{ koreguoti: window.koreguotiActive, editingProduct: '', editingProductId: null, editingLeft: '', editingAttention: false, editingToppingName: '', editingToppingId: null, editingToppingLeft: '', editingToppingAttention: false }" x-init="initSwapSortable($el, $wire, 'updateOrder')" @koreguoti-changed.window="koreguoti = $event.detail.active" class="grid md:grid-cols-4 auto-rows-min gap-2 mt-4">
     @foreach(\App\Models\Ceburek::orderBy('position')->get() as $productName)
         <div data-sortable-id="{{ $productName->id }}" wire:key="ceburek-{{ $productName->id }}"
-             @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ({{ $productName->attention ? 'true' : 'false' }}) { $wire.toggleAttention({{ $productName->id }}); } else { editingProduct = '{{ $productName->name }}'; editingProductId = {{ $productName->id }}; editingLeft = ''; $flux.modal('koreguoti-edit').show(); } }">
+             @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ({{ $productName->attention ? 'true' : 'false' }}) { $wire.toggleAttention({{ $productName->id }}); } else { editingProduct = '{{ $productName->name }}'; editingProductId = {{ $productName->id }}; editingLeft = ''; editingAttention = false; $flux.modal('koreguoti-edit').show(); } }">
         @if(!is_numeric($productName->name))
         <flux:modal.trigger name="choose-toppings">
         @endif
@@ -14,7 +14,11 @@
                 <div class="flex grid content-center flex-col gap-2 h-full text-white rounded-2xl w-full">
                     <button>
                         @if(!is_numeric($productName->name))
-                            <div class="font-extrabold text-base tracking-wide antialiased" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">{{ $productName->name }}{{ $productName->attention && $productName->left !== null ? ' - ' . $productName->left : '' }}</div>
+                            <div class="font-extrabold text-base tracking-wide antialiased" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">
+                                <span x-show="editingProductId === {{ $productName->id }} && editingLeft !== ''"
+                                      x-text="'{{ $productName->name }} - ' + editingLeft"></span>
+                                <span x-show="!(editingProductId === {{ $productName->id }} && editingLeft !== '')">{{ $productName->name }}{{ $productName->left !== null ? ' - ' . $productName->left : '' }}</span>
+                            </div>
                         @endif
                     </button>
                 </div>
@@ -24,20 +28,27 @@
         @endif
         </div>
     @endforeach
-        <flux:modal name="choose-toppings" class="w-full max-w-2xl bg-white! rounded-xl shadow-2xl blur-none">
+        <flux:modal name="choose-toppings" class="w-full max-w-2xl bg-white! rounded-xl shadow-2xl blur-none relative">
+            <button type="button" x-on:click="Livewire.dispatch('toggle-koreguoti')"
+                    :class="koreguoti
+                        ? 'bg-red-500 border-red-500 text-white shadow-md shadow-red-200 hover:bg-red-600 hover:border-red-600'
+                        : 'bg-white border-gray-200 text-slate-500 shadow-sm hover:shadow-md hover:border-gray-300'"
+                    class="absolute top-4 right-16 inline-flex items-center justify-center py-1.5 px-4 border rounded-xl cursor-pointer transition-all duration-200 text-sm font-bold z-10 outline-none focus:outline-none">
+                Koreguoti
+            </button>
             <form wire:submit.prevent="addOrder" >
                 <div class="bg-linear-to-b from-slate-50 to-slate-100 rounded-xl mx-3 p-3.5">
                     <h3 class="text-xs mb-3 font-bold text-center text-slate-500 tracking-widest uppercase">Pasirinkti priedus</h3>
-                    <ul x-data x-init="initSwapSortable($el, $wire, 'updateToppingOrder')" class="grid w-full gap-2 md:grid-cols-5">
+                    <ul x-init="initSwapSortable($el, $wire, 'updateToppingOrder')" class="grid w-full gap-2 md:grid-cols-5">
                         @foreach(\App\Models\Topping::where('show', true)->orderBy('position')->get()  as $topping)
-                            <li data-sortable-id="{{ $topping->id }}" wire:key="topping-{{ $topping->id }}">
+                            <li data-sortable-id="{{ $topping->id }}" wire:key="topping-{{ $topping->id }}"
+                                data-attention="{{ $topping->attention ? '1' : '0' }}"
+                                @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ($el.dataset.attention === '1') { $wire.toggleToppingAttention({{ $topping->id }}); } else { editingToppingName = '{{ $topping->name }}'; editingToppingId = {{ $topping->id }}; editingToppingLeft = ''; editingToppingAttention = false; $flux.modal('koreguoti-topping-edit').show(); } }">
                                 <input type="checkbox" id="{{$topping->name}}" value="{{$topping->name}}" wire:model.live="toppings"
                                        class="hidden peer">
                                 <label for="{{$topping->name}}"
-                                       class="flex items-center justify-center aspect-square w-full p-1 bg-linear-to-br from-slate-600 to-slate-800 text-white/90 rounded-xl cursor-pointer transition-all duration-200 shadow-md hover:from-slate-500 hover:to-slate-700 hover:shadow-lg hover:-translate-y-0.5 peer-checked:from-emerald-500 peer-checked:to-teal-600 peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-emerald-500/30 peer-checked:-translate-y-0.5 peer-checked:ring-2 peer-checked:ring-emerald-400/50 peer-checked:ring-offset-1 peer-checked:hover:from-emerald-500 peer-checked:hover:to-teal-600 font-bold leading-tight">
-                                    <div class="text-center text-sm">
-                                        {{$topping->name}}
-                                    </div>
+                                       class="flex items-center justify-center aspect-square w-full p-1 bg-linear-to-br text-white/90 rounded-xl cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 peer-checked:from-emerald-500 peer-checked:to-teal-600 peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-emerald-500/30 peer-checked:-translate-y-0.5 peer-checked:ring-2 peer-checked:ring-emerald-400/50 peer-checked:ring-offset-1 peer-checked:hover:from-emerald-500 peer-checked:hover:to-teal-600 font-bold leading-tight {{ $topping->attention ? 'from-red-500 to-red-700 hover:from-red-400 hover:to-red-600' : 'from-slate-600 to-slate-800 hover:from-slate-500 hover:to-slate-700' }}">
+                                    <div class="text-center text-sm">{{ $topping->name }}{{ $topping->left !== null ? ' - ' . $topping->left : '' }}</div>
                                 </label>
                             </li>
                         @endforeach
@@ -85,7 +96,31 @@
                         </div>
                     </button>
                 </div>
+
             </form>
+        </flux:modal>
+
+        <flux:modal name="koreguoti-topping-edit" class="w-80">
+            <div class="space-y-6">
+                <flux:heading size="lg" x-text="editingToppingName"></flux:heading>
+
+                <flux:field>
+                    <flux:label>Liko</flux:label>
+                    <flux:input type="number" min="0" x-model="editingToppingLeft" />
+                </flux:field>
+
+                <button type="button"
+                    x-on:click="editingToppingAttention = !editingToppingAttention; $wire.toggleToppingAttention(editingToppingId, null)"
+                    :class="editingToppingAttention ? 'bg-red-500 text-white border-red-500 hover:bg-red-600' : 'bg-white text-red-500 border-red-300 hover:bg-red-50'"
+                    class="w-full px-4 py-2 rounded-lg text-sm font-semibold border transition-all duration-200">
+                    Pažymėti raudonai
+                </button>
+
+                <div class="flex justify-end gap-2">
+                    <flux:button variant="primary" x-on:click="$wire.updateToppingLeft(editingToppingId, editingToppingLeft !== '' ? parseInt(editingToppingLeft) : null); $flux.modal('koreguoti-topping-edit').close()">Atnaujinti</flux:button>
+                    <flux:button x-on:click="$flux.modal('koreguoti-topping-edit').close()">Uždaryti</flux:button>
+                </div>
+            </div>
         </flux:modal>
 
         <flux:modal name="koreguoti-edit" class="w-80">
@@ -97,8 +132,15 @@
                     <flux:input type="number" min="0" x-model="editingLeft" />
                 </flux:field>
 
+                <button type="button"
+                    x-on:click="editingAttention = !editingAttention; $wire.toggleAttention(editingProductId, null)"
+                    :class="editingAttention ? 'bg-red-500 text-white border-red-500 hover:bg-red-600' : 'bg-white text-red-500 border-red-300 hover:bg-red-50'"
+                    class="w-full px-4 py-2 rounded-lg text-sm font-semibold border transition-all duration-200">
+                    Pažymėti raudonai
+                </button>
+
                 <div class="flex justify-end gap-2">
-                    <flux:button variant="primary" x-on:click="$wire.toggleAttention(editingProductId, editingLeft !== '' ? parseInt(editingLeft) : null); $flux.modal('koreguoti-edit').close()">Atnaujinti</flux:button>
+                    <flux:button variant="primary" x-on:click="$wire.updateLeft(editingProductId, editingLeft !== '' ? parseInt(editingLeft) : null); $flux.modal('koreguoti-edit').close()">Atnaujinti</flux:button>
                     <flux:button x-on:click="$flux.modal('koreguoti-edit').close()">Uždaryti</flux:button>
                 </div>
             </div>

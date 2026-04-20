@@ -5,14 +5,18 @@ namespace App\Livewire\Buttons;
 use App\Models\Drink;
 use App\Models\Order;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Renderless;
 use Livewire\Component;
 
 class Drinks extends Component
 {
     public $productName;
+
     public $selectedProductName = '';
+
     public Collection $drinks;
+
     public function addProduct($productName, $productPrice)
     {
         $this->selectedProductName = $productName;
@@ -32,8 +36,37 @@ class Drinks extends Component
             ]);
         }
 
-        $this->dispatch('change-order', orderName:$productName);
+        $this->dispatch('change-order', orderName: $productName);
     }
+
+    public function updateLeft(int $id, ?int $left): void
+    {
+        $drink = Drink::find($id);
+        if ($drink) {
+            $drink->left = $left;
+            $drink->save();
+        }
+    }
+
+    public function toggleAttention(int $id, ?int $left = null): void
+    {
+        $drink = Drink::find($id);
+        if ($drink) {
+            if ($drink->attention) {
+                $drink->attention = false;
+                $drink->left = null;
+            } else {
+                $drink->attention = true;
+                if ($left !== null) {
+                    $drink->left = $left;
+                }
+            }
+            $drink->save();
+        }
+    }
+
+    #[On('reset-orders')]
+    public function refreshProducts(): void {}
 
     #[Renderless]
     public function updateOrder($list)

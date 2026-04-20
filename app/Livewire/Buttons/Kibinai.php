@@ -4,13 +4,16 @@ namespace App\Livewire\Buttons;
 
 use App\Models\Order;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Renderless;
 use Livewire\Component;
 
 class Kibinai extends Component
 {
     public $productName;
+
     public $selectedProductName = '';
+
     public Collection $kibinai;
 
     public function addProduct($productName, $productPrice)
@@ -31,8 +34,37 @@ class Kibinai extends Component
             ]);
         }
 
-        $this->dispatch('change-order', orderName:$productName);
+        $this->dispatch('change-order', orderName: $productName);
     }
+
+    public function updateLeft(int $id, ?int $left): void
+    {
+        $kibinai = \App\Models\Kibinai::find($id);
+        if ($kibinai) {
+            $kibinai->left = $left;
+            $kibinai->save();
+        }
+    }
+
+    public function toggleAttention(int $id, ?int $left = null): void
+    {
+        $kibinai = \App\Models\Kibinai::find($id);
+        if ($kibinai) {
+            if ($kibinai->attention) {
+                $kibinai->attention = false;
+                $kibinai->left = null;
+            } else {
+                $kibinai->attention = true;
+                if ($left !== null) {
+                    $kibinai->left = $left;
+                }
+            }
+            $kibinai->save();
+        }
+    }
+
+    #[On('reset-orders')]
+    public function refreshProducts(): void {}
 
     #[Renderless]
     public function updateOrder($list)

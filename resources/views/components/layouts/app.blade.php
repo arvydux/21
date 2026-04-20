@@ -27,6 +27,17 @@
                 Sortable.mount(new Sortable.Swap());
             }
 
+            window.koreguotiActive = false;
+            window.addEventListener('koreguoti-changed', (e) => {
+                window.koreguotiActive = e.detail.active;
+            });
+
+            document.addEventListener('livewire:initialized', () => {
+                Livewire.hook('commit', ({ commit }) => {
+                    commit.calls = commit.calls.filter(call => call.method !== 'toJSON');
+                });
+            });
+
             window.initSwapSortable = function(el, wire, method) {
                 if (el._sortableInstance) return;
 

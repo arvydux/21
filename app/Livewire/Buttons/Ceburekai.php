@@ -13,8 +13,11 @@ use Livewire\Component;
 class Ceburekai extends Component
 {
     public $orderName;
+
     public $toppings = [];
+
     public $allProducts;
+
     public $allToppings;
 
     public float $orderPrice = 0;
@@ -22,6 +25,7 @@ class Ceburekai extends Component
     public $productName;
 
     public $takeaway = true;
+
     public Collection $cebureks;
 
     #[on('chooseProductName')]
@@ -85,7 +89,7 @@ class Ceburekai extends Component
             }
         }
 
-        if (!empty($toppingsWithPrices)) {
+        if (! empty($toppingsWithPrices)) {
             $sameOrder = Order::whereJsonContains('name', $productWithPrice)
                 ->whereJsonLength('toppings', count($toppingsWithPrices))
                 ->whereJsonContains('toppings', $toppingsWithPrices)
@@ -109,6 +113,41 @@ class Ceburekai extends Component
 
         $this->dispatch('change-order', orderName: $this->orderName);
         $this->toppings = [];
+    }
+
+    public function updateToppingLeft(int $id, ?int $left): void
+    {
+        $topping = Topping::find($id);
+        if ($topping) {
+            $topping->left = $left;
+            $topping->save();
+        }
+    }
+
+    public function toggleToppingAttention(int $id, ?int $left = null): void
+    {
+        $topping = Topping::find($id);
+        if ($topping) {
+            if ($topping->attention) {
+                $topping->attention = false;
+                $topping->left = null;
+            } else {
+                $topping->attention = true;
+                if ($left !== null) {
+                    $topping->left = $left;
+                }
+            }
+            $topping->save();
+        }
+    }
+
+    public function updateLeft(int $id, ?int $left): void
+    {
+        $ceburek = Ceburek::find($id);
+        if ($ceburek) {
+            $ceburek->left = $left;
+            $ceburek->save();
+        }
     }
 
     public function toggleAttention(int $id, ?int $left = null): void
