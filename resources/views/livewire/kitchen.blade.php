@@ -1,4 +1,4 @@
-<div wire:poll.5s class="grid md:grid-cols-2 auto-rows-min gap-4">
+<div class="grid md:grid-cols-2 auto-rows-min gap-4">
     <div class="grid md:grid-cols-2 auto-rows-min gap-4 mr-8">
         <div class="col-span-2">
             <div class="flex grid content-center text-white/80 rounded-xl ">
