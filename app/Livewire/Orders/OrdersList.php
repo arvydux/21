@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Orders;
 
-use App\Events\OrdersUpdated;
 use App\Models\Ceburek;
 use App\Models\Drink;
 use App\Models\FreeNumbers;
@@ -129,7 +128,6 @@ class OrdersList extends Component
             'created_at' => now(),
         ]);
         FreeNumbers::first()->update(['number' => $this->freeNumber + 1]);
-        OrdersUpdated::dispatch();
 
         // $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
         // $this->printOrderForClient($this->freeNumber, $this->byPhone);

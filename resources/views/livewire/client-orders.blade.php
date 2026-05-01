@@ -1,4 +1,4 @@
-<div>
+<div wire:poll.5s>
     {{-- Main content --}}
     <div>
         @if(\App\Models\OrderNumbers::count() === 0)
@@ -19,38 +19,4 @@
         @endif
     </div>
 
-    <script>
-        (function () {
-            if (window.__posOrderReadySetup) return;
-            window.__posOrderReadySetup = true;
-
-            var audioQueue = [];
-            var audioPlaying = false;
-
-            function playNextAudio() {
-                if (audioQueue.length === 0) { audioPlaying = false; return; }
-                audioPlaying = true;
-                var src = audioQueue.shift();
-                var audio = new Audio(src);
-                audio.addEventListener('ended', playNextAudio);
-                audio.addEventListener('error', playNextAudio);
-                audio.play();
-            }
-
-            function onOrderReady(data) {
-                var number = data && data.number !== undefined ? data.number : (Array.isArray(data) ? data[0] : null);
-                audioQueue.push('/ona/paruostas.mp3');
-                audioQueue.push('/ona/' + number + '.mp3');
-                if (!audioPlaying) playNextAudio();
-            }
-
-            if (typeof Livewire !== 'undefined') {
-                Livewire.on('play-order-ready', onOrderReady);
-            } else {
-                document.addEventListener('livewire:init', function () {
-                    Livewire.on('play-order-ready', onOrderReady);
-                });
-            }
-        })();
-    </script>
 </div>
