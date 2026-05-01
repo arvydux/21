@@ -1,9 +1,9 @@
 @script
 <script>
-    $wire.on('play-sound', ({ count }) => {
-        for (let i = 0; i < count; i++) {
-            setTimeout(() => new Audio('/14.mp3').play(), i * 1500);
-        }
+    $wire.on('play-sound', ({ numbers }) => {
+        numbers.forEach((number, i) => {
+            setTimeout(() => new Audio(`/ona/${number}.mp3`).play(), i * 2000);
+        });
     });
 </script>
 @endscript

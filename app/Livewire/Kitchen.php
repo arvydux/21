@@ -11,7 +11,9 @@ class Kitchen extends Component
     public function makeOrderReady($number): void
     {
         OrderNumbers::where('number', $number)->update(['is_ready' => true]);
-        Cache::put('playSound', (int) Cache::get('playSound', 0) + 1, 60 * 60 * 24);
+        $pending = Cache::get('pendingSounds', []);
+        $pending[] = (int) $number;
+        Cache::put('pendingSounds', $pending, 60 * 60 * 24);
     }
 
     public function makeOrderNotReady($number): void

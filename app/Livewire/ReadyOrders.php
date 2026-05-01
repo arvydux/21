@@ -17,10 +17,10 @@ class ReadyOrders extends Component
 
     public function checkAndPlaySound(): void
     {
-        $count = (int) Cache::get('playSound', 0);
-        if ($this->soundEnabled && $count > 0) {
-            Cache::put('playSound', 0, 60 * 60 * 24);
-            $this->dispatch('play-sound', count: $count);
+        $numbers = Cache::get('pendingSounds', []);
+        if ($this->soundEnabled && count($numbers) > 0) {
+            Cache::put('pendingSounds', [], 60 * 60 * 24);
+            $this->dispatch('play-sound', numbers: $numbers);
         }
     }
 
