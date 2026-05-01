@@ -17,9 +17,10 @@ class ReadyOrders extends Component
 
     public function checkAndPlaySound(): void
     {
-        if ($this->soundEnabled && Cache::get('playSound')) {
+        $count = (int) Cache::get('playSound', 0);
+        if ($this->soundEnabled && $count > 0) {
             Cache::put('playSound', 0, 60 * 60 * 24);
-            $this->js("new Audio('/14.mp3').play()");
+            $this->dispatch('play-sound', count: $count);
         }
     }
 

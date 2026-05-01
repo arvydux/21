@@ -1,3 +1,13 @@
+@script
+<script>
+    $wire.on('play-sound', ({ count }) => {
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => new Audio('/14.mp3').play(), i * 1500);
+        }
+    });
+</script>
+@endscript
+
 <div class="fixed bottom-0 left-0 w-full text-center p-2">
 
     @if(!$soundEnabled)
