@@ -23,6 +23,7 @@
             </div>
             @foreach(\App\Models\OrderNumbers::where('is_ready', true)->where('is_taken', false)->orderBy('updated_at', 'desc')->get() as $order)
                 <div
+                    data-order-number="{{ $order->number }}"
                     class="relative text-center aspect-video overflow-hidden rounded-2xl transition-transform hover:scale-105"
                     style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 8px 32px rgba(48, 207, 208, 0.25);">
                     <div class="flex grid content-center flex-col gap-2 h-full rounded-2xl w-full">

@@ -17,9 +17,4 @@ class OrderReady implements ShouldBroadcastNow
     {
         return [new Channel('orders')];
     }
-
-    public function broadcastAs(): string
-    {
-        return 'OrderReady';
-    }
 }

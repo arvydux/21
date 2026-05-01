@@ -30,6 +30,7 @@
         <div class="grid gap-5 content-start" style="grid-template-columns: repeat(3, 1fr);">
             @foreach($paruostiOrders as $order)
                 <div class="relative flex items-center justify-center rounded-2xl"
+                     data-order-number="{{ $order->number }}"
                      style="aspect-ratio: 4/3; background: #3da85a;
                             box-shadow: 0 2px 12px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06);">
                     <svg class="absolute top-2.5 right-2.5" style="width:1rem; height:1rem; opacity:0.55;" viewBox="0 0 20 20" fill="white">
