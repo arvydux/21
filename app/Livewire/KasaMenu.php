@@ -10,6 +10,7 @@ use Livewire\Component;
 class KasaMenu extends Component
 {
     public $categoryMenuClicked;
+
     public Collection $categories;
 
     public function categoryButtonClicked($buttonName): void
@@ -26,11 +27,9 @@ class KasaMenu extends Component
         }
     }
 
-
     public function render()
     {
-        $products = Category::orderBy('position')->paginate(10);
-        $this->categories = collect($products->items());
+        $this->categories = Category::orderBy('position')->get();
 
         return view('livewire.kasa-menu');
     }

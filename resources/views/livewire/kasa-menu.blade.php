@@ -1,5 +1,5 @@
 <div x-data x-init="initSwapSortable($el, $wire, 'updateOrder')" class="flex gap-3">
-    @foreach(\App\Models\Category::orderBy('position')->get() as $categoryName)
+    @foreach($categories as $categoryName)
         <div data-sortable-id="{{ $categoryName->id }}" wire:key="category-{{ $categoryName->id }}"
              wire:click="categoryButtonClicked('{{ $categoryName->component_name }}')"
              class="relative flex-1 cursor-pointer rounded-2xl py-4 px-5
