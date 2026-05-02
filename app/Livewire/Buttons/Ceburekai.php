@@ -51,6 +51,7 @@ class Ceburekai extends Component
     }
 
     #[On('reset-orders')]
+    #[On('order-made')]
     public function refreshProducts(): void {}
 
     #[on('simple-product-added')]

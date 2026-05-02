@@ -64,6 +64,7 @@ class Kibinai extends Component
     }
 
     #[On('reset-orders')]
+    #[On('order-made')]
     public function refreshProducts(): void {}
 
     #[Renderless]
