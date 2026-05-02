@@ -14,10 +14,6 @@ class Kitchen extends Component
         $pending = Cache::get('pendingSounds', []);
         $pending[] = (int) $number;
         Cache::put('pendingSounds', $pending, 60 * 60 * 24);
-
-        $animations = Cache::get('pendingAnimations', []);
-        $animations[] = (int) $number;
-        Cache::put('pendingAnimations', $animations, 60 * 60 * 24);
     }
 
     public function makeOrderNotReady($number): void
