@@ -1,9 +1,21 @@
 @script
 <script>
     $wire.on('play-sound', ({ numbers }) => {
-        numbers.forEach((number, i) => {
-            setTimeout(() => new Audio(`/ona/${number}.mp3`).play(), i * 2000);
+        const queue = [];
+        numbers.forEach(number => {
+            queue.push('/ona/paruostas.mp3');
+            queue.push(`/ona/${number}.mp3`);
         });
+
+        function playNext() {
+            if (queue.length === 0) return;
+            const audio = new Audio(queue.shift());
+            audio.addEventListener('ended', playNext);
+            audio.addEventListener('error', playNext);
+            audio.play();
+        }
+
+        playNext();
     });
 </script>
 @endscript
