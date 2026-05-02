@@ -7,11 +7,51 @@
             <flux:separator variant="subtle" class="mt-4" />
         </div>
 
-        <div>
-            <flux:heading class="mb-1">{{ __('Dizaino šablonas') }}</flux:heading>
-            <flux:subheading class="mb-4 text-white/70">{{ __('Pasirinkite dizaino šabloną savo POS sąsajai') }}</flux:subheading>
+        <div x-data="{ tab: 'dizainas' }">
 
-            <livewire:template-picker />
+            {{-- Tab buttons --}}
+            <div class="flex gap-1 border-b border-white/15 mb-6">
+                <button
+                    @click="tab = 'dizainas'"
+                    :class="tab === 'dizainas' ? 'border-b-2 border-white text-white' : 'text-white/50 hover:text-white/80'"
+                    class="px-4 py-2 text-sm font-medium transition-colors -mb-px">
+                    {{ __('Dizainas') }}
+                </button>
+                <button
+                    @click="tab = 'spausdintuvai'"
+                    :class="tab === 'spausdintuvai' ? 'border-b-2 border-white text-white' : 'text-white/50 hover:text-white/80'"
+                    class="px-4 py-2 text-sm font-medium transition-colors -mb-px">
+                    {{ __('Spausdintuvai') }}
+                </button>
+            </div>
+
+            {{-- Dizainas tab --}}
+            <div x-show="tab === 'dizainas'" x-transition>
+                <flux:heading class="mb-1">{{ __('Dizaino šablonas') }}</flux:heading>
+                <flux:subheading class="mb-4 text-white/70">{{ __('Pasirinkite dizaino šabloną savo POS sąsajai') }}</flux:subheading>
+
+                <livewire:template-picker />
+            </div>
+
+            {{-- Spausdintuvai tab --}}
+            <div x-show="tab === 'spausdintuvai'" x-transition class="flex flex-col gap-6">
+                <div>
+                    <flux:heading class="mb-1">{{ __('Virtuvės spausdintuvas') }}</flux:heading>
+                    <flux:subheading class="mb-4 text-white/70">{{ __('Konfigūruokite virtuvės spausdintuvo elgesį') }}</flux:subheading>
+
+                    <livewire:kitchen-printer-settings />
+                </div>
+
+                <flux:separator variant="subtle" />
+
+                <div>
+                    <flux:heading class="mb-1">{{ __('Kliento spausdintuvas') }}</flux:heading>
+                    <flux:subheading class="mb-4 text-white/70">{{ __('Konfigūruokite kliento spausdintuvo elgesį') }}</flux:subheading>
+
+                    <livewire:client-printer-settings />
+                </div>
+            </div>
+
         </div>
 
     </div>

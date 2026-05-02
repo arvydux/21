@@ -131,6 +131,7 @@ class OrdersList extends Component
 
         // $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
         // $this->printOrderForClient($this->freeNumber, $this->byPhone);
+        // Note: printOrderForKitchen respects the 'kitchen_printer_only_hot_food' cache setting
         $this->decrementCeburekLeft();
         $this->decrementKibinaiLeft();
         $this->decrementDrinkLeft();
@@ -227,6 +228,13 @@ class OrdersList extends Component
 
     private function printOrderForKitchen(int $freeOrder, bool $byPhone): void
     {
+        if (cache('kitchen_printer_only_hot_food', false)) {
+            $hasHotFood = Order::where('category', 1)->orWhere('category', 4)->exists();
+            if (! $hasHotFood) {
+                return;
+            }
+        }
+
         try {
             $profile = CapabilityProfile::load('TM-P80');
             $connector = new NetworkPrintConnector('192.168.32.100', 9100, 2);
@@ -311,6 +319,10 @@ class OrdersList extends Component
 
     private function printOrderForClient(int $freeOrder, bool $byPhone): void
     {
+        if (! cache('client_printer_enabled', true)) {
+            return;
+        }
+
         try {
             $profile = CapabilityProfile::load('TM-P80');
             $connector = new NetworkPrintConnector('192.168.32.101', 9100, 2);
