@@ -11,7 +11,7 @@
                 style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);">
                 <div class="flex h-full text-white items-center font-nunito">
                     <div class="flex-1 px-5 py-3 text-center">
-                        <div class="font-extrabold text-xl leading-tight antialiased" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">
+                        <div class="font-extrabold leading-tight antialiased {{ $productName->left !== null ? 'text-sm' : 'text-xl' }}" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">
                             {{ $productName->name }}
                         </div>
                     </div>
