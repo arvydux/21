@@ -46,7 +46,7 @@
         </div>
     @endforeach
         <flux:modal name="choose-toppings" class="w-full max-w-2xl bg-white! rounded-xl shadow-2xl blur-none relative">
-            <button type="button" x-on:click="Livewire.dispatch('toggle-koreguoti')"
+            <button type="button" x-on:click="koreguoti = !koreguoti; window.koreguotiActive = koreguoti; window.dispatchEvent(new CustomEvent('koreguoti-changed', { detail: { active: koreguoti } }))"
                     :class="koreguoti
                         ? 'bg-red-500 border-red-500 text-white shadow-md shadow-red-200 hover:bg-red-600 hover:border-red-600'
                         : 'bg-white border-gray-200 text-slate-500 shadow-sm hover:shadow-md hover:border-gray-300'"
