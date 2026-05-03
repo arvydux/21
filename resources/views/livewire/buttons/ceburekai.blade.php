@@ -3,8 +3,8 @@
     $buttonColumns = (int) cache('pos_button_columns', 4);
     $buttonGap = (int) cache('pos_button_gap', 4);
     $buttonPadding = (int) cache('pos_button_padding', 3);
-    $btnPx = match($buttonPadding) { 1 => 'px-1', 2 => 'px-2', 4 => 'px-4', 5 => 'px-5', default => 'px-3' };
-    $btnPy = match($buttonPadding) { 1 => 'py-1', 2 => 'py-2', 4 => 'py-4', 5 => 'py-5', default => 'py-3' };
+    $btnPx = match($buttonPadding) { 1 => 'px-0', 2 => 'px-2', 4 => 'px-4', 5 => 'px-5', default => 'px-3' };
+    $btnPy = match($buttonPadding) { 1 => 'py-0', 2 => 'py-2', 4 => 'py-4', 5 => 'py-5', default => 'py-3' };
 @endphp
 <div wire:poll.5s x-data="{ koreguoti: window.koreguotiActive, editingProduct: '', editingProductId: null, editingLeft: '', editingAttention: false, editingToppingName: '', editingToppingId: null, editingToppingLeft: '', editingToppingAttention: false }" x-init="initSwapSortable($el, $wire, 'updateOrder')" @koreguoti-changed.window="koreguoti = $event.detail.active" class="grid {{ $buttonColumns === 3 ? 'md:grid-cols-3' : ($buttonColumns === 5 ? 'md:grid-cols-5' : 'md:grid-cols-4') }} auto-rows-min {{ $buttonGap === 1 ? 'gap-1' : ($buttonGap === 2 ? 'gap-2' : ($buttonGap === 3 ? 'gap-3' : ($buttonGap === 5 ? 'gap-5' : 'gap-4'))) }} mt-4">
     @foreach(\App\Models\Ceburek::orderBy('position')->get() as $productName)
