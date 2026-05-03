@@ -56,6 +56,15 @@
 
                     <livewire:button-columns-picker />
                 </div>
+
+                <flux:separator variant="subtle" />
+
+                <div>
+                    <flux:heading class="mb-1">{{ __('Tarpai tarp mygtukų') }}</flux:heading>
+                    <flux:subheading class="mb-4 text-white/70">{{ __('Pasirinkite atstumą tarp produktų mygtukų') }}</flux:subheading>
+
+                    <livewire:button-gap-picker />
+                </div>
             </div>
 
             {{-- Spausdintuvai tab --}}
