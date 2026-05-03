@@ -18,6 +18,12 @@
                     {{ __('Dizainas') }}
                 </button>
                 <button
+                    @click="tab = 'mygtukai'"
+                    :class="tab === 'mygtukai' ? 'border-b-2 border-white text-white' : 'text-white/50 hover:text-white/80'"
+                    class="px-4 py-2 text-sm font-medium transition-colors -mb-px">
+                    {{ __('Mygtukai') }}
+                </button>
+                <button
                     @click="tab = 'spausdintuvai'"
                     :class="tab === 'spausdintuvai' ? 'border-b-2 border-white text-white' : 'text-white/50 hover:text-white/80'"
                     class="px-4 py-2 text-sm font-medium transition-colors -mb-px">
@@ -31,6 +37,25 @@
                 <flux:subheading class="mb-4 text-white/70">{{ __('Pasirinkite dizaino šabloną savo POS sąsajai') }}</flux:subheading>
 
                 <livewire:template-picker />
+            </div>
+
+            {{-- Mygtukai tab --}}
+            <div x-show="tab === 'mygtukai'" x-transition class="flex flex-col gap-6">
+                <div>
+                    <flux:heading class="mb-1">{{ __('Mygtukų dydis') }}</flux:heading>
+                    <flux:subheading class="mb-4 text-white/70">{{ __('Pasirinkite produktų mygtukų aukštį kasos sąsajoje') }}</flux:subheading>
+
+                    <livewire:button-style-picker />
+                </div>
+
+                <flux:separator variant="subtle" />
+
+                <div>
+                    <flux:heading class="mb-1">{{ __('Stulpelių skaičius') }}</flux:heading>
+                    <flux:subheading class="mb-4 text-white/70">{{ __('Pasirinkite, kiek mygtukų rodoma vienoje eilutėje') }}</flux:subheading>
+
+                    <livewire:button-columns-picker />
+                </div>
             </div>
 
             {{-- Spausdintuvai tab --}}
