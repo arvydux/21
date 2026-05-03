@@ -65,6 +65,15 @@
 
                     <livewire:button-gap-picker />
                 </div>
+
+                <flux:separator variant="subtle" />
+
+                <div>
+                    <flux:heading class="mb-1">{{ __('Mygtukų vidinis tarpas') }}</flux:heading>
+                    <flux:subheading class="mb-4 text-white/70">{{ __('Pasirinkite tarpą tarp teksto ir mygtuko kraštų') }}</flux:subheading>
+
+                    <livewire:button-padding-picker />
+                </div>
             </div>
 
             {{-- Spausdintuvai tab --}}

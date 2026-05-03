@@ -1,4 +1,11 @@
-@php $buttonStyle = cache('pos_button_style', 'compact'); $buttonColumns = (int) cache('pos_button_columns', 4); $buttonGap = (int) cache('pos_button_gap', 4); @endphp
+@php
+    $buttonStyle = cache('pos_button_style', 'compact');
+    $buttonColumns = (int) cache('pos_button_columns', 4);
+    $buttonGap = (int) cache('pos_button_gap', 4);
+    $buttonPadding = (int) cache('pos_button_padding', 3);
+    $btnPx = match($buttonPadding) { 1 => 'px-1', 2 => 'px-2', 4 => 'px-4', 5 => 'px-5', default => 'px-3' };
+    $btnPy = match($buttonPadding) { 1 => 'py-1', 2 => 'py-2', 4 => 'py-4', 5 => 'py-5', default => 'py-3' };
+@endphp
 <div wire:poll.5s x-data="{ koreguoti: window.koreguotiActive, editingProduct: '', editingProductId: null, editingLeft: '', editingAttention: false, editingToppingName: '', editingToppingId: null, editingToppingLeft: '', editingToppingAttention: false }" x-init="initSwapSortable($el, $wire, 'updateOrder')" @koreguoti-changed.window="koreguoti = $event.detail.active" class="grid {{ $buttonColumns === 3 ? 'md:grid-cols-3' : ($buttonColumns === 5 ? 'md:grid-cols-5' : 'md:grid-cols-4') }} auto-rows-min {{ $buttonGap === 1 ? 'gap-1' : ($buttonGap === 2 ? 'gap-2' : ($buttonGap === 3 ? 'gap-3' : ($buttonGap === 5 ? 'gap-5' : 'gap-4'))) }} mt-4">
     @foreach(\App\Models\Ceburek::orderBy('position')->get() as $productName)
         <div data-sortable-id="{{ $productName->id }}" wire:key="ceburek-{{ $productName->id }}"
@@ -14,14 +21,14 @@
                 style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);">
                 @if(!is_numeric($productName->name))
                 <div class="flex h-full text-white items-center font-nunito">
-                    <div class="flex-1 px-3 py-3 text-center">
+                    <div class="flex-1 {{ $btnPx }} {{ $btnPy }} text-center">
                         <div class="font-extrabold leading-tight antialiased {{ $productName->left !== null ? ($buttonStyle === 'large' ? 'text-sm' : 'text-xs') : ($buttonStyle === 'large' ? 'text-xl' : 'text-base') }}" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">
                             {{ $productName->name }}
                         </div>
                     </div>
                     @if($productName->left !== null)
                     <div class="w-px bg-white/20 self-stretch {{ $buttonStyle === 'large' ? 'my-3' : 'my-4' }} shrink-0"></div>
-                    <div class="flex items-baseline justify-center px-3 shrink-0 gap-0.5">
+                    <div class="flex items-baseline justify-center {{ $btnPx }} shrink-0 gap-0.5">
                         <div class="font-black {{ $buttonStyle === 'large' ? 'text-2xl' : 'text-xl' }} leading-none" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
                             <span x-show="editingProductId === {{ $productName->id }} && editingLeft !== ''"
                                   x-text="editingLeft"></span>
