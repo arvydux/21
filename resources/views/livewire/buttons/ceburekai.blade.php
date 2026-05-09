@@ -142,7 +142,7 @@
                 </button>
 
                 <div class="flex justify-end gap-2">
-                    <flux:button variant="primary" x-on:click="$wire.updateToppingLeft(editingToppingId, editingToppingLeft !== '' ? parseInt(editingToppingLeft) : null); $flux.modal('koreguoti-topping-edit').close()">Atnaujinti</flux:button>
+                    <flux:button variant="primary" x-on:click="$wire.updateToppingLeft(editingToppingId, editingToppingLeft !== '' ? parseInt(editingToppingLeft) : null); $flux.modal('koreguoti-topping-edit').close(); editingToppingId = null; editingToppingLeft = ''">Atnaujinti</flux:button>
                     <flux:button x-on:click="$flux.modal('koreguoti-topping-edit').close()">Uždaryti</flux:button>
                 </div>
             </div>
@@ -165,7 +165,7 @@
                 </button>
 
                 <div class="flex justify-end gap-2">
-                    <flux:button variant="primary" x-on:click="$wire.updateLeft(editingProductId, editingLeft !== '' ? parseInt(editingLeft) : null); $flux.modal('koreguoti-edit').close()">Atnaujinti</flux:button>
+                    <flux:button variant="primary" x-on:click="$wire.updateLeft(editingProductId, editingLeft !== '' ? parseInt(editingLeft) : null); $flux.modal('koreguoti-edit').close(); editingProductId = null; editingLeft = ''">Atnaujinti</flux:button>
                     <flux:button x-on:click="$flux.modal('koreguoti-edit').close()">Uždaryti</flux:button>
                 </div>
             </div>

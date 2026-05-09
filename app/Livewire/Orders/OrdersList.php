@@ -324,35 +324,18 @@ class OrdersList extends Component
         }
 
         try {
-            $profile = CapabilityProfile::load('TM-P80');
             $connector = new NetworkPrintConnector('192.168.32.101', 9100, 2);
+            $profile = CapabilityProfile::load('default'); // попробуй 'default' вместо TM-P80
             $printer = new Printer($connector, $profile);
-            $printer->setEmphasis(true);
 
-            $printer->feed();
-            $printer->setTextSize(6, 5);
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text($freeOrder."\n");
-            // change font
-            $printer->setFont(1);
-            $printer->setTextSize(2, 1);
-            $printer->text("\n".now('Europe/Vilnius')."\n");
-            $printer->text(str_repeat('-', 24)."\n"); // Adjust 48 to match your printer's width*/
-            $printer->feed();
+            // Переключаем на Baltic (CP775) кодовую страницу
+            // ESC t n — команда выбора кодовой страницы
+            $printer->getPrintConnector()->write("\x1B\x74\x0B"); // 0x0B = 11 = CP775
 
-            $printer->text("Nefiskalinis kvitas \n");
-            $printer->feed(2);
+            // Конвертируем строку из UTF-8 в CP775
+            $text = iconv('UTF-8', 'CP775//TRANSLIT', 'Ačiū už pirkinį!');
+            $printer->text($text."\n");
 
-            $totalSum = Cache::get('totalSum');
-            $printer->text('Viso '.$totalSum.' EUR'."\n");
-
-            $printer->feed(1);
-            if ($byPhone) {
-                $printer->setTextSize(2, 2);
-                $printer->setJustification(Printer::JUSTIFY_CENTER);
-                $printer->text('Telefonu '."\n");
-            }
-            $printer->feed(1);
             $printer->cut();
             $printer->close();
         } catch (Exception $e) {
