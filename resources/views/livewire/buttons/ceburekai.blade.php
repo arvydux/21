@@ -72,8 +72,28 @@
                                 <input type="checkbox" id="{{$topping->name}}" value="{{$topping->name}}" wire:model.live="toppings"
                                        class="hidden peer">
                                 <label for="{{$topping->name}}"
-                                       class="flex items-center justify-center aspect-square w-full p-1 bg-linear-to-br text-white/90 rounded-xl cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 peer-checked:from-emerald-500 peer-checked:to-teal-600 peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-emerald-500/30 peer-checked:-translate-y-0.5 peer-checked:ring-2 peer-checked:ring-emerald-400/50 peer-checked:ring-offset-1 peer-checked:hover:from-emerald-500 peer-checked:hover:to-teal-600 font-bold leading-tight {{ $topping->attention ? 'from-red-500 to-red-700 hover:from-red-400 hover:to-red-600' : 'from-slate-600 to-slate-800 hover:from-slate-500 hover:to-slate-700' }}">
-                                    <div class="text-center text-sm">{{ $topping->name }}{{ $topping->left !== null ? ' - ' . $topping->left : '' }}</div>
+                                       class="flex items-center aspect-square w-full overflow-hidden bg-linear-to-br text-white/90 rounded-xl cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 peer-checked:from-emerald-500 peer-checked:to-teal-600 peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-emerald-500/30 peer-checked:-translate-y-0.5 peer-checked:ring-2 peer-checked:ring-emerald-400/50 peer-checked:ring-offset-1 peer-checked:hover:from-emerald-500 peer-checked:hover:to-teal-600 font-bold leading-tight {{ $topping->attention ? 'from-red-500 to-red-700 hover:from-red-400 hover:to-red-600' : 'from-slate-600 to-slate-800 hover:from-slate-500 hover:to-slate-700' }}">
+                                    <div class="flex-1 p-1 text-center">
+                                        <div class="font-extrabold leading-tight antialiased text-sm" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">{{ $topping->name }}</div>
+                                    </div>
+                                    @if($topping->left !== null)
+                                    <div class="w-px bg-white/20 self-stretch my-3 shrink-0"></div>
+                                    <div class="flex items-baseline justify-center px-2 shrink-0 gap-0.5">
+                                        <div class="font-black text-xl leading-none" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                                            <span x-show="editingToppingId === {{ $topping->id }} && editingToppingLeft !== ''" x-text="editingToppingLeft"></span>
+                                            <span x-show="!(editingToppingId === {{ $topping->id }} && editingToppingLeft !== '')">{{ $topping->left }}</span>
+                                        </div>
+                                        <div class="text-xs font-semibold opacity-75">vnt.</div>
+                                    </div>
+                                    @else
+                                    <div class="w-px bg-white/20 self-stretch my-3 shrink-0"
+                                         x-show="editingToppingId === {{ $topping->id }} && editingToppingLeft !== ''"></div>
+                                    <div class="flex items-baseline justify-center px-2 shrink-0 gap-0.5"
+                                         x-show="editingToppingId === {{ $topping->id }} && editingToppingLeft !== ''">
+                                        <div x-text="editingToppingLeft" class="font-black text-xl leading-none" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>
+                                        <div class="text-xs font-semibold opacity-75">vnt.</div>
+                                    </div>
+                                    @endif
                                 </label>
                             </li>
                         @endforeach
