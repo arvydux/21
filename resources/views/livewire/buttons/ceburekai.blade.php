@@ -78,20 +78,20 @@
                                     </div>
                                     @if($topping->left !== null)
                                     <div class="w-px bg-white/20 self-stretch my-3 shrink-0"></div>
-                                    <div class="flex items-baseline justify-center px-2 shrink-0 gap-0.5">
-                                        <div class="font-black text-xl leading-none" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                                    <div class="flex items-baseline justify-center px-1.5 shrink-0 gap-0.5">
+                                        <div class="font-black text-base leading-none" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
                                             <span x-show="editingToppingId === {{ $topping->id }} && editingToppingLeft !== ''" x-text="editingToppingLeft"></span>
                                             <span x-show="!(editingToppingId === {{ $topping->id }} && editingToppingLeft !== '')">{{ $topping->left }}</span>
                                         </div>
-                                        <div class="text-xs font-semibold opacity-75">vnt.</div>
+                                        <div class="text-[10px] font-semibold opacity-75">vnt.</div>
                                     </div>
                                     @else
                                     <div class="w-px bg-white/20 self-stretch my-3 shrink-0"
                                          x-show="editingToppingId === {{ $topping->id }} && editingToppingLeft !== ''"></div>
-                                    <div class="flex items-baseline justify-center px-2 shrink-0 gap-0.5"
+                                    <div class="flex items-baseline justify-center px-1.5 shrink-0 gap-0.5"
                                          x-show="editingToppingId === {{ $topping->id }} && editingToppingLeft !== ''">
-                                        <div x-text="editingToppingLeft" class="font-black text-xl leading-none" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>
-                                        <div class="text-xs font-semibold opacity-75">vnt.</div>
+                                        <div x-text="editingToppingLeft" class="font-black text-base leading-none" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>
+                                        <div class="text-[10px] font-semibold opacity-75">vnt.</div>
                                     </div>
                                     @endif
                                 </label>
