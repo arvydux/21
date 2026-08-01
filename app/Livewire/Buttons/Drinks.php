@@ -15,7 +15,14 @@ class Drinks extends Component
 
     public $selectedProductName = '';
 
+    public ?int $subcategoryId = null;
+
     public Collection $drinks;
+
+    public function mount(?int $subcategoryId = null): void
+    {
+        $this->subcategoryId = $subcategoryId;
+    }
 
     public function addProduct($productName, $productPrice)
     {
@@ -79,7 +86,7 @@ class Drinks extends Component
 
     public function render()
     {
-        $products = Drink::orderBy('position')->paginate(10);
+        $products = Drink::where('subcategory_id', $this->subcategoryId)->orderBy('position')->paginate(10);
         $this->drinks = collect($products->items());
 
         return view('livewire.buttons.drinks');

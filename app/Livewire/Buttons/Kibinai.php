@@ -14,7 +14,14 @@ class Kibinai extends Component
 
     public $selectedProductName = '';
 
+    public ?int $subcategoryId = null;
+
     public Collection $kibinai;
+
+    public function mount(?int $subcategoryId = null): void
+    {
+        $this->subcategoryId = $subcategoryId;
+    }
 
     public function addProduct($productName, $productPrice)
     {
@@ -77,7 +84,7 @@ class Kibinai extends Component
 
     public function render()
     {
-        $products = \App\Models\Kibinai::orderBy('position')->paginate(10);
+        $products = \App\Models\Kibinai::where('subcategory_id', $this->subcategoryId)->orderBy('position')->paginate(10);
         $this->kibinai = collect($products->items());
 
         return view('livewire.buttons.kibinai');

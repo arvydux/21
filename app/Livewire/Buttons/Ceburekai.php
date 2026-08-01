@@ -26,6 +26,8 @@ class Ceburekai extends Component
 
     public $takeaway = true;
 
+    public ?int $subcategoryId = null;
+
     public Collection $cebureks;
 
     #[on('chooseProductName')]
@@ -34,8 +36,9 @@ class Ceburekai extends Component
         $this->productName = $name;
     }
 
-    public function mount()
+    public function mount(?int $subcategoryId = null)
     {
+        $this->subcategoryId = $subcategoryId;
         $this->getToppingList();
         $this->getProductList();
     }

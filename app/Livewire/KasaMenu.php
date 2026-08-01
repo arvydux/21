@@ -13,10 +13,10 @@ class KasaMenu extends Component
 
     public Collection $categories;
 
-    public function categoryButtonClicked($buttonName): void
+    public function categoryButtonClicked($buttonName, $categoryId = null): void
     {
         $this->categoryMenuClicked = $buttonName;
-        $this->dispatch('category-button-clicked', $buttonName);
+        $this->dispatch('category-button-clicked', buttonName: $buttonName, categoryId: $categoryId);
     }
 
     #[Renderless]

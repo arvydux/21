@@ -9,6 +9,7 @@
                     <th scope="col" class="px-6 py-3 w-32">Kaina</th>
                     <th scope="col" class="px-6 py-3 w-28">Rodyti</th>
                     <th scope="col" class="px-6 py-3 w-36">Pakuotės kaina</th>
+                    <th scope="col" class="px-6 py-3 w-44">Subkategorija</th>
                     <th scope="col" class="px-6 py-3 w-44">Veiksmai</th>
                 </tr>
             </thead>
@@ -25,6 +26,7 @@
                         @endif
                     </td>
                     <td class="px-6 py-4">{{ number_format($productName->package ?? 0, 2) }} €</td>
+                    <td class="px-6 py-4">{{ $productName->subcategory?->name ?? '—' }}</td>
                     <td class="px-4 py-4">
                         <div class="flex gap-2">
                             <flux:button wire:click="editProduct({{ $productName->id }})" variant="primary">Pakeisti</flux:button>
@@ -33,7 +35,7 @@
                     </td>
                 </tr>
                 <tr class="@if($editedProductNameId !== $productName->id) hidden @endif border-b-2 border-emerald-400/50 bg-emerald-900/30">
-                    <td colspan="5" class="px-4 py-4">
+                    <td colspan="6" class="px-4 py-4">
                         <div class="flex gap-4 items-end flex-wrap">
                             <div class="flex-1 min-w-[200px]">
                                 <label class="block mb-1 text-xs font-medium text-white/70">Pavadinimas</label>
@@ -56,6 +58,16 @@
                                 <label class="block mb-1 text-xs font-medium text-white/70">Pakuotės kaina</label>
                                 <input type="number" min="0" wire:model="package" id="package-price" class="w-full bg-white/90 px-3 py-2 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
                                 @error('package-price') <span class="text-xs text-red-300">Pakuotės kaina turi būti užpildytas</span> @enderror
+                            </div>
+                            <div class="w-48">
+                                <label class="block mb-1 text-xs font-medium text-white/70">Subkategorija</label>
+                                <select wire:model="subcategory_id" class="w-full bg-white/90 px-3 py-2 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                    <option value="">— Pasirinkite —</option>
+                                    @foreach($subcategories as $subcategory)
+                                        <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('subcategory_id') <span class="text-xs text-red-300">Pasirinkite subkategoriją</span> @enderror
                             </div>
                             <div class="flex gap-2 shrink-0">
                                 <flux:button wire:click="save({{ $productName->id }})" variant="primary">Išsaugoti</flux:button>

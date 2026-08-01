@@ -8,13 +8,22 @@ use Livewire\Component;
 class CebureksTable extends Component
 {
     public int $editedProductNameId = 0;
+
     public \App\Models\Ceburek $product;
+
     public string $name;
+
     public float $price;
+
     public ?float $package = null;
+
     public string $sign;
+
     public bool $show = false;
-    public $products= [];
+
+    public ?int $subcategory_id = null;
+
+    public $products = [];
 
     public function editProduct(int $productNameId): void
     {
@@ -25,6 +34,7 @@ class CebureksTable extends Component
         $this->sign = $this->product->sign;
         $this->show = $this->product->show;
         $this->package = $this->product->package;
+        $this->subcategory_id = $this->product->subcategory_id;
     }
 
     public function save()
@@ -32,13 +42,14 @@ class CebureksTable extends Component
         $this->validate([
             'name' => 'required',
             'price' => 'required|numeric',
+            'subcategory_id' => 'required|exists:subcategories,id',
         ]);
 
         if (is_null($this->product)) {
             $position = \App\Models\Ceburek::max('position') + 1;
-            \App\Models\Ceburek::create(array_merge($this->only('name', 'price', 'show', 'sign', 'package'), ['position' => $position]));
+            \App\Models\Ceburek::create(array_merge($this->only('name', 'price', 'show', 'sign', 'package', 'subcategory_id'), ['position' => $position]));
         } else {
-            $this->product->update($this->only('name', 'price', 'show', 'sign', 'package', 'package'));
+            $this->product->update($this->only('name', 'price', 'show', 'sign', 'package', 'subcategory_id'));
         }
 
         $this->editedProductNameId = 0;
@@ -56,13 +67,19 @@ class CebureksTable extends Component
     {
         $this->products = \App\Models\Ceburek::all();
     }
+
     public function cancel(): void
     {
         $this->editedProductNameId = 0;
     }
 
+    #[On('subcategoryChanged')]
+    public function refreshSubcategories(): void {}
+
     public function render()
     {
-        return view('livewire.menu.tables.cebureks-table');
+        return view('livewire.menu.tables.cebureks-table', [
+            'subcategories' => \App\Models\Subcategory::whereHas('category', fn ($q) => $q->where('component_name', 'ceburekai'))->orderBy('position')->get(),
+        ]);
     }
 }
