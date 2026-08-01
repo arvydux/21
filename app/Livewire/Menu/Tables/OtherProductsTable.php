@@ -8,12 +8,20 @@ use Livewire\Component;
 class OtherProductsTable extends Component
 {
     public int $editedProductNameId = 0;
+
     public \App\Models\OtherProduct $simpleProduct;
+
     public string $name;
+
     public float $price;
+
     public ?float $package = null;
+
     public bool $show = false;
-    public $simpleProducts= [];
+
+    public ?int $subcategory_id = null;
+
+    public $simpleProducts = [];
 
     public function editProduct(int $productNameId): void
     {
@@ -23,6 +31,7 @@ class OtherProductsTable extends Component
         $this->price = $this->simpleProduct->price;
         $this->show = $this->simpleProduct->show;
         $this->package = $this->simpleProduct->package;
+        $this->subcategory_id = $this->simpleProduct->subcategory_id;
     }
 
     public function save()
@@ -30,14 +39,14 @@ class OtherProductsTable extends Component
         $this->validate([
             'name' => 'required',
             'price' => 'required|numeric',
+            'subcategory_id' => 'required|exists:subcategories,id',
         ]);
 
         if (is_null($this->simpleProduct)) {
             $position = \App\Models\OtherProduct::max('position') + 1;
-            \App\Models\OtherProduct::create(array_merge($this->only('name', 'price', 'show', 'package'), ['position' => $position]));
+            \App\Models\OtherProduct::create(array_merge($this->only('name', 'price', 'show', 'package', 'subcategory_id'), ['position' => $position]));
         } else {
-          //  dd($this->packagePrice);
-            $this->simpleProduct->update($this->only('name', 'price', 'show', 'package'));
+            $this->simpleProduct->update($this->only('name', 'price', 'show', 'package', 'subcategory_id'));
         }
 
         $this->editedProductNameId = 0;
@@ -55,13 +64,19 @@ class OtherProductsTable extends Component
     {
         $this->simpleProducts = \App\Models\OtherProduct::all();
     }
+
     public function cancel(): void
     {
         $this->editedProductNameId = 0;
     }
 
+    #[On('subcategoryChanged')]
+    public function refreshSubcategories(): void {}
+
     public function render()
     {
-        return view('livewire.menu.tables.other-products-table');
+        return view('livewire.menu.tables.other-products-table', [
+            'subcategories' => \App\Models\Subcategory::whereHas('category', fn ($q) => $q->where('component_name', 'other'))->orderBy('position')->get(),
+        ]);
     }
 }

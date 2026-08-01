@@ -15,7 +15,14 @@ class OtherProducts extends Component
 
     public $selectedProductName = '';
 
+    public ?int $subcategoryId = null;
+
     public Collection $otherProducts;
+
+    public function mount(?int $subcategoryId = null): void
+    {
+        $this->subcategoryId = $subcategoryId;
+    }
 
     public function addProduct($productName, $productPrice)
     {
@@ -78,7 +85,7 @@ class OtherProducts extends Component
 
     public function render()
     {
-        $products = OtherProduct::orderBy('position')->paginate(10);
+        $products = OtherProduct::where('subcategory_id', $this->subcategoryId)->orderBy('position')->paginate(10);
         $this->otherProducts = collect($products->items());
 
         return view('livewire.buttons.other-products');

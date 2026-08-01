@@ -2,6 +2,7 @@
     <div class="flex h-full w-full flex-1  gap-4 rounded-xl">
         <div class="auto-rows-min gap-4 w-4/4" data-tabs-toggle="#default-tab-content" role="tablist">
             <livewire:menu-category/>
+            <livewire:menu-subcategory/>
             <livewire:menu-category-tables/>
             <div class="relative left-0 bottom-0 my-2">
                 <button onclick="window.location='{{ route('home') }}'" class="flex items-center justify-center w-20 h-20 rounded-full text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none">

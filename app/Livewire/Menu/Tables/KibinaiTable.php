@@ -8,12 +8,20 @@ use Livewire\Component;
 class KibinaiTable extends Component
 {
     public int $editedProductNameId = 0;
+
     public \App\Models\Kibinai $simpleProduct;
+
     public string $name;
+
     public float $price;
+
     public ?float $package = null;
+
     public bool $show = false;
-    public $simpleProducts= [];
+
+    public ?int $subcategory_id = null;
+
+    public $simpleProducts = [];
 
     public function editProduct(int $productNameId): void
     {
@@ -23,6 +31,7 @@ class KibinaiTable extends Component
         $this->price = $this->simpleProduct->price;
         $this->show = $this->simpleProduct->show;
         $this->package = $this->simpleProduct->package;
+        $this->subcategory_id = $this->simpleProduct->subcategory_id;
     }
 
     public function save()
@@ -30,13 +39,14 @@ class KibinaiTable extends Component
         $this->validate([
             'name' => 'required',
             'price' => 'required|numeric',
+            'subcategory_id' => 'required|exists:subcategories,id',
         ]);
 
         if (is_null($this->simpleProduct)) {
             $position = \App\Models\Kibinai::max('position') + 1;
-            \App\Models\Kibinai::create(array_merge($this->only('name', 'price', 'show', 'package'), ['position' => $position]));
+            \App\Models\Kibinai::create(array_merge($this->only('name', 'price', 'show', 'package', 'subcategory_id'), ['position' => $position]));
         } else {
-            $this->simpleProduct->update($this->only('name', 'price', 'show', 'package'));
+            $this->simpleProduct->update($this->only('name', 'price', 'show', 'package', 'subcategory_id'));
         }
 
         $this->editedProductNameId = 0;
@@ -54,13 +64,19 @@ class KibinaiTable extends Component
     {
         $this->simpleProducts = \App\Models\Kibinai::all();
     }
+
     public function cancel(): void
     {
         $this->editedProductNameId = 0;
     }
 
+    #[On('subcategoryChanged')]
+    public function refreshSubcategories(): void {}
+
     public function render()
     {
-        return view('livewire.menu.tables.kibinai-table');
+        return view('livewire.menu.tables.kibinai-table', [
+            'subcategories' => \App\Models\Subcategory::whereHas('category', fn ($q) => $q->where('component_name', 'kibinai'))->orderBy('position')->get(),
+        ]);
     }
 }
