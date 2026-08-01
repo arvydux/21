@@ -129,8 +129,8 @@ class OrdersList extends Component
         ]);
         FreeNumbers::first()->update(['number' => $this->freeNumber + 1]);
 
-        // $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
-        // $this->printOrderForClient($this->freeNumber, $this->byPhone);
+        $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
+        $this->printOrderForClient($this->freeNumber, $this->byPhone);
         $this->decrementCeburekLeft();
         $this->decrementKibinaiLeft();
         $this->decrementDrinkLeft();
@@ -358,7 +358,6 @@ class OrdersList extends Component
 
     public function mount()
     {
-        OrderNumbers::truncate();
         $this->byPhone = false;
         $this->koreguoti = false;
         $this->orders = Order::orderBy('created_at', 'desc')->get();
