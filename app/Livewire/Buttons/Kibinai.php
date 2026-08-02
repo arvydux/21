@@ -3,7 +3,6 @@
 namespace App\Livewire\Buttons;
 
 use App\Models\Order;
-use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Renderless;
 use Livewire\Component;
@@ -15,8 +14,6 @@ class Kibinai extends Component
     public $selectedProductName = '';
 
     public ?int $subcategoryId = null;
-
-    public Collection $kibinai;
 
     public function mount(?int $subcategoryId = null): void
     {
@@ -84,9 +81,6 @@ class Kibinai extends Component
 
     public function render()
     {
-        $products = \App\Models\Kibinai::where('subcategory_id', $this->subcategoryId)->orderBy('position')->paginate(10);
-        $this->kibinai = collect($products->items());
-
         return view('livewire.buttons.kibinai');
     }
 }

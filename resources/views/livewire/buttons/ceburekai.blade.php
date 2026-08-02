@@ -1,8 +1,14 @@
 @php
-    $buttonStyle = cache('pos_button_style', 'compact');
-    $buttonColumns = (int) cache('pos_button_columns', 4);
-    $buttonGap = (int) cache('pos_button_gap', 4);
-    $buttonPadding = (int) cache('pos_button_padding', 3);
+    $__btnSettings = \Illuminate\Support\Facades\Cache::many([
+        'pos_button_style' => 'compact',
+        'pos_button_columns' => 4,
+        'pos_button_gap' => 4,
+        'pos_button_padding' => 3,
+    ]);
+    $buttonStyle = $__btnSettings['pos_button_style'];
+    $buttonColumns = (int) $__btnSettings['pos_button_columns'];
+    $buttonGap = (int) $__btnSettings['pos_button_gap'];
+    $buttonPadding = (int) $__btnSettings['pos_button_padding'];
     $btnPx = match($buttonPadding) { 1 => 'px-0', 2 => 'px-2', 4 => 'px-4', 5 => 'px-5', default => 'px-3' };
     $btnPy = match($buttonPadding) { 1 => 'py-0', 2 => 'py-2', 4 => 'py-4', 5 => 'py-5', default => 'py-3' };
 @endphp

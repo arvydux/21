@@ -46,6 +46,8 @@ class KasaCategorySection extends Component
             ? Subcategory::where('category_id', $this->categoryId)->orderBy('position')->get()
             : collect();
 
-        return view('livewire.kasa-category-section');
+        return view('livewire.kasa-category-section', [
+            'layoutMode' => cache('subcategory_layout_mode', 'drilldown'),
+        ]);
     }
 }
