@@ -16,7 +16,7 @@ new class extends Component {
     }
 }; ?>
 
-<div class="grid grid-cols-2 gap-4">
+<div class="grid grid-cols-3 gap-4">
 
     {{-- Drilldown: subcategory buttons disappear, products + back button --}}
     <label class="cursor-pointer">
@@ -59,6 +59,32 @@ new class extends Component {
             <div class="flex items-center justify-between bg-white/10 text-white px-3 py-2 text-sm">
                 <span>{{ __('Be „Atgal“') }}</span>
                 @if($mode === 'persistent') <flux:icon.check-circle class="size-4" /> @endif
+            </div>
+        </div>
+    </label>
+
+    {{-- Visi default: auto-select "Visi" (all products) on category click --}}
+    <label class="cursor-pointer">
+        <input type="radio" wire:model.live="mode" value="visi_default" class="sr-only">
+        <div class="rounded-xl overflow-hidden transition-all
+            {{ $mode === 'visi_default' ? 'ring-2 ring-white scale-105' : 'ring-1 ring-white/30 opacity-60' }}">
+            <div class="w-full h-28 bg-white/10 flex flex-col gap-2 p-3 justify-center">
+                <div class="flex gap-1" style="height:0.9rem;">
+                    <div class="flex items-center justify-center rounded" style="flex:1;background:rgba(255,255,255,0.6);">
+                        <div style="height:0.3rem;width:50%;background:rgba(0,0,0,0.35);border-radius:2px;"></div>
+                    </div>
+                    <div class="flex-1 rounded" style="background:rgba(255,255,255,0.2);"></div>
+                    <div class="flex-1 rounded" style="background:rgba(255,255,255,0.2);"></div>
+                </div>
+                <div class="grid grid-cols-3 gap-1">
+                    @foreach(range(1, 6) as $n)
+                        <div class="rounded" style="height:0.9rem;background:rgba(255,255,255,0.18);"></div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="flex items-center justify-between bg-white/10 text-white px-3 py-2 text-sm">
+                <span>{{ __('Iš karto „Visi“') }}</span>
+                @if($mode === 'visi_default') <flux:icon.check-circle class="size-4" /> @endif
             </div>
         </div>
     </label>

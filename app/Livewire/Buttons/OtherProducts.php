@@ -16,9 +16,12 @@ class OtherProducts extends Component
 
     public ?int $subcategoryId = null;
 
-    public function mount(?int $subcategoryId = null): void
+    public bool $showAll = false;
+
+    public function mount(?int $subcategoryId = null, bool $showAll = false): void
     {
         $this->subcategoryId = $subcategoryId;
+        $this->showAll = $showAll;
     }
 
     public function addProduct($productName, $productPrice)

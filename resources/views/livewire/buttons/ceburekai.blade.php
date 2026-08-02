@@ -13,7 +13,7 @@
     $btnPy = match($buttonPadding) { 1 => 'py-0', 2 => 'py-2', 4 => 'py-4', 5 => 'py-5', default => 'py-3' };
 @endphp
 <div x-data="{ koreguoti: window.koreguotiActive, editingProduct: '', editingProductId: null, editingLeft: '', editingAttention: false, editingToppingName: '', editingToppingId: null, editingToppingLeft: '', editingToppingAttention: false }" x-init="initSwapSortable($el, $wire, 'updateOrder')" @koreguoti-changed.window="koreguoti = $event.detail.active" class="grid {{ $buttonColumns === 3 ? 'md:grid-cols-3' : ($buttonColumns === 5 ? 'md:grid-cols-5' : 'md:grid-cols-4') }} auto-rows-min {{ $buttonGap === 1 ? 'gap-1' : ($buttonGap === 2 ? 'gap-2' : ($buttonGap === 3 ? 'gap-3' : ($buttonGap === 5 ? 'gap-5' : 'gap-4'))) }} mt-4">
-    @foreach(\App\Models\Ceburek::where('subcategory_id', $subcategoryId)->orderBy('position')->get() as $productName)
+    @foreach(\App\Models\Ceburek::when(! $showAll, fn ($q) => $q->where('subcategory_id', $subcategoryId))->orderBy('position')->get() as $productName)
         <div data-sortable-id="{{ $productName->id }}" wire:key="ceburek-{{ $productName->id }}"
              @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ({{ $productName->attention ? 'true' : 'false' }}) { $wire.toggleAttention({{ $productName->id }}); } else { editingProduct = '{{ $productName->name }}'; editingProductId = {{ $productName->id }}; editingLeft = ''; editingAttention = false; $flux.modal('koreguoti-edit').show(); } }">
         @if(!is_numeric($productName->name))

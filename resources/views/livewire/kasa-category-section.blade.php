@@ -1,6 +1,6 @@
 <div>
     @if(isset($buttonName))
-        @php $persistent = $layoutMode === 'persistent'; @endphp
+        @php $persistent = in_array($layoutMode, ['persistent', 'visi_default'], true); @endphp
 
         @if($persistent)
             {{-- Persistent mode: subcategory buttons stay visible, no "Atgal" button --}}

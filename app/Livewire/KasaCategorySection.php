@@ -28,6 +28,12 @@ class KasaCategorySection extends Component
         $this->buttonName = $buttonName;
         $this->categoryId = $categoryId;
         $this->selectedSubcategoryId = null;
+
+        if ($categoryId && cache('subcategory_layout_mode', 'drilldown') === 'visi_default') {
+            $this->selectedSubcategoryId = Subcategory::where('category_id', $categoryId)
+                ->where('name', 'Visi')
+                ->value('id');
+        }
     }
 
     public function selectSubcategory(int $subcategoryId): void
@@ -46,8 +52,16 @@ class KasaCategorySection extends Component
             ? Subcategory::where('category_id', $this->categoryId)->orderBy('position')->get()
             : collect();
 
+        $layoutMode = cache('subcategory_layout_mode', 'drilldown');
+        $visiId = $this->subcategories->firstWhere('name', 'Visi')?->id;
+
+        $showAll = $layoutMode === 'visi_default'
+            && $this->selectedSubcategoryId !== null
+            && $this->selectedSubcategoryId === $visiId;
+
         return view('livewire.kasa-category-section', [
-            'layoutMode' => cache('subcategory_layout_mode', 'drilldown'),
+            'layoutMode' => $layoutMode,
+            'showAll' => $showAll,
         ]);
     }
 }
