@@ -22,3 +22,10 @@ it('loads the stored mode on mount', function () {
     Volt::test('subcategory-layout-picker')
         ->assertSet('mode', 'persistent');
 });
+
+it('persists the visi_default mode to cache', function () {
+    Volt::test('subcategory-layout-picker')
+        ->set('mode', 'visi_default');
+
+    expect(cache('subcategory_layout_mode'))->toBe('visi_default');
+});

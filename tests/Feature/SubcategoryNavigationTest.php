@@ -96,3 +96,49 @@ it('defaults to drilldown mode when no preference is stored', function () {
         ->call('selectSubcategory', $meat->id)
         ->assertSee('Atgal');
 });
+
+function makeCeburekCategoryWithVisi(): array
+{
+    $category = Category::create(['name' => 'Čeburekai', 'component_name' => 'ceburekai']);
+
+    $visi = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+    $meat = Subcategory::create(['name' => 'Mėsiniai', 'category_id' => $category->id, 'position' => 1]);
+
+    Ceburek::create(['name' => 'Produktas Visi', 'price' => 3.5, 'sign' => 'A', 'show' => true, 'category' => 1, 'position' => 0, 'subcategory_id' => $visi->id]);
+    Ceburek::create(['name' => 'Produktas Mesa', 'price' => 3.0, 'sign' => 'B', 'show' => true, 'category' => 1, 'position' => 1, 'subcategory_id' => $meat->id]);
+
+    return compact('category', 'visi', 'meat');
+}
+
+it('auto-selects Visi and shows all category products in visi_default mode', function () {
+    cache()->forever('subcategory_layout_mode', 'visi_default');
+    ['category' => $category, 'visi' => $visi] = makeCeburekCategoryWithVisi();
+
+    Livewire::test(KasaCategorySection::class)
+        ->call('showProductMenu', 'ceburekai', $category->id)
+        ->assertSet('selectedSubcategoryId', $visi->id)
+        ->assertDontSee('Atgal')
+        ->assertSee('Mėsiniai')          // subcategory buttons stay visible
+        ->assertSee('Produktas Visi')
+        ->assertSee('Produktas Mesa');   // product from a different subcategory is shown too
+});
+
+it('filters to the clicked subcategory in visi_default mode', function () {
+    cache()->forever('subcategory_layout_mode', 'visi_default');
+    ['category' => $category, 'meat' => $meat] = makeCeburekCategoryWithVisi();
+
+    Livewire::test(KasaCategorySection::class)
+        ->call('showProductMenu', 'ceburekai', $category->id)
+        ->call('selectSubcategory', $meat->id)
+        ->assertSee('Produktas Mesa')
+        ->assertDontSee('Produktas Visi');
+});
+
+it('does not auto-select Visi in drilldown or persistent modes', function () {
+    cache()->forever('subcategory_layout_mode', 'persistent');
+    ['category' => $category] = makeCeburekCategoryWithVisi();
+
+    Livewire::test(KasaCategorySection::class)
+        ->call('showProductMenu', 'ceburekai', $category->id)
+        ->assertSet('selectedSubcategoryId', null);
+});

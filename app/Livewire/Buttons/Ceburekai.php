@@ -27,15 +27,18 @@ class Ceburekai extends Component
 
     public ?int $subcategoryId = null;
 
+    public bool $showAll = false;
+
     #[on('chooseProductName')]
     public function getProductName($name): void
     {
         $this->productName = $name;
     }
 
-    public function mount(?int $subcategoryId = null)
+    public function mount(?int $subcategoryId = null, bool $showAll = false)
     {
         $this->subcategoryId = $subcategoryId;
+        $this->showAll = $showAll;
         $this->getToppingList();
         $this->getProductList();
     }
