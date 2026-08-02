@@ -4,7 +4,6 @@ namespace App\Livewire\Buttons;
 
 use App\Models\Order;
 use App\Models\OtherProduct;
-use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Renderless;
 use Livewire\Component;
@@ -16,8 +15,6 @@ class OtherProducts extends Component
     public $selectedProductName = '';
 
     public ?int $subcategoryId = null;
-
-    public Collection $otherProducts;
 
     public function mount(?int $subcategoryId = null): void
     {
@@ -85,9 +82,6 @@ class OtherProducts extends Component
 
     public function render()
     {
-        $products = OtherProduct::where('subcategory_id', $this->subcategoryId)->orderBy('position')->paginate(10);
-        $this->otherProducts = collect($products->items());
-
         return view('livewire.buttons.other-products');
     }
 }

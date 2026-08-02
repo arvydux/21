@@ -29,6 +29,12 @@
                     class="px-4 py-2 text-sm font-medium transition-colors -mb-px">
                     {{ __('Spausdintuvai') }}
                 </button>
+                <button
+                    @click="tab = 'subkategorijos'"
+                    :class="tab === 'subkategorijos' ? 'border-b-2 border-white text-white' : 'text-white/50 hover:text-white/80'"
+                    class="px-4 py-2 text-sm font-medium transition-colors -mb-px">
+                    {{ __('Subkategorijos') }}
+                </button>
             </div>
 
             {{-- Dizainas tab --}}
@@ -92,6 +98,16 @@
                     <flux:subheading class="mb-4 text-white/70">{{ __('Konfigūruokite kliento spausdintuvo elgesį') }}</flux:subheading>
 
                     <livewire:client-printer-settings />
+                </div>
+            </div>
+
+            {{-- Subkategorijos tab --}}
+            <div x-show="tab === 'subkategorijos'" x-transition class="flex flex-col gap-6">
+                <div>
+                    <flux:heading class="mb-1">{{ __('Subkategorijų išdėstymas') }}</flux:heading>
+                    <flux:subheading class="mb-4 text-white/70">{{ __('Pasirinkite, kaip elgiasi subkategorijos kasoje pasirinkus vieną iš jų') }}</flux:subheading>
+
+                    <livewire:subcategory-layout-picker />
                 </div>
             </div>
 

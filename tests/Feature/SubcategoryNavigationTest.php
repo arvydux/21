@@ -62,3 +62,37 @@ it('resets the selected subcategory when switching category', function () {
         ->call('showProductMenu', 'other', $other->id)
         ->assertSet('selectedSubcategoryId', null);
 });
+
+it('hides subcategory buttons and shows the back button in drilldown mode', function () {
+    cache()->forever('subcategory_layout_mode', 'drilldown');
+    ['category' => $category, 'meat' => $meat] = makeCeburekCategoryWithSubcategories();
+
+    Livewire::test(KasaCategorySection::class)
+        ->call('showProductMenu', 'ceburekai', $category->id)
+        ->call('selectSubcategory', $meat->id)
+        ->assertSee('Atgal')
+        ->assertDontSee('Sūriniai');
+});
+
+it('keeps subcategory buttons and hides the back button in persistent mode', function () {
+    cache()->forever('subcategory_layout_mode', 'persistent');
+    ['category' => $category, 'meat' => $meat] = makeCeburekCategoryWithSubcategories();
+
+    Livewire::test(KasaCategorySection::class)
+        ->call('showProductMenu', 'ceburekai', $category->id)
+        ->call('selectSubcategory', $meat->id)
+        ->assertDontSee('Atgal')
+        ->assertSee('Mėsiniai')
+        ->assertSee('Sūriniai')
+        ->assertSee('Su kiauliena');
+});
+
+it('defaults to drilldown mode when no preference is stored', function () {
+    cache()->forget('subcategory_layout_mode');
+    ['category' => $category, 'meat' => $meat] = makeCeburekCategoryWithSubcategories();
+
+    Livewire::test(KasaCategorySection::class)
+        ->call('showProductMenu', 'ceburekai', $category->id)
+        ->call('selectSubcategory', $meat->id)
+        ->assertSee('Atgal');
+});

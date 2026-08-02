@@ -5,7 +5,6 @@ namespace App\Livewire\Buttons;
 use App\Models\Ceburek;
 use App\Models\Order;
 use App\Models\Topping;
-use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Renderless;
 use Livewire\Component;
@@ -27,8 +26,6 @@ class Ceburekai extends Component
     public $takeaway = true;
 
     public ?int $subcategoryId = null;
-
-    public Collection $cebureks;
 
     #[on('chooseProductName')]
     public function getProductName($name): void
@@ -189,9 +186,6 @@ class Ceburekai extends Component
 
     public function render()
     {
-        $products = Ceburek::orderBy('position')->paginate(10);
-        $this->cebureks = collect($products->items());
-
         return view('livewire.buttons.ceburekai');
     }
 }
