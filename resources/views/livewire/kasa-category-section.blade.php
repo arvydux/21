@@ -3,24 +3,8 @@
         @php $persistent = in_array($layoutMode, ['persistent', 'visi_default'], true); @endphp
 
         @if($persistent)
-            {{-- Persistent mode: subcategory buttons stay visible, no "Atgal" button --}}
-            <div class="grid md:grid-cols-4 auto-rows-min gap-3 mt-4">
-                @forelse($subcategories as $subcategory)
-                    <div wire:key="subcategory-{{ $subcategory->id }}"
-                         wire:click="selectSubcategory({{ $subcategory->id }})"
-                         class="relative cursor-pointer rounded-2xl py-6 px-5 transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98]
-                                {{ $selectedSubcategoryId === $subcategory->id ? 'bg-emerald-500/60 ring-2 ring-white/70' : 'bg-emerald-600/30 hover:bg-emerald-500/35' }}"
-                         style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
-                        <div class="flex items-center justify-center text-white font-nunito text-center">
-                            <span class="font-extrabold text-lg tracking-wide">{{ $subcategory->name }}</span>
-                        </div>
-                    </div>
-                @empty
-                    <div class="col-span-full text-center text-white/70 font-nunito py-8">
-                        Šioje kategorijoje subkategorijų nėra.
-                    </div>
-                @endforelse
-            </div>
+            {{-- Persistent mode: subcategory chips stay visible, no "Atgal" button --}}
+            @include('livewire.partials.kasa-subcategory-chips')
 
             @if($selectedSubcategoryId !== null)
                 @include('livewire.partials.kasa-subcategory-products')
@@ -29,24 +13,7 @@
             {{-- Drilldown mode --}}
             @if($selectedSubcategoryId === null)
                 {{-- Step 2: choose a subcategory --}}
-                <div class="grid md:grid-cols-4 auto-rows-min gap-3 mt-4">
-                    @forelse($subcategories as $subcategory)
-                        <div wire:key="subcategory-{{ $subcategory->id }}"
-                             wire:click="selectSubcategory({{ $subcategory->id }})"
-                             class="relative cursor-pointer rounded-2xl py-6 px-5
-                                    bg-emerald-600/30 hover:bg-emerald-500/35
-                                    transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98]"
-                             style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
-                            <div class="flex items-center justify-center text-white font-nunito text-center">
-                                <span class="font-extrabold text-lg tracking-wide">{{ $subcategory->name }}</span>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="col-span-full text-center text-white/70 font-nunito py-8">
-                            Šioje kategorijoje subkategorijų nėra.
-                        </div>
-                    @endforelse
-                </div>
+                @include('livewire.partials.kasa-subcategory-chips')
             @else
                 {{-- Step 3: products of the selected subcategory --}}
                 <div class="mt-4">
