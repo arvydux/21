@@ -129,7 +129,9 @@ class OrdersList extends Component
         ]);
         FreeNumbers::first()->update(['number' => $this->freeNumber + 1]);
 
-        $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
+        if ($this->shouldPrintForKitchen()) {
+            $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
+        }
         $this->printOrderForClient($this->freeNumber, $this->byPhone);
         $this->decrementCeburekLeft();
         $this->decrementKibinaiLeft();
@@ -223,6 +225,11 @@ class OrdersList extends Component
                 }
             }
         }
+    }
+
+    public function shouldPrintForKitchen(): bool
+    {
+        return Order::whereIn('category', [1, 4])->exists();
     }
 
     private function printOrderForKitchen(int $freeOrder, bool $byPhone): void
