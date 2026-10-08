@@ -96,7 +96,7 @@
                         @else
                             <span
                                 class="text-emerald-700/60 text-xs font-bold tracking-wide antialiased">Pilna suma:</span><span
-                                class="text-emerald-900 text-xs font-extrabold tracking-wide"> {{ $price}} € &times; {{ $order->amount }} = {{ $price * $order->amount }} €</span>
+                                class="text-emerald-900 text-xs font-extrabold tracking-wide"> {{ $order->order_price }} € &times; {{ $order->amount }} = {{ $order->order_price * $order->amount }} €</span>
                     @endif
                     <div
                         class="text-emerald-600 text-xs text-left font-extrabold tracking-wide antialiased">{{ $order->takeaway ? "Išsinešimui!" : 'Vietoje!' }}
