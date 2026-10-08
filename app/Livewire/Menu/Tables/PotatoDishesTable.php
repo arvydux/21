@@ -11,6 +11,8 @@ class PotatoDishesTable extends Component
 
     public \App\Models\PotatoDish $product;
 
+    public ?int $number = null;
+
     public string $name;
 
     public float $price;
@@ -31,6 +33,7 @@ class PotatoDishesTable extends Component
     {
         $this->editedProductNameId = $productNameId;
         $this->product = \App\Models\PotatoDish::find($productNameId);
+        $this->number = $this->product->number;
         $this->name = $this->product->name;
         $this->price = $this->product->price;
         $this->half_price = $this->product->half_price;
@@ -43,6 +46,7 @@ class PotatoDishesTable extends Component
     public function save()
     {
         $this->validate([
+            'number' => 'nullable|integer|min:1',
             'name' => 'required',
             'price' => 'required|numeric',
             'half_price' => 'required|numeric',
@@ -51,9 +55,9 @@ class PotatoDishesTable extends Component
 
         if (is_null($this->product)) {
             $position = \App\Models\PotatoDish::max('position') + 1;
-            \App\Models\PotatoDish::create(array_merge($this->only('name', 'price', 'half_price', 'show', 'sign', 'package', 'subcategory_id'), ['position' => $position]));
+            \App\Models\PotatoDish::create(array_merge($this->only('number', 'name', 'price', 'half_price', 'show', 'sign', 'package', 'subcategory_id'), ['position' => $position]));
         } else {
-            $this->product->update($this->only('name', 'price', 'half_price', 'show', 'sign', 'package', 'subcategory_id'));
+            $this->product->update($this->only('number', 'name', 'price', 'half_price', 'show', 'sign', 'package', 'subcategory_id'));
         }
 
         $this->editedProductNameId = 0;
@@ -69,7 +73,7 @@ class PotatoDishesTable extends Component
     #[on('productAdded')]
     public function mount(): void
     {
-        $this->products = \App\Models\PotatoDish::all();
+        $this->products = \App\Models\PotatoDish::orderByRaw('number is null')->orderBy('number')->orderBy('position')->get();
     }
 
     public function cancel(): void

@@ -268,3 +268,72 @@ it('shows the line total including paid sauces in the cart', function () {
         ->assertSeeHtml('&times; 2 = 15.6 €')
         ->assertDontSeeHtml('&times; 2 = 14.8 €');
 });
+
+it('shows the menu number on the cashier button', function () {
+    $this->dish->update(['number' => 7]);
+
+    Livewire::test(PotatoDishes::class, ['showAll' => true])
+        ->assertSeeInOrder(['>7<', 'Žemaičių blynai su kiauliena'], escape: false);
+});
+
+it('saves the menu number from the menu admin', function () {
+    $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai']);
+    $this->dish->update(['subcategory_id' => Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0])->id]);
+
+    Livewire::test(\App\Livewire\Menu\Tables\PotatoDishesTable::class)
+        ->call('editProduct', $this->dish->id)
+        ->set('number', 3)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($this->dish->fresh()->number)->toBe(3);
+});
+
+it('rejects a menu number that is not a positive whole number', function (mixed $number) {
+    Livewire::test(\App\Livewire\Menu\Tables\PotatoDishesTable::class)
+        ->call('editProduct', $this->dish->id)
+        ->set('number', $number)
+        ->call('save')
+        ->assertHasErrors(['number']);
+})->with([
+    'zero' => 0,
+    'negative' => -1,
+]);
+
+it('creates a dish with a menu number, or without one', function (mixed $number, ?int $expected) {
+    $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai']);
+    $subcategory = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+
+    Livewire::test(PotatoDishesCreateForm::class)
+        ->set('number', $number)
+        ->set('name', 'Naujas patiekalas')
+        ->set('half_price', 3.00)
+        ->set('price', 5.00)
+        ->set('subcategory_id', $subcategory->id)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect(PotatoDish::where('name', 'Naujas patiekalas')->value('number'))->toBe($expected);
+})->with([
+    'with number' => [8, 8],
+    'empty' => ['', null],
+]);
+
+it('numbers the existing dishes like the paper menu', function () {
+    PotatoDish::query()->delete();
+    (new \Database\Seeders\PotatoDishSeeder)->run();
+    PotatoDish::query()->update(['number' => null]);
+
+    $migration = require database_path('migrations/2026_10_08_145855_add_number_to_potato_dishes_table.php');
+    \Illuminate\Support\Facades\Schema::table('potato_dishes', fn ($table) => $table->dropColumn('number'));
+    $migration->up();
+
+    expect(PotatoDish::orderBy('number')->pluck('number', 'name')->all())->toBe([
+        'Žemaičių blynai su kiauliena' => 1,
+        'Žemaičių blynai su vištiena' => 2,
+        'Žemaičių blynai su pievagrybiais' => 3,
+        'Bulvinukai su sūriu' => 4,
+        'Bulviniai blynai su mėsa „Kėdainių“' => 5,
+        'Traškūs bulviniai blynai be mėsos' => 6,
+    ]);
+});

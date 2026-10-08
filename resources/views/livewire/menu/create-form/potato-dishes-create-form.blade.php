@@ -1,6 +1,11 @@
 <div class="bg-white/80 rounded-xl px-5 py-4 backdrop-blur-[2px]">
     <h2 class="text-[#191919] text-base font-semibold mb-3">Sukurti produktą</h2>
     <div class="flex gap-3 items-end flex-wrap">
+        <div class="w-20">
+            <label class="block mb-1 text-sm font-medium text-gray-600">Nr.</label>
+            <input wire:model="number" type="number" min="1" step="1" class="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+            @error('number') <span class="text-sm text-red-500">Tik sveikas skaičius</span> @enderror
+        </div>
         <div class="flex-1 min-w-[200px]">
             <label class="block mb-1 text-sm font-medium text-gray-600">Pavadinimas</label>
             <input wire:model="name" class="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Įveskite pavadinimą..." />
