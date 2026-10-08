@@ -19,4 +19,13 @@
                 <div class="font-semibold text-lg">Priedai</div>
             </div>
         </div>
+        <div wire:click="categoryButtonClicked('potato-toppings')"
+             class="relative text-center shadow-md  hover:drop-shadow-2xl hover:shadow-md  hover:scale-101
+            aspect-video overflow-hidden rounded-xl  bg-gray-900/20 dark:border-neutral-700
+             {{ ($categoryMenuClicked === 'potato-toppings') ? ' bg-gray-900/30 scale-93' : null }}
+            ">
+            <div class="flex grid content-center flex-col gap-2 h-full text-white/80 rounded-xl w-full">
+                <div class="font-semibold text-lg">Bulvinių patiekalų priedai</div>
+            </div>
+        </div>
 </div>

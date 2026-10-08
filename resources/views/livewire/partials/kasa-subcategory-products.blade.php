@@ -11,3 +11,6 @@
 @if($buttonName === 'other')
     <livewire:dynamic-component :component="'buttons.other-products'" :subcategoryId="$selectedSubcategoryId" :showAll="$__showAll" :key="'other-'.$__key" />
 @endif
+@if($buttonName === 'bulviniai')
+    <livewire:dynamic-component :component="'buttons.potato-dishes'" :subcategoryId="$selectedSubcategoryId" :showAll="$__showAll" :key="'bulviniai-'.$__key" />
+@endif

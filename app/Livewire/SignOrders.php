@@ -8,28 +8,29 @@ use Livewire\Component;
 class SignOrders extends Component
 {
     public $totalCeburekSignsOrders = [];
+
     public function makeSignOrder()
     {
-        $orders = \App\Models\Order::all();
+        $orders = \App\Models\Order::where('category', 1)->get();
         $totalCeburekSignsOrders = [];
         foreach ($orders as $order) {
             // checking if product is ceburek according to toppings
             if (isset($order->toppings)) {
                 $orderName = json_decode($order->name);
-                $productName = array_key_first((array)$orderName[0]);
+                $productName = array_key_first((array) $orderName[0]);
                 $ceburekSign = \App\Models\Ceburek::where('name', $productName)->first()->sign;
-                if (!empty($order->toppings)) {
+                if (! empty($order->toppings)) {
                     $toppings = json_decode($order->toppings);
                     foreach ($toppings as $topping) {
-                        $topping = array_key_first((array)$topping);
-                        $ceburekSign .= ' + ' . \App\Models\Topping::where('name', $topping)->first()->sign;
+                        $topping = array_key_first((array) $topping);
+                        $ceburekSign .= ' + '.\App\Models\Topping::where('name', $topping)->first()->sign;
                     }
                 }
-                   $totalCeburekSignsOrders[] = $ceburekSign . ' x ' . $order->amount . ($order->takeaway ? ' -' : ' +')  ;
+                $totalCeburekSignsOrders[] = $ceburekSign.' x '.$order->amount.($order->takeaway ? ' -' : ' +');
             }
         }
 
-         $this->totalCeburekSignsOrders = $totalCeburekSignsOrders;
+        $this->totalCeburekSignsOrders = $totalCeburekSignsOrders;
     }
 
     #[On('order-made')]

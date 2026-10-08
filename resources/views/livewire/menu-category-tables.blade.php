@@ -12,8 +12,14 @@
         @if($buttonName === 'other')
             <livewire:dynamic-component :component="'menu.tables.other-products-table'" />
         @endif
+        @if($buttonName === 'bulviniai')
+            <livewire:dynamic-component :component="'menu.tables.potato-dishes-table'" />
+        @endif
         @if($buttonName === 'toppings')
             <livewire:dynamic-component :component="'menu.tables.toppings-table'" />
+        @endif
+        @if($buttonName === 'potato-toppings')
+            <livewire:dynamic-component :component="'menu.tables.potato-toppings-table'" />
         @endif
    @endif{{-- To attain knowledge, add things every day; To attain wisdom, subtract things every day. --}}
 
