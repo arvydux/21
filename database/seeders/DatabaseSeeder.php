@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             PotatoToppingSeeder::class,
             FreeNumbersSeeder::class,
             SubcategorySeeder::class,
+            HotDrinkSeeder::class,
+            ColdDrinkSeeder::class,
         ]);
     }
 }
