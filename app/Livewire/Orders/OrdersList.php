@@ -9,6 +9,8 @@ use App\Models\Kibinai;
 use App\Models\Order;
 use App\Models\OrderNumbers;
 use App\Models\OtherProduct;
+use App\Models\PotatoDish;
+use App\Models\PotatoTopping;
 use App\Models\Topping;
 use Exception;
 use Illuminate\Support\Facades\Cache;
@@ -138,6 +140,7 @@ class OrdersList extends Component
         $this->decrementDrinkLeft();
         $this->decrementOtherProductLeft();
         $this->decrementToppingLeft();
+        $this->decrementPotatoDishLeft();
         $this->resetOrders();
         $this->byPhone = false;
 
@@ -227,9 +230,43 @@ class OrdersList extends Component
         }
     }
 
+    private function decrementPotatoDishLeft(): void
+    {
+        foreach (Order::where('category', PotatoDish::ORDER_CATEGORY)->get() as $order) {
+            foreach (json_decode($order->name, true) as $item) {
+                foreach ($item as $orderLabel => $price) {
+                    $product = PotatoDish::where('name', PotatoDish::nameFromOrderLabel($orderLabel))
+                        ->whereNotNull('left')
+                        ->first();
+                    if ($product) {
+                        $product->left = max(0, $product->left - $order->amount);
+                        $product->save();
+                    }
+                }
+            }
+            foreach (json_decode($order->toppings, true) ?? [] as $toppingItem) {
+                foreach ($toppingItem as $toppingName => $price) {
+                    $topping = PotatoTopping::where('name', $toppingName)->whereNotNull('left')->first();
+                    if ($topping) {
+                        $topping->left = max(0, $topping->left - $order->amount);
+                        $topping->save();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function kitchenCategories(): array
+    {
+        return [1, 4, PotatoDish::ORDER_CATEGORY];
+    }
+
     public function shouldPrintForKitchen(): bool
     {
-        return Order::whereIn('category', [1, 4])->exists();
+        return Order::whereIn('category', $this->kitchenCategories())->exists();
     }
 
     private function printOrderForKitchen(int $freeOrder, bool $byPhone): void
@@ -255,7 +292,7 @@ class OrdersList extends Component
             // set font 0-default, 1-other
             $printer->setFont(0);
 
-            foreach (Order::where('category', 1)->orwhere('category', 4)->orderBy('category')->get() as $order) {
+            foreach (Order::whereIn('category', $this->kitchenCategories())->orderBy('category')->get() as $order) {
                 foreach (json_decode($order->name) as $name) {
                     foreach ($name as $name => $price) {
                         $nameInNotLt = $this->convertTextFromLtToNotLt($name);
@@ -357,8 +394,8 @@ class OrdersList extends Component
 
     private function convertTextFromLtToNotLt($text)
     {
-        $search = ['Č', 'ė', 'ū', 'ų', 'š', 'ž', 'ą', 'ė', 'į', 'ė', 'ą', 'ė', 'į', 'ū', 'ų', 'č', 'ė', 'ū', 'ų'];
-        $replace = ['C', 'e', 'u', 'u', 's', 'z', 'a', 'e', 'i', 'e', 'a', 'e', 'i', 'u', 'u', 'c', 'e', 'u', 'u'];
+        $search = ['½', '„', '“', 'Ž', 'Š', 'Ė', 'Ū', 'Č', 'ė', 'ū', 'ų', 'š', 'ž', 'ą', 'ė', 'į', 'ė', 'ą', 'ė', 'į', 'ū', 'ų', 'č', 'ė', 'ū', 'ų'];
+        $replace = ['1/2', '"', '"', 'Z', 'S', 'E', 'U', 'C', 'e', 'u', 'u', 's', 'z', 'a', 'e', 'i', 'e', 'a', 'e', 'i', 'u', 'u', 'c', 'e', 'u', 'u'];
 
         return str_replace($search, $replace, $text);
     }

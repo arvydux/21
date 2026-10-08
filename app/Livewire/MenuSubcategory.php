@@ -6,6 +6,7 @@ use App\Models\Ceburek;
 use App\Models\Drink;
 use App\Models\Kibinai;
 use App\Models\OtherProduct;
+use App\Models\PotatoDish;
 use App\Models\Subcategory;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
@@ -24,6 +25,7 @@ class MenuSubcategory extends Component
         'kibinai' => Kibinai::class,
         'drinks' => Drink::class,
         'other' => OtherProduct::class,
+        'bulviniai' => PotatoDish::class,
     ];
 
     public ?int $categoryId = null;

@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             CeburekSeeder::class,
             ToppingSeeder::class,
+            PotatoDishSeeder::class,
+            PotatoToppingSeeder::class,
             FreeNumbersSeeder::class,
             SubcategorySeeder::class,
         ]);

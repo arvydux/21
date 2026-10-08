@@ -25,6 +25,9 @@ class CategorySeeder extends Seeder
             [
                 'name' => 'Kiti', 'component_name' => 'other',
             ],
+            [
+                'name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai',
+            ],
         ];
 
         Category::insert($categories);
