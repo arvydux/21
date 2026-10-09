@@ -15,8 +15,8 @@
 <div x-data="{ koreguoti: window.koreguotiActive, editingProduct: '', editingProductId: null, editingLeft: '', editingAttention: false }" x-init="initSwapSortable($el, $wire, 'updateOrder')" @koreguoti-changed.window="koreguoti = $event.detail.active" class="grid {{ $buttonColumns === 3 ? 'md:grid-cols-3' : ($buttonColumns === 5 ? 'md:grid-cols-5' : 'md:grid-cols-4') }} auto-rows-min {{ $buttonGap === 1 ? 'gap-1' : ($buttonGap === 2 ? 'gap-2' : ($buttonGap === 3 ? 'gap-3' : ($buttonGap === 5 ? 'gap-5' : 'gap-4'))) }} mt-10 mt-4">
     @foreach(\App\Models\Kibinai::where('show', true)->when(! $showAll, fn ($q) => $q->where('subcategory_id', $subcategoryId))->orderBy('position')->get() as $productName)
         <div data-sortable-id="{{ $productName->id }}" wire:key="kibinai-{{ $productName->id }}"
-             @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ({{ $productName->attention ? 'true' : 'false' }}) { $wire.toggleAttention({{ $productName->id }}); } else { editingProduct = '{{ $productName->name }}'; editingProductId = {{ $productName->id }}; editingLeft = ''; editingAttention = false; $flux.modal('koreguoti-edit-kibinai').show(); } }">
-            <div wire:click="addProduct('{{ $productName->name }}', '{{ $productName->price }}')"
+             @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ({{ $productName->attention ? 'true' : 'false' }}) { $wire.toggleAttention({{ $productName->id }}); } else { editingProduct = @js($productName->name); editingProductId = {{ $productName->id }}; editingLeft = ''; editingAttention = false; $flux.modal('koreguoti-edit-kibinai').show(); } }">
+            <div wire:click="addProduct(@js($productName->name), '{{ $productName->price }}')"
                 class="relative {{ $buttonStyle === 'large' ? 'aspect-[5/3]' : 'aspect-[5/2.3]' }} overflow-hidden rounded-2xl cursor-pointer
                     {{ $productName->attention ? 'bg-red-500/70 hover:bg-red-500/70' : 'bg-white/10 hover:bg-white/20' }} backdrop-blur-lg border border-white/25
                     hover:scale-[1.03] hover:-translate-y-0.5
