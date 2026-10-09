@@ -31,6 +31,8 @@ class DatabaseSeeder extends Seeder
             CiderSeeder::class,
             WineSeeder::class,
             SpiritsSeeder::class,
+            CheeseCeburekSeeder::class,
+            MeatCeburekSeeder::class,
         ]);
     }
 }

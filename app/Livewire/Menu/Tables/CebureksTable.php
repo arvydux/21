@@ -11,6 +11,8 @@ class CebureksTable extends Component
 
     public \App\Models\Ceburek $product;
 
+    public ?int $number = null;
+
     public string $name;
 
     public float $price;
@@ -29,6 +31,7 @@ class CebureksTable extends Component
     {
         $this->editedProductNameId = $productNameId;
         $this->product = \App\Models\Ceburek::find($productNameId);
+        $this->number = $this->product->number;
         $this->name = $this->product->name;
         $this->price = $this->product->price;
         $this->sign = $this->product->sign;
@@ -40,6 +43,7 @@ class CebureksTable extends Component
     public function save()
     {
         $this->validate([
+            'number' => 'nullable|integer|min:1',
             'name' => 'required',
             'price' => 'required|numeric',
             'subcategory_id' => 'required|exists:subcategories,id',
@@ -47,9 +51,9 @@ class CebureksTable extends Component
 
         if (is_null($this->product)) {
             $position = \App\Models\Ceburek::max('position') + 1;
-            \App\Models\Ceburek::create(array_merge($this->only('name', 'price', 'show', 'sign', 'package', 'subcategory_id'), ['position' => $position]));
+            \App\Models\Ceburek::create(array_merge($this->only('number', 'name', 'price', 'show', 'sign', 'package', 'subcategory_id'), ['position' => $position]));
         } else {
-            $this->product->update($this->only('name', 'price', 'show', 'sign', 'package', 'subcategory_id'));
+            $this->product->update($this->only('number', 'name', 'price', 'show', 'sign', 'package', 'subcategory_id'));
         }
 
         $this->editedProductNameId = 0;
@@ -65,7 +69,7 @@ class CebureksTable extends Component
     #[on('productAdded')]
     public function mount(): void
     {
-        $this->products = \App\Models\Ceburek::all();
+        $this->products = \App\Models\Ceburek::orderByRaw('number is null')->orderBy('number')->orderBy('position')->get();
     }
 
     public function cancel(): void

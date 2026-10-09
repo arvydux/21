@@ -16,9 +16,10 @@ abstract class NumberedDrinkSeeder extends Seeder
     abstract protected function subcategoryName(): string;
 
     /**
-     * Drinks as listed on the paper menu; the number may be null when the menu has none.
+     * Products as listed on the paper menu; the number may be null when the menu
+     * has none, and extra attributes (e.g. a Čeburekai "sign") are stored as given.
      *
-     * @return array<int, array{number: ?int, name: string, price: float}>
+     * @return array<int, array{number: ?int, name: string, price: float, sign?: string}>
      */
     abstract protected function products(): array;
 

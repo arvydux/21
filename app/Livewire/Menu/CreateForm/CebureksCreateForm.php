@@ -8,6 +8,8 @@ use Livewire\Component;
 
 class CebureksCreateForm extends Component
 {
+    public $number;
+
     public $name;
 
     public $price;
@@ -19,6 +21,7 @@ class CebureksCreateForm extends Component
     public function save()
     {
         $this->validate([
+            'number' => 'nullable|integer|min:1',
             'name' => 'required',
             'price' => 'required|numeric',
             'subcategory_id' => 'required|exists:subcategories,id',
@@ -26,6 +29,7 @@ class CebureksCreateForm extends Component
 
         // Save to database
         \App\Models\Ceburek::create([
+            'number' => $this->number ?: null,
             'name' => $this->name,
             'price' => $this->price,
             'sign' => 'A',
@@ -33,6 +37,7 @@ class CebureksCreateForm extends Component
         ]);
 
         // Reset form
+        $this->number = '';
         $this->name = '';
         $this->price = '';
         $this->sign = '';
