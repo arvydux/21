@@ -14,3 +14,6 @@
 @if($buttonName === 'bulviniai')
     <livewire:dynamic-component :component="'buttons.potato-dishes'" :subcategoryId="$selectedSubcategoryId" :showAll="$__showAll" :key="'bulviniai-'.$__key" />
 @endif
+@if($buttonName === 'koldunai')
+    <livewire:dynamic-component :component="'buttons.koldunai-dishes'" :subcategoryId="$selectedSubcategoryId" :showAll="$__showAll" :key="'koldunai-'.$__key" />
+@endif

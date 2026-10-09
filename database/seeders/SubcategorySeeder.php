@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Ceburek;
 use App\Models\Drink;
 use App\Models\Kibinai;
+use App\Models\KoldunaiDish;
 use App\Models\OtherProduct;
 use App\Models\PotatoDish;
 use App\Models\Subcategory;
@@ -25,6 +26,7 @@ class SubcategorySeeder extends Seeder
         'drinks' => Drink::class,
         'other' => OtherProduct::class,
         'bulviniai' => PotatoDish::class,
+        'koldunai' => KoldunaiDish::class,
     ];
 
     /**

@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             ToppingSeeder::class,
             PotatoDishSeeder::class,
             PotatoToppingSeeder::class,
+            KoldunaiDishSeeder::class,
+            KoldunaiToppingSeeder::class,
             FreeNumbersSeeder::class,
             SubcategorySeeder::class,
             HotDrinkSeeder::class,

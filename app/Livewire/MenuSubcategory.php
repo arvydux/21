@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Ceburek;
 use App\Models\Drink;
 use App\Models\Kibinai;
+use App\Models\KoldunaiDish;
 use App\Models\OtherProduct;
 use App\Models\PotatoDish;
 use App\Models\Subcategory;
@@ -26,6 +27,7 @@ class MenuSubcategory extends Component
         'drinks' => Drink::class,
         'other' => OtherProduct::class,
         'bulviniai' => PotatoDish::class,
+        'koldunai' => KoldunaiDish::class,
     ];
 
     public ?int $categoryId = null;

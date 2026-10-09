@@ -6,6 +6,8 @@ use App\Models\Ceburek;
 use App\Models\Drink;
 use App\Models\FreeNumbers;
 use App\Models\Kibinai;
+use App\Models\KoldunaiDish;
+use App\Models\KoldunaiTopping;
 use App\Models\Order;
 use App\Models\OrderNumbers;
 use App\Models\OtherProduct;
@@ -141,6 +143,7 @@ class OrdersList extends Component
         $this->decrementOtherProductLeft();
         $this->decrementToppingLeft();
         $this->decrementPotatoDishLeft();
+        $this->decrementKoldunaiDishLeft();
         $this->resetOrders();
         $this->byPhone = false;
 
@@ -256,12 +259,36 @@ class OrdersList extends Component
         }
     }
 
+    private function decrementKoldunaiDishLeft(): void
+    {
+        foreach (Order::where('category', KoldunaiDish::ORDER_CATEGORY)->get() as $order) {
+            foreach (json_decode($order->name, true) as $item) {
+                foreach ($item as $productName => $price) {
+                    $product = KoldunaiDish::where('name', $productName)->whereNotNull('left')->first();
+                    if ($product) {
+                        $product->left = max(0, $product->left - $order->amount);
+                        $product->save();
+                    }
+                }
+            }
+            foreach (json_decode($order->toppings, true) ?? [] as $toppingItem) {
+                foreach ($toppingItem as $toppingName => $price) {
+                    $topping = KoldunaiTopping::where('name', $toppingName)->whereNotNull('left')->first();
+                    if ($topping) {
+                        $topping->left = max(0, $topping->left - $order->amount);
+                        $topping->save();
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * @return list<int>
      */
     private function kitchenCategories(): array
     {
-        return [1, 4, PotatoDish::ORDER_CATEGORY];
+        return [1, 4, PotatoDish::ORDER_CATEGORY, KoldunaiDish::ORDER_CATEGORY];
     }
 
     public function shouldPrintForKitchen(): bool
