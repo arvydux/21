@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\AlcoholicDrink;
 use App\Models\Category;
 use App\Models\Ceburek;
 use App\Models\Drink;
@@ -27,6 +28,7 @@ class SubcategorySeeder extends Seeder
         'other' => OtherProduct::class,
         'bulviniai' => PotatoDish::class,
         'koldunai' => KoldunaiDish::class,
+        'alkoholis' => AlcoholicDrink::class,
     ];
 
     /**

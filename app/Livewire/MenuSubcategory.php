@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\AlcoholicDrink;
 use App\Models\Ceburek;
 use App\Models\Drink;
 use App\Models\Kibinai;
@@ -28,6 +29,7 @@ class MenuSubcategory extends Component
         'other' => OtherProduct::class,
         'bulviniai' => PotatoDish::class,
         'koldunai' => KoldunaiDish::class,
+        'alkoholis' => AlcoholicDrink::class,
     ];
 
     public ?int $categoryId = null;

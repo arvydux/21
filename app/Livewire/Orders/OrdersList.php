@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Orders;
 
+use App\Models\AlcoholicDrink;
 use App\Models\Ceburek;
 use App\Models\Drink;
 use App\Models\FreeNumbers;
@@ -144,6 +145,7 @@ class OrdersList extends Component
         $this->decrementToppingLeft();
         $this->decrementPotatoDishLeft();
         $this->decrementKoldunaiDishLeft();
+        $this->decrementAlcoholicDrinkLeft();
         $this->resetOrders();
         $this->byPhone = false;
 
@@ -277,6 +279,21 @@ class OrdersList extends Component
                     if ($topping) {
                         $topping->left = max(0, $topping->left - $order->amount);
                         $topping->save();
+                    }
+                }
+            }
+        }
+    }
+
+    private function decrementAlcoholicDrinkLeft(): void
+    {
+        foreach (Order::where('category', AlcoholicDrink::ORDER_CATEGORY)->get() as $order) {
+            foreach (json_decode($order->name, true) as $item) {
+                foreach ($item as $productName => $price) {
+                    $alcoholicDrink = AlcoholicDrink::where('name', $productName)->whereNotNull('left')->first();
+                    if ($alcoholicDrink) {
+                        $alcoholicDrink->left = max(0, $alcoholicDrink->left - $order->amount);
+                        $alcoholicDrink->save();
                     }
                 }
             }

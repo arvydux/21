@@ -18,6 +18,9 @@
         @if($buttonName === 'koldunai')
             <livewire:dynamic-component :component="'menu.tables.koldunai-dishes-table'" />
         @endif
+        @if($buttonName === 'alkoholis')
+            <livewire:dynamic-component :component="'menu.tables.alcoholic-drinks-table'" />
+        @endif
         @if($buttonName === 'toppings')
             <livewire:dynamic-component :component="'menu.tables.toppings-table'" />
         @endif

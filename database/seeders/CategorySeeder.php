@@ -31,6 +31,9 @@ class CategorySeeder extends Seeder
             [
                 'name' => 'Koldūnai bei bulvytės', 'component_name' => 'koldunai',
             ],
+            [
+                'name' => 'Alkoholis', 'component_name' => 'alkoholis',
+            ],
         ];
 
         Category::insert($categories);
