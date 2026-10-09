@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Ceburek;
 use App\Models\Subcategory;
 use Database\Seeders\CheeseCeburekSeeder;
+use Database\Seeders\MeatCeburekSeeder;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -84,9 +85,6 @@ it('adds the meat Čeburekai to a "Su mėsa" subcategory after "Su sūriu"', fun
             [4, 'Jautiena', 6.5, 'J'],
             [5, 'Maišytas (jaut. + aviena)', 6.9, 'MA'],
             [6, 'Aviena', 7.2, 'A'],
-            [7, 'Šefo', 7.5, 'Š'],
-            [8, 'Gurmaniškas', 7.2, 'G'],
-            [9, 'Pachmo', 7.5, 'P'],
         ]);
 });
 
@@ -94,8 +92,8 @@ it('renames and moves the original meat Čeburekai instead of duplicating them',
     $pork = Ceburek::create(['name' => 'Čeburėkas su kiauliena', 'price' => 4.50, 'sign' => 'K', 'show' => true, 'position' => 3, 'subcategory_id' => $this->visi->id]);
     $chef = Ceburek::create(['name' => 'Čeburėkas Šefo', 'price' => 6.80, 'sign' => 'Š', 'show' => true, 'position' => 9, 'subcategory_id' => $this->visi->id]);
 
-    $migration = require database_path('migrations/2026_10_09_160846_add_meat_ceburekai_subcategory.php');
-    $migration->up();
+    (require database_path('migrations/2026_10_09_160846_add_meat_ceburekai_subcategory.php'))->up();
+    (require database_path('migrations/2026_10_09_161629_add_signature_ceburekai_subcategory.php'))->up();
 
     $pork->refresh();
     expect($pork->name)->toBe('Kiauliena')
@@ -105,7 +103,44 @@ it('renames and moves the original meat Čeburekai instead of duplicating them',
         ->and(Ceburek::count())->toBe(9)
         ->and($chef->fresh()->name)->toBe('Šefo')
         ->and((float) $chef->fresh()->price)->toBe(7.5)
-        ->and($chef->fresh()->subcategory->name)->toBe('Su mėsa');
+        ->and($chef->fresh()->number)->toBe(1)
+        ->and($chef->fresh()->subcategory->name)->toBe('Firminis');
+});
+
+it('adds the signature Čeburekai to a "Firminis" subcategory after "Su mėsa"', function () {
+    (new CheeseCeburekSeeder)->run();
+    (new MeatCeburekSeeder)->run();
+
+    $migration = require database_path('migrations/2026_10_09_161629_add_signature_ceburekai_subcategory.php');
+    $migration->up();
+    $migration->up();
+
+    $subcategory = Subcategory::where('name', 'Firminis')->sole();
+
+    expect($subcategory->position)->toBe(3)
+        ->and(ceburekaiIn($subcategory))->toBe([
+            [1, 'Šefo', 7.5, 'Š'],
+            [2, 'Gurmaniškas', 7.2, 'G'],
+            [3, 'Pachmo', 7.5, 'P'],
+        ])
+        ->and(Ceburek::count())->toBe(12);
+});
+
+it('moves the signature Čeburekai out of "Su mėsa" and renumbers them', function () {
+    $meat = Subcategory::create(['name' => 'Su mėsa', 'category_id' => $this->category->id, 'position' => 2]);
+    $pork = Ceburek::create(['number' => 1, 'name' => 'Kiauliena', 'price' => 5.50, 'sign' => 'K', 'show' => true, 'position' => 0, 'subcategory_id' => $meat->id]);
+    foreach ([7 => 'Šefo', 8 => 'Gurmaniškas', 9 => 'Pachmo'] as $number => $name) {
+        Ceburek::create(['number' => $number, 'name' => $name, 'price' => 7.20, 'sign' => 'X', 'show' => true, 'position' => $number, 'subcategory_id' => $meat->id]);
+    }
+
+    (require database_path('migrations/2026_10_09_161629_add_signature_ceburekai_subcategory.php'))->up();
+
+    $firminis = Subcategory::where('name', 'Firminis')->sole();
+    expect(Ceburek::where('subcategory_id', $firminis->id)->orderBy('number')->pluck('number', 'name')->all())
+        ->toBe(['Šefo' => 1, 'Gurmaniškas' => 2, 'Pachmo' => 3])
+        ->and(Ceburek::where('subcategory_id', $meat->id)->pluck('name')->all())->toBe(['Kiauliena'])
+        ->and($pork->fresh()->number)->toBe(1)
+        ->and(Ceburek::count())->toBe(4);
 });
 
 it('shows the menu number on the Čeburekai button', function () {

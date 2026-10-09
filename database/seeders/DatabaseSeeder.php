@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             SpiritsSeeder::class,
             CheeseCeburekSeeder::class,
             MeatCeburekSeeder::class,
+            SignatureCeburekSeeder::class,
         ]);
     }
 }
