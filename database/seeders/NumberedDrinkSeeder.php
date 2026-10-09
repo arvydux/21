@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Drink;
 use App\Models\Subcategory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
 abstract class NumberedDrinkSeeder extends Seeder
@@ -15,21 +16,39 @@ abstract class NumberedDrinkSeeder extends Seeder
     abstract protected function subcategoryName(): string;
 
     /**
-     * Drinks as numbered on the paper menu.
+     * Drinks as listed on the paper menu; the number may be null when the menu has none.
      *
-     * @return array<int, array{number: int, name: string, price: float}>
+     * @return array<int, array{number: ?int, name: string, price: float}>
      */
     abstract protected function products(): array;
 
     /**
-     * Add the subcategory to the drinks category and fill it with the
-     * numbered drinks. An existing drink with the same name and no number yet
-     * is moved into the subcategory instead of being duplicated; numbered
-     * drinks are left as is, so re-running never overwrites admin edits.
+     * Component name of the category that owns the subcategory.
+     */
+    protected function categoryComponentName(): string
+    {
+        return 'drinks';
+    }
+
+    /**
+     * Product model of that category.
+     *
+     * @return class-string<Model>
+     */
+    protected function productModel(): string
+    {
+        return Drink::class;
+    }
+
+    /**
+     * Add the subcategory to the category and fill it with the drinks. An
+     * existing drink with the same name, no number yet and outside this
+     * subcategory is moved into it instead of being duplicated; any other
+     * existing drink is left as is, so re-running never overwrites admin edits.
      */
     public function run(): void
     {
-        $category = Category::where('component_name', 'drinks')->first();
+        $category = Category::where('component_name', $this->categoryComponentName())->first();
 
         if ($category === null) {
             return;
@@ -40,18 +59,19 @@ abstract class NumberedDrinkSeeder extends Seeder
             ['position' => (Subcategory::where('category_id', $category->id)->max('position') ?? -1) + 1],
         );
 
-        $position = (Drink::max('position') ?? -1) + 1;
+        $model = $this->productModel();
+        $position = ($model::max('position') ?? -1) + 1;
 
         foreach ($this->products() as $product) {
-            $drink = Drink::where('name', $product['name'])->first();
+            $drink = $model::where('name', $product['name'])->first();
 
             if ($drink === null) {
-                Drink::create([...$product, 'show' => true, 'position' => $position++, 'subcategory_id' => $subcategory->id]);
+                $model::create([...$product, 'show' => true, 'position' => $position++, 'subcategory_id' => $subcategory->id]);
 
                 continue;
             }
 
-            if ($drink->number === null) {
+            if ($drink->number === null && $drink->subcategory_id !== $subcategory->id) {
                 $drink->update([...$product, 'subcategory_id' => $subcategory->id]);
             }
         }

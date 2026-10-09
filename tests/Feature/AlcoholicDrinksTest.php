@@ -11,6 +11,7 @@ use App\Models\Drink;
 use App\Models\FreeNumbers;
 use App\Models\Order;
 use App\Models\Subcategory;
+use Database\Seeders\DraftBeerSeeder;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -151,4 +152,115 @@ it('leaves a fresh database to the seeders', function () {
     $migration->up();
 
     expect(Category::count())->toBe(0);
+});
+
+it('adds the draft beers to a "Pilstomas alus" subcategory', function () {
+    $migration = require database_path('migrations/2026_10_09_145422_add_draft_beer_subcategory.php');
+    $migration->up();
+
+    $subcategory = Subcategory::where('name', 'Pilstomas alus')->sole();
+
+    expect($subcategory->category_id)->toBe($this->category->id)
+        ->and($subcategory->position)->toBe(1)
+        ->and(AlcoholicDrink::where('subcategory_id', $subcategory->id)->orderBy('position')->get()->map(fn (AlcoholicDrink $drink) => [$drink->number, $drink->name, (float) $drink->price, (bool) $drink->show])->all())
+        ->toBe([
+            [1, '„Vilkmergės Premium lager“ (400 ml)', 4.4, true],
+            [2, '„Vilkmergės“ tamsusis (400 ml)', 4.4, true],
+        ])
+        ->and($this->beer->fresh()->subcategory_id)->toBe($this->visi->id);
+});
+
+it('keeps admin edits to the draft beers when run again', function () {
+    (new DraftBeerSeeder)->run();
+    AlcoholicDrink::where('name', '„Vilkmergės“ tamsusis (400 ml)')->update(['price' => 4.60]);
+
+    (new DraftBeerSeeder)->run();
+
+    expect(AlcoholicDrink::count())->toBe(3)
+        ->and(Subcategory::where('name', 'Pilstomas alus')->count())->toBe(1)
+        ->and((float) AlcoholicDrink::where('name', '„Vilkmergės“ tamsusis (400 ml)')->value('price'))->toBe(4.6);
+});
+
+it('moves an unnumbered draft beer from another subcategory instead of duplicating it', function () {
+    AlcoholicDrink::factory()->create(['name' => '„Vilkmergės“ tamsusis (400 ml)', 'price' => 4.00, 'subcategory_id' => $this->visi->id]);
+
+    (new DraftBeerSeeder)->run();
+
+    $darkBeer = AlcoholicDrink::where('name', '„Vilkmergės“ tamsusis (400 ml)')->sole();
+    expect($darkBeer->subcategory->name)->toBe('Pilstomas alus')
+        ->and((float) $darkBeer->price)->toBe(4.4);
+});
+
+it('adds a draft beer to the cart with one click', function () {
+    (new DraftBeerSeeder)->run();
+
+    Livewire::test(AlcoholicDrinks::class, ['subcategoryId' => Subcategory::where('name', 'Pilstomas alus')->value('id')])
+        ->assertSee('„Vilkmergės Premium lager“ (400 ml)')
+        ->call('addProduct', '„Vilkmergės Premium lager“ (400 ml)', '4.40');
+
+    expect(json_decode(Order::sole()->name, true))->toBe([['„Vilkmergės Premium lager“ (400 ml)' => '4.40']]);
+});
+
+it('adds the cider to a "Sidras" subcategory after the draft beers', function () {
+    (new DraftBeerSeeder)->run();
+
+    $migration = require database_path('migrations/2026_10_09_150108_add_cider_subcategory.php');
+    $migration->up();
+    $migration->up();
+
+    $subcategory = Subcategory::where('name', 'Sidras')->sole();
+
+    expect($subcategory->category_id)->toBe($this->category->id)
+        ->and($subcategory->position)->toBe(2)
+        ->and(AlcoholicDrink::where('subcategory_id', $subcategory->id)->get()->map(fn (AlcoholicDrink $drink) => [$drink->number, $drink->name, (float) $drink->price])->all())
+        ->toBe([[1, 'Vilkmergės CRAFT sidras (400 ml)', 4.6]]);
+});
+
+it('adds the wines to a "Vynas" subcategory', function () {
+    $migration = require database_path('migrations/2026_10_09_150350_add_wine_subcategory.php');
+    $migration->up();
+    $migration->up();
+
+    $subcategory = Subcategory::where('name', 'Vynas')->sole();
+
+    expect($subcategory->category_id)->toBe($this->category->id)
+        ->and(AlcoholicDrink::where('subcategory_id', $subcategory->id)->orderBy('number')->get()->map(fn (AlcoholicDrink $drink) => [$drink->number, $drink->name, (float) $drink->price])->all())
+        ->toBe([
+            [1, 'Baltasis sausas vynas „COLPASSO“ (150 ml)', 5.5],
+            [2, 'Baltasis sausas vynas „COLPASSO“ (750 ml)', 22.0],
+            [3, 'Raudonasis sausas vynas „PRECISO“ (150 ml)', 5.7],
+            [4, 'Raudonasis sausas vynas „PRECISO“ (750 ml)', 24.0],
+            [5, 'Raudonas saldus vynas „KAGOR“ (150 ml)', 5.2],
+            [6, 'Raudonas saldus vynas „KAGOR“ (750 ml)', 20.0],
+            [7, 'Putojantis vynas „Escanza PROSECCO“ (150 ml)', 5.5],
+            [8, 'Putojantis vynas „Escanza PROSECCO“ (750 ml)', 22.0],
+            [9, 'Putojantis saldus vynas „BOSCA“ (150 ml)', 3.9],
+            [10, 'Putojantis saldus vynas „BOSCA“ (750 ml)', 13.0],
+            [11, 'Karštas vynas (150 ml)', 5.4],
+        ]);
+});
+
+it('adds the spirits to a "Stiprieji alkoholiniai gėrimai" subcategory', function () {
+    $migration = require database_path('migrations/2026_10_09_151501_add_spirits_subcategory.php');
+    $migration->up();
+    $migration->up();
+
+    $subcategory = Subcategory::where('name', 'Stiprieji alkoholiniai gėrimai')->sole();
+
+    expect($subcategory->category_id)->toBe($this->category->id)
+        ->and(AlcoholicDrink::where('subcategory_id', $subcategory->id)->orderBy('number')->get()->map(fn (AlcoholicDrink $drink) => [$drink->number, $drink->name, (float) $drink->price])->all())
+        ->toBe([
+            [1, 'Degtinė LITHUANIAN AUKSINĖ (40 ml)', 3.5],
+            [2, 'Degtinė LITHUANIAN AUKSINĖ (500 ml)', 30.0],
+            [3, 'Viskis JACK DANIEL’S (40 ml)', 4.6],
+            [4, 'Viskis JACK DANIEL’S (500 ml)', 40.0],
+        ]);
+});
+
+it('passes names with quotes to the cart button safely', function () {
+    $this->beer->update(['name' => "Viskis JACK DANIEL'S"]);
+
+    Livewire::test(AlcoholicDrinks::class, ['subcategoryId' => $this->visi->id])
+        ->assertSeeHtml("addProduct('Viskis JACK DANIEL\\u0027S'")
+        ->assertDontSeeHtml("DANIEL'S'");
 });

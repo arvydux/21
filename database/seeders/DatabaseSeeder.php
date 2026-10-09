@@ -27,6 +27,10 @@ class DatabaseSeeder extends Seeder
             SubcategorySeeder::class,
             HotDrinkSeeder::class,
             ColdDrinkSeeder::class,
+            DraftBeerSeeder::class,
+            CiderSeeder::class,
+            WineSeeder::class,
+            SpiritsSeeder::class,
         ]);
     }
 }
