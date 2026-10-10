@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
             CheeseCeburekSeeder::class,
             MeatCeburekSeeder::class,
             SignatureCeburekSeeder::class,
+            KibinaiSubcategorySeeder::class,
+            DonutSubcategorySeeder::class,
         ]);
     }
 }

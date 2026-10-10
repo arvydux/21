@@ -73,7 +73,7 @@ abstract class NumberedDrinkSeeder extends Seeder
             }
 
             if ($drink->number === null && $drink->subcategory_id !== $subcategory->id) {
-                $drink->update([...$product, 'subcategory_id' => $subcategory->id]);
+                $drink->update([...$product, 'position' => $position++, 'subcategory_id' => $subcategory->id]);
             }
         }
     }

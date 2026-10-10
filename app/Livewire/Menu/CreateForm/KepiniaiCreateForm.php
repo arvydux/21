@@ -8,6 +8,8 @@ use Livewire\Component;
 
 class KepiniaiCreateForm extends Component
 {
+    public $number;
+
     public $name;
 
     public $price;
@@ -17,6 +19,7 @@ class KepiniaiCreateForm extends Component
     public function save()
     {
         $this->validate([
+            'number' => 'nullable|integer|min:1',
             'name' => 'required',
             'price' => 'required|numeric',
             'subcategory_id' => 'required|exists:subcategories,id',
@@ -24,12 +27,14 @@ class KepiniaiCreateForm extends Component
 
         // Save to database
         \App\Models\Kepiniai::create([
+            'number' => $this->number ?: null,
             'name' => $this->name,
             'price' => $this->price,
             'subcategory_id' => $this->subcategory_id,
         ]);
 
         // Reset form
+        $this->number = '';
         $this->name = '';
         $this->price = '';
         $this->subcategory_id = null;

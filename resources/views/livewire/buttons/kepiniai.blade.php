@@ -25,7 +25,10 @@
                 style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);">
                 <div class="flex h-full text-white items-center">
                     <div class="flex-1 {{ $btnPx }} {{ $btnPy }} text-center">
-                        <div class="font-nunito font-extrabold leading-tight antialiased {{ $productName->left !== null ? ($buttonStyle === 'large' ? 'text-sm' : 'text-xs') : ($buttonStyle === 'large' ? 'text-xl' : 'text-base') }}" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">
+                        @if($productName->number !== null)
+                            <div class="mx-auto mb-1 flex size-6 items-center justify-center rounded-full bg-white/90 text-xs font-black leading-none text-emerald-900 shadow">{{ $productName->number }}</div>
+                        @endif
+                        <div class="font-nunito font-extrabold leading-tight antialiased {{ $productName->number !== null ? 'flex items-center justify-center '.($buttonStyle === 'large' ? 'min-h-[3.125rem]' : 'min-h-10') : '' }} {{ $productName->left !== null ? ($buttonStyle === 'large' ? 'text-sm' : 'text-xs') : ($buttonStyle === 'large' ? 'text-xl' : 'text-base') }}" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">
                             {{ $productName->name }}
                         </div>
                     </div>
