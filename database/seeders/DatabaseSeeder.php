@@ -37,6 +37,8 @@ class DatabaseSeeder extends Seeder
             KibinaiSubcategorySeeder::class,
             DonutSubcategorySeeder::class,
             SoupSubcategorySeeder::class,
+            DessertSubcategorySeeder::class,
+            KidsMenuSubcategorySeeder::class,
         ]);
     }
 }

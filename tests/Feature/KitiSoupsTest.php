@@ -70,3 +70,51 @@ it('creates and edits the menu number from the menu admin', function () {
 it('stores the position given when a product is created', function () {
     expect(OtherProduct::create(['name' => 'Naujas', 'price' => 1.0, 'position' => 5])->fresh()->position)->toBe(5);
 });
+
+it('adds the desserts to a "Desertai" subcategory after "Sriubos", one record per ice cream topping', function () {
+    (new Database\Seeders\SoupSubcategorySeeder)->run();
+
+    $migration = require database_path('migrations/2026_10_10_194926_add_dessert_subcategory_to_kiti.php');
+    $migration->up();
+    $migration->up();
+
+    $desserts = Subcategory::where('category_id', $this->category->id)->where('name', 'Desertai')->sole();
+
+    expect($desserts->position)->toBe(2)
+        ->and(OtherProduct::where('subcategory_id', $desserts->id)->orderBy('number')->get()->map(fn (OtherProduct $product) => [$product->number, $product->name, (float) $product->price])->all())
+        ->toBe([
+            [1, 'Žagarėliai su ledais ir padažu', 5.5],
+            [2, 'Ledai su vyšnių užpilu', 3.9],
+            [3, 'Ledai su šokolado užpilu', 3.9],
+            [4, 'Ledai su karamelės užpilu', 3.9],
+        ]);
+});
+
+it('adds the kids menu to a "Vaikų meniu" subcategory', function () {
+    $migration = require database_path('migrations/2026_10_10_195123_add_kids_menu_subcategory_to_kiti.php');
+    $migration->up();
+    $migration->up();
+
+    $kidsMenu = Subcategory::where('category_id', $this->category->id)->where('name', 'Vaikų meniu')->sole();
+
+    expect(OtherProduct::where('subcategory_id', $kidsMenu->id)->orderBy('number')->get()->map(fn (OtherProduct $product) => [$product->number, $product->name, (float) $product->price])->all())
+        ->toBe([
+            [1, 'Gruzdintos bulvytės „FRI“ su pomidorų padažu', 3.5],
+            [2, 'Bulvių ir vištienos rutuliukai (be padažo)', 4.9],
+            [3, 'Vištienos filė juostelės su bulvytėmis, agurkais ir pomidorų padažu', 5.9],
+            [4, 'Pieniškos dešrelės su bulvytėmis, agurkais ir pomidorų padažu', 5.5],
+        ]);
+});
+
+it('moves the original potato and chicken balls into the kids menu instead of duplicating them', function () {
+    $balls = OtherProduct::create(['name' => 'Bulvių ir vištienos rutuliukai', 'price' => 4.9, 'show' => true, 'position' => 2, 'subcategory_id' => $this->visi->id]);
+
+    (require database_path('migrations/2026_10_10_195123_add_kids_menu_subcategory_to_kiti.php'))->up();
+
+    $balls->refresh();
+    expect($balls->name)->toBe('Bulvių ir vištienos rutuliukai (be padažo)')
+        ->and($balls->number)->toBe(2)
+        ->and($balls->subcategory->name)->toBe('Vaikų meniu')
+        ->and(OtherProduct::where('name', 'like', 'Bulvių ir vištienos rutuliukai%')->count())->toBe(1)
+        ->and(OtherProduct::count())->toBe(4);
+});
