@@ -41,6 +41,8 @@ class DatabaseSeeder extends Seeder
             KidsMenuSubcategorySeeder::class,
             SnackSubcategorySeeder::class,
             SauceSubcategorySeeder::class,
+            ZemaiciuBlynaiSubcategorySeeder::class,
+            BulviniaiBlynaiSubcategorySeeder::class,
         ]);
     }
 }
