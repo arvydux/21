@@ -160,3 +160,19 @@ it('adds the sauces to a "Padažai" subcategory, one record per sauce', function
             [3, 'Pomidorų padažas', 1.0],
         ]);
 });
+
+it('adds the combos to a "Komplektai" subcategory', function () {
+    $migration = require database_path('migrations/2026_10_10_202658_add_combo_subcategory_to_kiti.php');
+    $migration->up();
+    $migration->up();
+
+    $combos = Subcategory::where('category_id', $this->category->id)->where('name', 'Komplektai')->sole();
+
+    expect(OtherProduct::where('subcategory_id', $combos->id)->orderBy('number')->get()->map(fn (OtherProduct $product) => [$product->number, $product->name, (float) $product->price])->all())
+        ->toBe([
+            [1, 'Čeburekas su kiauliena ir sriuba', 6.9],
+            [2, 'Čeburekas su kiauliena + vištienos sultinys', 6.9],
+            [3, 'Pietūs (11:00 – 14:00)', 6.9],
+            [4, 'Pietūs su sriuba (11:00 – 14:00)', 6.9],
+        ]);
+});
