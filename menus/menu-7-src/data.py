@@ -1,4 +1,4 @@
-# Menu data for Prusakovų užkandinė, taken from the POS (categories, subcategories,
+# Menu data for Prusakovų užeiga, taken from the POS (categories, subcategories,
 # numbers and prices as of 2026-10-10). Every text is {lt, ru, en}.
 
 from pl import PL
@@ -16,7 +16,7 @@ def item(number, name, price, desc=None, vol=None, half=None, n18=False):
 
 
 UI = {
-    "brand": t("Prusakovų užkandinė", "Prusakovų užkandinė", "Prusakovų užkandinė"),
+    "brand": t("Prusakovų užeiga", "Prusakovų užeiga", "Prusakovų užeiga"),
     "menu": t("Meniu", "Меню", "Menu"),
     "lang_name": t("Lietuvių", "Русский", "English"),
     "half": t("½ porcija", "½ порции", "½ portion"),

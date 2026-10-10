@@ -1,6 +1,6 @@
 # Polish translations, keyed by the English text in data.py.
 PL = {
-    "Prusakovų užkandinė": "Prusakovų užkandinė",
+    "Prusakovų užeiga": "Prusakovų užeiga",
     "Menu": "Menu",
     "English": "Polski",
     "½ portion": "½ porcji",

@@ -156,7 +156,7 @@ def build_print():
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meniu 7 — Prusakovų užkandinė (spausdinimui)</title>
+<title>Meniu 7 — Prusakovų užeiga (spausdinimui)</title>
 {FONTS}
 <style>{PRINT_CSS}</style>
 </head>
@@ -284,13 +284,13 @@ def build_mobile():
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#14664A">
-<title>Meniu — Prusakovų užkandinė</title>
+<title>Meniu — Prusakovų užeiga</title>
 {FONTS}
 <style>{MOBILE_CSS}</style>
 </head>
 <body>
 <header class="hdr">
-  <div class="hdr-top"><div class="brand">Prusakovų užkandinė<small>Meniu · Menu</small></div><div class="langs">{lang_buttons}</div></div>
+  <div class="hdr-top"><div class="brand">Prusakovų užeiga<small>Meniu · Menu</small></div><div class="langs">{lang_buttons}</div></div>
   {navs}
 </header>
 <main>{panels}</main>
