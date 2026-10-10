@@ -43,7 +43,7 @@ it('does not print to kitchen for a drinks-only order (category 3)', function ()
     expect(shouldPrintForKitchen())->toBeFalse();
 });
 
-it('does not print to kitchen for a kibinai-only order (category 2)', function () {
+it('does not print to kitchen for a kepiniai-only order (category 2)', function () {
     makeKitchenTestOrder(2);
 
     expect(shouldPrintForKitchen())->toBeFalse();

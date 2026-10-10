@@ -2,11 +2,11 @@
 
 use App\Livewire\Buttons\Ceburekai;
 use App\Livewire\Buttons\Drinks;
-use App\Livewire\Buttons\Kibinai;
+use App\Livewire\Buttons\Kepiniai;
 use App\Livewire\Buttons\OtherProducts;
 use App\Models\Ceburek;
 use App\Models\Drink;
-use App\Models\Kibinai as KibinaiModel;
+use App\Models\Kepiniai as KepiniaiModel;
 use App\Models\OtherProduct;
 use App\Models\Topping;
 use Livewire\Livewire;
@@ -20,7 +20,7 @@ it('passes product names with quotes to the button handlers safely', function (s
         ->assertDontSeeHtml('Daniel&#039;s&#039;');
 })->with([
     'Gėrimai' => [Drinks::class, Drink::class, []],
-    'Kibinai' => [Kibinai::class, KibinaiModel::class, []],
+    'Kepiniai' => [Kepiniai::class, KepiniaiModel::class, []],
     'Kiti' => [OtherProducts::class, OtherProduct::class, []],
     'Čeburekai' => [Ceburekai::class, Ceburek::class, ['sign' => 'JD']],
 ]);

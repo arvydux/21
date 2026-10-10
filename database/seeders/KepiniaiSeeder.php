@@ -3,12 +3,12 @@
 namespace Database\Seeders;
 
 
-use App\Models\Kibinai;
+use App\Models\Kepiniai;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class KibinaiSeeder extends Seeder
+class KepiniaiSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -27,6 +27,6 @@ class KibinaiSeeder extends Seeder
             ],
         ];
 
-        Kibinai::insert($products);
+        Kepiniai::insert($products);
     }
 }

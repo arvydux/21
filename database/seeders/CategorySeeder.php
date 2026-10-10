@@ -17,7 +17,7 @@ class CategorySeeder extends Seeder
                 'name' => 'Čeburekai', 'component_name' => 'ceburekai',
             ],
             [
-                'name' => 'Kibinai', 'component_name' => 'kibinai',
+                'name' => 'Kepiniai', 'component_name' => 'kepiniai',
             ],
             [
                 'name' => 'Gėrimai', 'component_name' => 'drinks',

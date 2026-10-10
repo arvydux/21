@@ -1,5 +1,5 @@
 <div class="relative mt-6 text-white/80">
-    <livewire:menu.create-form.kibinai-create-form/>
+    <livewire:menu.create-form.kepiniai-create-form/>
 
     <div class="mt-4 overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left">

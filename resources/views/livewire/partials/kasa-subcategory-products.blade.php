@@ -2,8 +2,8 @@
 @if($buttonName === 'ceburekai')
     <livewire:dynamic-component :component="'buttons.ceburekai'" :subcategoryId="$selectedSubcategoryId" :showAll="$__showAll" :key="'ceburekai-'.$__key" />
 @endif
-@if($buttonName === 'kibinai')
-    <livewire:dynamic-component :component="'buttons.kibinai'" :subcategoryId="$selectedSubcategoryId" :showAll="$__showAll" :key="'kibinai-'.$__key" />
+@if($buttonName === 'kepiniai')
+    <livewire:dynamic-component :component="'buttons.kepiniai'" :subcategoryId="$selectedSubcategoryId" :showAll="$__showAll" :key="'kepiniai-'.$__key" />
 @endif
 @if($buttonName === 'drinks')
     <livewire:dynamic-component :component="'buttons.drinks'" :subcategoryId="$selectedSubcategoryId" :showAll="$__showAll" :key="'drinks-'.$__key" />

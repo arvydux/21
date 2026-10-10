@@ -13,9 +13,9 @@
     $btnPy = match($buttonPadding) { 1 => 'py-0', 2 => 'py-2', 4 => 'py-4', 5 => 'py-5', default => 'py-3' };
 @endphp
 <div x-data="{ koreguoti: window.koreguotiActive, editingProduct: '', editingProductId: null, editingLeft: '', editingAttention: false }" x-init="initSwapSortable($el, $wire, 'updateOrder')" @koreguoti-changed.window="koreguoti = $event.detail.active" class="grid {{ $buttonColumns === 3 ? 'md:grid-cols-3' : ($buttonColumns === 5 ? 'md:grid-cols-5' : 'md:grid-cols-4') }} auto-rows-min {{ $buttonGap === 1 ? 'gap-1' : ($buttonGap === 2 ? 'gap-2' : ($buttonGap === 3 ? 'gap-3' : ($buttonGap === 5 ? 'gap-5' : 'gap-4'))) }} mt-10 mt-4">
-    @foreach(\App\Models\Kibinai::where('show', true)->when(! $showAll, fn ($q) => $q->where('subcategory_id', $subcategoryId))->orderBy('position')->get() as $productName)
-        <div data-sortable-id="{{ $productName->id }}" wire:key="kibinai-{{ $productName->id }}"
-             @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ({{ $productName->attention ? 'true' : 'false' }}) { $wire.toggleAttention({{ $productName->id }}); } else { editingProduct = @js($productName->name); editingProductId = {{ $productName->id }}; editingLeft = ''; editingAttention = false; $flux.modal('koreguoti-edit-kibinai').show(); } }">
+    @foreach(\App\Models\Kepiniai::where('show', true)->when(! $showAll, fn ($q) => $q->where('subcategory_id', $subcategoryId))->orderBy('position')->get() as $productName)
+        <div data-sortable-id="{{ $productName->id }}" wire:key="kepiniai-{{ $productName->id }}"
+             @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ({{ $productName->attention ? 'true' : 'false' }}) { $wire.toggleAttention({{ $productName->id }}); } else { editingProduct = @js($productName->name); editingProductId = {{ $productName->id }}; editingLeft = ''; editingAttention = false; $flux.modal('koreguoti-edit-kepiniai').show(); } }">
             <div wire:click="addProduct(@js($productName->name), '{{ $productName->price }}')"
                 class="relative {{ $buttonStyle === 'large' ? 'aspect-[5/3]' : 'aspect-[5/2.3]' }} overflow-hidden rounded-2xl cursor-pointer
                     {{ $productName->attention ? 'bg-red-500/70 hover:bg-red-500/70' : 'bg-white/10 hover:bg-white/20' }} backdrop-blur-lg border border-white/25
@@ -53,7 +53,7 @@
         </div>
     @endforeach
 
-    <flux:modal name="koreguoti-edit-kibinai" class="w-80">
+    <flux:modal name="koreguoti-edit-kepiniai" class="w-80">
         <div class="space-y-6">
             <flux:heading size="lg" x-text="editingProduct"></flux:heading>
 
@@ -70,8 +70,8 @@
             </button>
 
             <div class="flex justify-end gap-2">
-                <flux:button variant="primary" x-on:click="$wire.updateLeft(editingProductId, editingLeft !== '' ? parseInt(editingLeft) : null); $flux.modal('koreguoti-edit-kibinai').close(); editingProductId = null; editingLeft = ''">Atnaujinti</flux:button>
-                <flux:button x-on:click="$flux.modal('koreguoti-edit-kibinai').close()">Uždaryti</flux:button>
+                <flux:button variant="primary" x-on:click="$wire.updateLeft(editingProductId, editingLeft !== '' ? parseInt(editingLeft) : null); $flux.modal('koreguoti-edit-kepiniai').close(); editingProductId = null; editingLeft = ''">Atnaujinti</flux:button>
+                <flux:button x-on:click="$flux.modal('koreguoti-edit-kepiniai').close()">Uždaryti</flux:button>
             </div>
         </div>
     </flux:modal>

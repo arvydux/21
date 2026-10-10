@@ -3,8 +3,8 @@
         @if($buttonName === 'ceburekai')
             <livewire:dynamic-component :component="'menu.tables.cebureks-table'" />
         @endif
-        @if($buttonName === 'kibinai')
-            <livewire:dynamic-component :component="'menu.tables.kibinai-table'" />
+        @if($buttonName === 'kepiniai')
+            <livewire:dynamic-component :component="'menu.tables.kepiniai-table'" />
         @endif
         @if($buttonName === 'drinks')
             <livewire:dynamic-component :component="'menu.tables.drinks-table'" />

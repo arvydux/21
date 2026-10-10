@@ -6,7 +6,7 @@ use App\Models\AlcoholicDrink;
 use App\Models\Ceburek;
 use App\Models\Drink;
 use App\Models\FreeNumbers;
-use App\Models\Kibinai;
+use App\Models\Kepiniai;
 use App\Models\KoldunaiDish;
 use App\Models\KoldunaiTopping;
 use App\Models\Order;
@@ -139,7 +139,7 @@ class OrdersList extends Component
         }
         $this->printOrderForClient($this->freeNumber, $this->byPhone);
         $this->decrementCeburekLeft();
-        $this->decrementKibinaiLeft();
+        $this->decrementKepiniaiLeft();
         $this->decrementDrinkLeft();
         $this->decrementOtherProductLeft();
         $this->decrementToppingLeft();
@@ -169,17 +169,17 @@ class OrdersList extends Component
         }
     }
 
-    private function decrementKibinaiLeft(): void
+    private function decrementKepiniaiLeft(): void
     {
         foreach (Order::where('category', 2)->get() as $order) {
             foreach (json_decode($order->name, true) as $item) {
                 foreach ($item as $productName => $price) {
-                    $kibinai = Kibinai::where('name', $productName)
+                    $kepinys = Kepiniai::where('name', $productName)
                         ->whereNotNull('left')
                         ->first();
-                    if ($kibinai) {
-                        $kibinai->left = max(0, $kibinai->left - $order->amount);
-                        $kibinai->save();
+                    if ($kepinys) {
+                        $kepinys->left = max(0, $kepinys->left - $order->amount);
+                        $kepinys->save();
                     }
                 }
             }
