@@ -39,6 +39,8 @@ class DatabaseSeeder extends Seeder
             SoupSubcategorySeeder::class,
             DessertSubcategorySeeder::class,
             KidsMenuSubcategorySeeder::class,
+            SnackSubcategorySeeder::class,
+            SauceSubcategorySeeder::class,
         ]);
     }
 }

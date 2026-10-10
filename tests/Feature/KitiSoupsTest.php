@@ -118,3 +118,45 @@ it('moves the original potato and chicken balls into the kids menu instead of du
         ->and(OtherProduct::where('name', 'like', 'Bulvių ir vištienos rutuliukai%')->count())->toBe(1)
         ->and(OtherProduct::count())->toBe(4);
 });
+
+it('adds the snacks to a "Užkandžiai" subcategory, keeping the kids menu fries as a separate button', function () {
+    $fries = OtherProduct::create(['name' => 'Bulvytės fri', 'price' => 2.8, 'show' => true, 'position' => 0, 'subcategory_id' => $this->visi->id]);
+    (require database_path('migrations/2026_10_10_195123_add_kids_menu_subcategory_to_kiti.php'))->up();
+
+    $migration = require database_path('migrations/2026_10_10_200702_add_snack_subcategory_to_kiti.php');
+    $migration->up();
+    $migration->up();
+
+    $snacks = Subcategory::where('category_id', $this->category->id)->where('name', 'Užkandžiai')->sole();
+    $kidsMenu = Subcategory::where('category_id', $this->category->id)->where('name', 'Vaikų meniu')->sole();
+
+    expect(OtherProduct::where('subcategory_id', $snacks->id)->orderBy('number')->get()->map(fn (OtherProduct $product) => [$product->number, $product->name, (float) $product->price])->all())
+        ->toBe([
+            [1, 'Gruzdintos bulvytės „FRI“ su pomidorų padažu', 3.5],
+            [2, 'Svogūnų žiedai 12 vnt. su česnakiniu padažu', 4.5],
+            [3, 'Kalmarų žiedai 12 vnt. su česnakiniu padažu', 5.5],
+            [4, 'Vištienos filė piršteliai 8 vnt. su pikantišku padažu', 6.5],
+            [5, 'Kepta duona sūrio padaže', 5.5],
+            [6, 'Kepta duona su sūrio padažu (atskirai)', 5.5],
+            [7, 'Gruzdinti naminiai koldūnai su mėsa ir pikantišku padažu', 6.5],
+            [8, 'Užkandžių rinkinys', 18.5],
+        ])
+        ->and(OtherProduct::where('name', 'Gruzdintos bulvytės „FRI“ su pomidorų padažu')->pluck('subcategory_id')->sort()->values()->all())
+        ->toBe(collect([$kidsMenu->id, $snacks->id])->sort()->values()->all())
+        ->and($fries->fresh()->subcategory_id)->toBe($this->visi->id);
+});
+
+it('adds the sauces to a "Padažai" subcategory, one record per sauce', function () {
+    $migration = require database_path('migrations/2026_10_10_200808_add_sauce_subcategory_to_kiti.php');
+    $migration->up();
+    $migration->up();
+
+    $sauces = Subcategory::where('category_id', $this->category->id)->where('name', 'Padažai')->sole();
+
+    expect(OtherProduct::where('subcategory_id', $sauces->id)->orderBy('number')->get()->map(fn (OtherProduct $product) => [$product->number, $product->name, (float) $product->price])->all())
+        ->toBe([
+            [1, 'Česnakinis padažas', 1.0],
+            [2, 'Pikantiškas padažas', 1.0],
+            [3, 'Pomidorų padažas', 1.0],
+        ]);
+});

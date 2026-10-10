@@ -42,10 +42,12 @@ abstract class NumberedDrinkSeeder extends Seeder
     }
 
     /**
-     * Add the subcategory to the category and fill it with the drinks. An
-     * existing drink with the same name, no number yet and outside this
-     * subcategory is moved into it instead of being duplicated; any other
-     * existing drink is left as is, so re-running never overwrites admin edits.
+     * Add the subcategory to the category and fill it with the drinks. A drink
+     * already in this subcategory is left as is, so re-running never
+     * overwrites admin edits. Otherwise an existing drink with the same name
+     * and no number yet is moved into it instead of being duplicated, and if
+     * there is none a new one is created (the same dish may then appear in
+     * several subcategories, each with its own number).
      */
     public function run(): void
     {
@@ -64,17 +66,19 @@ abstract class NumberedDrinkSeeder extends Seeder
         $position = ($model::max('position') ?? -1) + 1;
 
         foreach ($this->products() as $product) {
-            $drink = $model::where('name', $product['name'])->first();
+            if ($model::where('name', $product['name'])->where('subcategory_id', $subcategory->id)->exists()) {
+                continue;
+            }
 
-            if ($drink === null) {
-                $model::create([...$product, 'show' => true, 'position' => $position++, 'subcategory_id' => $subcategory->id]);
+            $drink = $model::where('name', $product['name'])->whereNull('number')->first();
+
+            if ($drink !== null) {
+                $drink->update([...$product, 'position' => $position++, 'subcategory_id' => $subcategory->id]);
 
                 continue;
             }
 
-            if ($drink->number === null && $drink->subcategory_id !== $subcategory->id) {
-                $drink->update([...$product, 'position' => $position++, 'subcategory_id' => $subcategory->id]);
-            }
+            $model::create([...$product, 'show' => true, 'position' => $position++, 'subcategory_id' => $subcategory->id]);
         }
     }
 }

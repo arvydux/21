@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Ceburek;
-use App\Models\Subcategory;
 use Database\Seeders\SignatureCeburekSeeder;
 use Illuminate\Database\Migrations\Migration;
 
@@ -24,21 +23,12 @@ return new class extends Migration
         }
 
         $seeder = new SignatureCeburekSeeder;
+
+        Ceburek::whereIn('name', array_column($seeder->products(), 'name'))
+            ->whereDoesntHave('subcategory', fn ($query) => $query->where('name', 'Firminis'))
+            ->update(['number' => null]);
+
         $seeder->run();
-
-        $firminis = Subcategory::where('name', 'Firminis')
-            ->whereHas('category', fn ($query) => $query->where('component_name', 'ceburekai'))
-            ->first();
-
-        if ($firminis === null) {
-            return;
-        }
-
-        foreach ($seeder->products() as $product) {
-            Ceburek::where('name', $product['name'])
-                ->where('subcategory_id', '!=', $firminis->id)
-                ->update(['subcategory_id' => $firminis->id, 'number' => $product['number']]);
-        }
     }
 
     public function down(): void
