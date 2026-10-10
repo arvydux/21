@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             SignatureCeburekSeeder::class,
             KibinaiSubcategorySeeder::class,
             DonutSubcategorySeeder::class,
+            SoupSubcategorySeeder::class,
         ]);
     }
 }
