@@ -377,8 +377,8 @@ class OrdersList extends Component
             $receipt->text((string) $orderNumber, 48, 'center');
         }
 
-        $receipt->text($this->printedAt(), 16, 'center')
-            ->text('Nefiskalinis kvitas', 16, 'center')
+        $receipt->text($this->printedAt(), 18, 'center')
+            ->text('Nefiskalinis kvitas', 18, 'center')
             ->separator();
 
         $lines = $this->fullReceiptLines();
@@ -386,11 +386,11 @@ class OrdersList extends Component
 
         foreach ($lines as $line) {
             $line['price'] === null
-                ? $receipt->text($line['text'], 17, indent: $line['indent'])
-                : $receipt->row($line['text'], $line['price'], 17, $line['indent']);
+                ? $receipt->text($line['text'], 19, indent: $line['indent'])
+                : $receipt->row($line['text'], $line['price'], 19, $line['indent']);
         }
 
-        $receipt->separator()->row($total['text'], $total['price'], 20);
+        $receipt->separator()->row($total['text'], $total['price'], 22);
 
         if ($byPhone) {
             $receipt->space(12)->text('Telefonu', 28, 'center');
