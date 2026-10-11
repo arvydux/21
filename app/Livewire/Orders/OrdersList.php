@@ -138,6 +138,7 @@ class OrdersList extends Component
             $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
         }
         $this->printOrderForClient($this->freeNumber, $this->byPhone);
+        $this->printFullOrderForClient($this->freeNumber, $this->byPhone);
         $this->decrementCeburekLeft();
         $this->decrementKepiniaiLeft();
         $this->decrementDrinkLeft();
@@ -433,6 +434,111 @@ class OrdersList extends Component
             $printer->close();
         } catch (Exception $e) {
             echo "Couldn't print to client printer: ".$e->getMessage()."\n";
+        }
+    }
+
+    private const FULL_RECEIPT_WIDTH = 48;
+
+    /**
+     * Lines of the second client receipt: every item of the order with its price, then the total.
+     *
+     * @return list<string>
+     */
+    public function fullReceiptLines(): array
+    {
+        $lines = [];
+        $total = 0.0;
+
+        foreach (Order::orderBy('category')->orderBy('id')->get() as $order) {
+            foreach (json_decode($order->name, true) ?? [] as $product) {
+                foreach ($product as $name => $price) {
+                    $linePrice = $order->amount * (float) $price;
+                    $total += $linePrice;
+                    array_push($lines, ...$this->receiptLine($order->amount.' x '.$name, $linePrice));
+                }
+            }
+
+            foreach (json_decode($order->toppings ?? '[]', true) ?? [] as $topping) {
+                foreach ($topping as $name => $price) {
+                    $linePrice = $order->amount * (float) $price;
+                    $total += $linePrice;
+                    array_push($lines, ...$this->receiptLine('   + '.$name, $linePrice));
+                }
+            }
+
+            if ($order->package) {
+                $packagePrice = $order->amount * (float) $order->package;
+                $total += $packagePrice;
+                array_push($lines, ...$this->receiptLine('   + Pakuotė', $packagePrice));
+            }
+
+            if ($order->takeaway) {
+                $lines[] = $this->convertTextFromLtToNotLt('   Išsinešimui');
+            }
+
+            if ($order->comments) {
+                $lines[] = $this->convertTextFromLtToNotLt('   Pageidavimai: '.$order->comments);
+            }
+        }
+
+        $lines[] = str_repeat('-', self::FULL_RECEIPT_WIDTH);
+        array_push($lines, ...$this->receiptLine('Viso', $total, ' EUR'));
+
+        return $lines;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function receiptLine(string $label, float $price, string $suffix = ''): array
+    {
+        $label = $this->convertTextFromLtToNotLt($label);
+        $price = number_format($price, 2, '.', '').$suffix;
+
+        if (strlen($label) + 1 + strlen($price) <= self::FULL_RECEIPT_WIDTH) {
+            return [str_pad($label, self::FULL_RECEIPT_WIDTH - strlen($price)).$price];
+        }
+
+        return [
+            ...explode("\n", wordwrap($label, self::FULL_RECEIPT_WIDTH, "\n", true)),
+            str_pad($price, self::FULL_RECEIPT_WIDTH, ' ', STR_PAD_LEFT),
+        ];
+    }
+
+    private function printFullOrderForClient(int $freeOrder, bool $byPhone): void
+    {
+        try {
+            $profile = CapabilityProfile::load('TM-P80');
+            $connector = new NetworkPrintConnector('192.168.32.101', 9100, 2);
+            $printer = new Printer($connector, $profile);
+            $printer->setEmphasis(true);
+
+            $printer->setTextSize(3, 3);
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            $printer->text($freeOrder."\n");
+            $printer->setFont(0);
+            $printer->setTextSize(1, 1);
+            $printer->text(now('Europe/Vilnius')."\n");
+            $printer->text("Nefiskalinis kvitas\n");
+            $printer->text(str_repeat('-', self::FULL_RECEIPT_WIDTH)."\n");
+
+            $printer->setJustification();
+            $printer->setTextSize(1, 2);
+            foreach ($this->fullReceiptLines() as $line) {
+                $printer->text($line."\n");
+            }
+
+            if ($byPhone) {
+                $printer->feed();
+                $printer->setTextSize(2, 2);
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->text('Telefonu '."\n");
+            }
+            $printer->feed(2);
+            $printer->cut();
+            $printer->close();
+        } catch (Exception $e) {
+            echo "Couldn't print full order to client printer: ".$e->getMessage()."\n";
         }
     }
 
