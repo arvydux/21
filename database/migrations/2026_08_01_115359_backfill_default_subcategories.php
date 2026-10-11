@@ -1,25 +1,23 @@
 <?php
 
 use App\Models\Category;
-use App\Models\Ceburek;
-use App\Models\Drink;
-use App\Models\Kibinai;
-use App\Models\OtherProduct;
 use App\Models\Subcategory;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
     /**
-     * Map each category's component_name to its product model class.
+     * Map each category's component_name to its product table as it was named
+     * when this migration was written (tables renamed later are not affected).
      *
-     * @var array<string, class-string<\Illuminate\Database\Eloquent\Model>>
+     * @var array<string, string>
      */
-    private array $componentModels = [
-        'ceburekai' => Ceburek::class,
-        'kibinai' => Kibinai::class,
-        'drinks' => Drink::class,
-        'other' => OtherProduct::class,
+    private array $componentTables = [
+        'ceburekai' => 'cebureks',
+        'kibinai' => 'kibinais',
+        'drinks' => 'drinks',
+        'other' => 'other_products',
     ];
 
     /**
@@ -35,13 +33,13 @@ return new class extends Migration
                 ['position' => 0],
             );
 
-            $modelClass = $this->componentModels[$category->component_name] ?? null;
+            $table = $this->componentTables[$category->component_name] ?? null;
 
-            if ($modelClass === null) {
+            if ($table === null) {
                 continue;
             }
 
-            $modelClass::query()
+            DB::table($table)
                 ->whereNull('subcategory_id')
                 ->update(['subcategory_id' => $defaultSubcategory->id]);
         }

@@ -6,8 +6,10 @@ use App\Models\Subcategory;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class KibinaiCreateForm extends Component
+class KepiniaiCreateForm extends Component
 {
+    public $number;
+
     public $name;
 
     public $price;
@@ -17,19 +19,22 @@ class KibinaiCreateForm extends Component
     public function save()
     {
         $this->validate([
+            'number' => 'nullable|integer|min:1',
             'name' => 'required',
             'price' => 'required|numeric',
             'subcategory_id' => 'required|exists:subcategories,id',
         ]);
 
         // Save to database
-        \App\Models\Kibinai::create([
+        \App\Models\Kepiniai::create([
+            'number' => $this->number ?: null,
             'name' => $this->name,
             'price' => $this->price,
             'subcategory_id' => $this->subcategory_id,
         ]);
 
         // Reset form
+        $this->number = '';
         $this->name = '';
         $this->price = '';
         $this->subcategory_id = null;
@@ -42,8 +47,8 @@ class KibinaiCreateForm extends Component
 
     public function render()
     {
-        return view('livewire.menu.create-form.kibinai-create-form', [
-            'subcategories' => Subcategory::whereHas('category', fn ($q) => $q->where('component_name', 'kibinai'))->orderBy('position')->get(),
+        return view('livewire.menu.create-form.kepiniai-create-form', [
+            'subcategories' => Subcategory::whereHas('category', fn ($q) => $q->where('component_name', 'kepiniai'))->orderBy('position')->get(),
         ]);
     }
 }

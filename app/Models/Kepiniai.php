@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Kibinai extends Model
+class Kepiniai extends Model
 {
-    //
-    protected $fillable = ['name', 'price', 'show', 'takeaway', 'package', 'position', 'attention', 'left', 'subcategory_id'];
+    protected $table = 'kepiniai';
+
+    protected $fillable = ['number', 'name', 'price', 'show', 'takeaway', 'package', 'position', 'attention', 'left', 'subcategory_id'];
 
     public function subcategory(): BelongsTo
     {

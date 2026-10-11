@@ -8,6 +8,8 @@ use Livewire\Component;
 
 class PotatoDishesCreateForm extends Component
 {
+    public $number;
+
     public $name;
 
     public $price;
@@ -21,6 +23,7 @@ class PotatoDishesCreateForm extends Component
     public function save()
     {
         $this->validate([
+            'number' => 'nullable|integer|min:1',
             'name' => 'required',
             'price' => 'required|numeric',
             'half_price' => 'required|numeric',
@@ -29,6 +32,7 @@ class PotatoDishesCreateForm extends Component
 
         // Save to database
         \App\Models\PotatoDish::create([
+            'number' => $this->number ?: null,
             'name' => $this->name,
             'price' => $this->price,
             'half_price' => $this->half_price,
@@ -38,6 +42,7 @@ class PotatoDishesCreateForm extends Component
         ]);
 
         // Reset form
+        $this->number = '';
         $this->name = '';
         $this->price = '';
         $this->half_price = '';

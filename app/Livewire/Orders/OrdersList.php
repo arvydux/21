@@ -2,10 +2,13 @@
 
 namespace App\Livewire\Orders;
 
+use App\Models\AlcoholicDrink;
 use App\Models\Ceburek;
 use App\Models\Drink;
 use App\Models\FreeNumbers;
-use App\Models\Kibinai;
+use App\Models\Kepiniai;
+use App\Models\KoldunaiDish;
+use App\Models\KoldunaiTopping;
 use App\Models\Order;
 use App\Models\OrderNumbers;
 use App\Models\OtherProduct;
@@ -135,12 +138,15 @@ class OrdersList extends Component
             $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
         }
         $this->printOrderForClient($this->freeNumber, $this->byPhone);
+        $this->printFullOrderForClient($this->freeNumber, $this->byPhone);
         $this->decrementCeburekLeft();
-        $this->decrementKibinaiLeft();
+        $this->decrementKepiniaiLeft();
         $this->decrementDrinkLeft();
         $this->decrementOtherProductLeft();
         $this->decrementToppingLeft();
         $this->decrementPotatoDishLeft();
+        $this->decrementKoldunaiDishLeft();
+        $this->decrementAlcoholicDrinkLeft();
         $this->resetOrders();
         $this->byPhone = false;
 
@@ -164,17 +170,17 @@ class OrdersList extends Component
         }
     }
 
-    private function decrementKibinaiLeft(): void
+    private function decrementKepiniaiLeft(): void
     {
         foreach (Order::where('category', 2)->get() as $order) {
             foreach (json_decode($order->name, true) as $item) {
                 foreach ($item as $productName => $price) {
-                    $kibinai = Kibinai::where('name', $productName)
+                    $kepinys = Kepiniai::where('name', $productName)
                         ->whereNotNull('left')
                         ->first();
-                    if ($kibinai) {
-                        $kibinai->left = max(0, $kibinai->left - $order->amount);
-                        $kibinai->save();
+                    if ($kepinys) {
+                        $kepinys->left = max(0, $kepinys->left - $order->amount);
+                        $kepinys->save();
                     }
                 }
             }
@@ -256,12 +262,51 @@ class OrdersList extends Component
         }
     }
 
+    private function decrementKoldunaiDishLeft(): void
+    {
+        foreach (Order::where('category', KoldunaiDish::ORDER_CATEGORY)->get() as $order) {
+            foreach (json_decode($order->name, true) as $item) {
+                foreach ($item as $productName => $price) {
+                    $product = KoldunaiDish::where('name', $productName)->whereNotNull('left')->first();
+                    if ($product) {
+                        $product->left = max(0, $product->left - $order->amount);
+                        $product->save();
+                    }
+                }
+            }
+            foreach (json_decode($order->toppings, true) ?? [] as $toppingItem) {
+                foreach ($toppingItem as $toppingName => $price) {
+                    $topping = KoldunaiTopping::where('name', $toppingName)->whereNotNull('left')->first();
+                    if ($topping) {
+                        $topping->left = max(0, $topping->left - $order->amount);
+                        $topping->save();
+                    }
+                }
+            }
+        }
+    }
+
+    private function decrementAlcoholicDrinkLeft(): void
+    {
+        foreach (Order::where('category', AlcoholicDrink::ORDER_CATEGORY)->get() as $order) {
+            foreach (json_decode($order->name, true) as $item) {
+                foreach ($item as $productName => $price) {
+                    $alcoholicDrink = AlcoholicDrink::where('name', $productName)->whereNotNull('left')->first();
+                    if ($alcoholicDrink) {
+                        $alcoholicDrink->left = max(0, $alcoholicDrink->left - $order->amount);
+                        $alcoholicDrink->save();
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * @return list<int>
      */
     private function kitchenCategories(): array
     {
-        return [1, 4, PotatoDish::ORDER_CATEGORY];
+        return [1, 4, PotatoDish::ORDER_CATEGORY, KoldunaiDish::ORDER_CATEGORY];
     }
 
     public function shouldPrintForKitchen(): bool
@@ -389,6 +434,111 @@ class OrdersList extends Component
             $printer->close();
         } catch (Exception $e) {
             echo "Couldn't print to client printer: ".$e->getMessage()."\n";
+        }
+    }
+
+    private const FULL_RECEIPT_WIDTH = 48;
+
+    /**
+     * Lines of the second client receipt: every item of the order with its price, then the total.
+     *
+     * @return list<string>
+     */
+    public function fullReceiptLines(): array
+    {
+        $lines = [];
+        $total = 0.0;
+
+        foreach (Order::orderBy('category')->orderBy('id')->get() as $order) {
+            foreach (json_decode($order->name, true) ?? [] as $product) {
+                foreach ($product as $name => $price) {
+                    $linePrice = $order->amount * (float) $price;
+                    $total += $linePrice;
+                    array_push($lines, ...$this->receiptLine($order->amount.' x '.$name, $linePrice));
+                }
+            }
+
+            foreach (json_decode($order->toppings ?? '[]', true) ?? [] as $topping) {
+                foreach ($topping as $name => $price) {
+                    $linePrice = $order->amount * (float) $price;
+                    $total += $linePrice;
+                    array_push($lines, ...$this->receiptLine('   + '.$name, $linePrice));
+                }
+            }
+
+            if ($order->package) {
+                $packagePrice = $order->amount * (float) $order->package;
+                $total += $packagePrice;
+                array_push($lines, ...$this->receiptLine('   + Pakuotė', $packagePrice));
+            }
+
+            if ($order->takeaway) {
+                $lines[] = $this->convertTextFromLtToNotLt('   Išsinešimui');
+            }
+
+            if ($order->comments) {
+                $lines[] = $this->convertTextFromLtToNotLt('   Pageidavimai: '.$order->comments);
+            }
+        }
+
+        $lines[] = str_repeat('-', self::FULL_RECEIPT_WIDTH);
+        array_push($lines, ...$this->receiptLine('Viso', $total, ' EUR'));
+
+        return $lines;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function receiptLine(string $label, float $price, string $suffix = ''): array
+    {
+        $label = $this->convertTextFromLtToNotLt($label);
+        $price = number_format($price, 2, '.', '').$suffix;
+
+        if (strlen($label) + 1 + strlen($price) <= self::FULL_RECEIPT_WIDTH) {
+            return [str_pad($label, self::FULL_RECEIPT_WIDTH - strlen($price)).$price];
+        }
+
+        return [
+            ...explode("\n", wordwrap($label, self::FULL_RECEIPT_WIDTH, "\n", true)),
+            str_pad($price, self::FULL_RECEIPT_WIDTH, ' ', STR_PAD_LEFT),
+        ];
+    }
+
+    private function printFullOrderForClient(int $freeOrder, bool $byPhone): void
+    {
+        try {
+            $profile = CapabilityProfile::load('TM-P80');
+            $connector = new NetworkPrintConnector('192.168.32.101', 9100, 2);
+            $printer = new Printer($connector, $profile);
+            $printer->setEmphasis(true);
+
+            $printer->setTextSize(3, 3);
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            $printer->text($freeOrder."\n");
+            $printer->setFont(0);
+            $printer->setTextSize(1, 1);
+            $printer->text(now('Europe/Vilnius')."\n");
+            $printer->text("Nefiskalinis kvitas\n");
+            $printer->text(str_repeat('-', self::FULL_RECEIPT_WIDTH)."\n");
+
+            $printer->setJustification();
+            $printer->setTextSize(1, 2);
+            foreach ($this->fullReceiptLines() as $line) {
+                $printer->text($line."\n");
+            }
+
+            if ($byPhone) {
+                $printer->feed();
+                $printer->setTextSize(2, 2);
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->text('Telefonu '."\n");
+            }
+            $printer->feed(2);
+            $printer->cut();
+            $printer->close();
+        } catch (Exception $e) {
+            echo "Couldn't print full order to client printer: ".$e->getMessage()."\n";
         }
     }
 

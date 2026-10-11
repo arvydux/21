@@ -7,7 +7,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Renderless;
 use Livewire\Component;
 
-class Kibinai extends Component
+class Kepiniai extends Component
 {
     public $productName;
 
@@ -36,7 +36,7 @@ class Kibinai extends Component
             Order::create([
                 'name' => json_encode([[$productName => $productPrice]]),
                 'order_price' => $productPrice,
-                'package' => \App\Models\Kibinai::where('name', $productName)->first()->package,
+                'package' => \App\Models\Kepiniai::where('name', $productName)->first()->package,
                 'category' => 2,
             ]);
         }
@@ -46,27 +46,27 @@ class Kibinai extends Component
 
     public function updateLeft(int $id, ?int $left): void
     {
-        $kibinai = \App\Models\Kibinai::find($id);
-        if ($kibinai) {
-            $kibinai->left = $left;
-            $kibinai->save();
+        $kepinys = \App\Models\Kepiniai::find($id);
+        if ($kepinys) {
+            $kepinys->left = $left;
+            $kepinys->save();
         }
     }
 
     public function toggleAttention(int $id, ?int $left = null): void
     {
-        $kibinai = \App\Models\Kibinai::find($id);
-        if ($kibinai) {
-            if ($kibinai->attention) {
-                $kibinai->attention = false;
-                $kibinai->left = null;
+        $kepinys = \App\Models\Kepiniai::find($id);
+        if ($kepinys) {
+            if ($kepinys->attention) {
+                $kepinys->attention = false;
+                $kepinys->left = null;
             } else {
-                $kibinai->attention = true;
+                $kepinys->attention = true;
                 if ($left !== null) {
-                    $kibinai->left = $left;
+                    $kepinys->left = $left;
                 }
             }
-            $kibinai->save();
+            $kepinys->save();
         }
     }
 
@@ -78,12 +78,12 @@ class Kibinai extends Component
     public function updateOrder($list)
     {
         foreach ($list as $item) {
-            \App\Models\Kibinai::where('id', $item['value'])->update(['position' => $item['order']]);
+            \App\Models\Kepiniai::where('id', $item['value'])->update(['position' => $item['order']]);
         }
     }
 
     public function render()
     {
-        return view('livewire.buttons.kibinai');
+        return view('livewire.buttons.kepiniai');
     }
 }

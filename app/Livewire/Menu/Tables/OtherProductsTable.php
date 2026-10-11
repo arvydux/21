@@ -11,6 +11,8 @@ class OtherProductsTable extends Component
 
     public \App\Models\OtherProduct $simpleProduct;
 
+    public ?int $number = null;
+
     public string $name;
 
     public float $price;
@@ -27,6 +29,7 @@ class OtherProductsTable extends Component
     {
         $this->editedProductNameId = $productNameId;
         $this->simpleProduct = \App\Models\OtherProduct::find($productNameId);
+        $this->number = $this->simpleProduct->number;
         $this->name = $this->simpleProduct->name;
         $this->price = $this->simpleProduct->price;
         $this->show = $this->simpleProduct->show;
@@ -37,6 +40,7 @@ class OtherProductsTable extends Component
     public function save()
     {
         $this->validate([
+            'number' => 'nullable|integer|min:1',
             'name' => 'required',
             'price' => 'required|numeric',
             'subcategory_id' => 'required|exists:subcategories,id',
@@ -44,9 +48,9 @@ class OtherProductsTable extends Component
 
         if (is_null($this->simpleProduct)) {
             $position = \App\Models\OtherProduct::max('position') + 1;
-            \App\Models\OtherProduct::create(array_merge($this->only('name', 'price', 'show', 'package', 'subcategory_id'), ['position' => $position]));
+            \App\Models\OtherProduct::create(array_merge($this->only('number', 'name', 'price', 'show', 'package', 'subcategory_id'), ['position' => $position]));
         } else {
-            $this->simpleProduct->update($this->only('name', 'price', 'show', 'package', 'subcategory_id'));
+            $this->simpleProduct->update($this->only('number', 'name', 'price', 'show', 'package', 'subcategory_id'));
         }
 
         $this->editedProductNameId = 0;
@@ -62,7 +66,7 @@ class OtherProductsTable extends Component
     #[on('productAdded')]
     public function mount(): void
     {
-        $this->simpleProducts = \App\Models\OtherProduct::all();
+        $this->simpleProducts = \App\Models\OtherProduct::orderByRaw('number is null')->orderBy('number')->orderBy('position')->get();
     }
 
     public function cancel(): void

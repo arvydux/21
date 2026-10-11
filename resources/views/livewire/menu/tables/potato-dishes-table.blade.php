@@ -5,6 +5,7 @@
         <table class="w-full text-sm text-left">
             <thead class="text-xs uppercase bg-emerald-700/70 text-white/80">
                 <tr>
+                    <th scope="col" class="px-6 py-3 w-16">Nr.</th>
                     <th scope="col" class="px-6 py-3">Pavadinimas</th>
                     <th scope="col" class="px-6 py-3 w-32">Pusė porcijos</th>
                     <th scope="col" class="px-6 py-3 w-32">Pilna porcija</th>
@@ -17,6 +18,7 @@
             <tbody>
             @foreach($products as $productName)
                 <tr class="@if($editedProductNameId === $productName->id) hidden @endif border-b border-green-500/30 bg-white/10">
+                    <td class="px-6 py-4 font-semibold text-white">{{ $productName->number ?? '—' }}</td>
                     <td class="px-6 py-4 font-medium text-white">{{ $productName->name }}</td>
                     <td class="px-6 py-4">{{ number_format($productName->half_price, 2) }} €</td>
                     <td class="px-6 py-4">{{ number_format($productName->price, 2) }} €</td>
@@ -37,8 +39,13 @@
                     </td>
                 </tr>
                 <tr class="@if($editedProductNameId !== $productName->id) hidden @endif border-b-2 border-emerald-400/50 bg-emerald-900/30">
-                    <td colspan="7" class="px-4 py-4">
+                    <td colspan="8" class="px-4 py-4">
                         <div class="flex gap-4 items-end flex-wrap">
+                            <div class="w-20">
+                                <label class="block mb-1 text-xs font-medium text-white/70">Nr.</label>
+                                <input type="number" min="1" step="1" wire:model="number" class="w-full bg-white/90 px-3 py-2 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+                                @error('number') <span class="text-xs text-red-300">Tik sveikas skaičius</span> @enderror
+                            </div>
                             <div class="flex-1 min-w-[200px]">
                                 <label class="block mb-1 text-xs font-medium text-white/70">Pavadinimas</label>
                                 <input type="text" wire:model.live.debounce="name" class="w-full bg-white/90 px-3 py-2 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />

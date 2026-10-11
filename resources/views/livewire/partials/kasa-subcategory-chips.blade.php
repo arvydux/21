@@ -1,16 +1,16 @@
-<div class="flex flex-wrap gap-2 mt-4">
+<div class="mt-3 flex flex-wrap gap-2">
     @forelse($subcategories as $subcategory)
         <div wire:key="subcategory-{{ $subcategory->id }}"
              wire:click="selectSubcategory({{ $subcategory->id }})"
-             class="cursor-pointer select-none rounded-full px-5 py-2.5 font-nunito font-bold text-base tracking-wide
+             class="flex h-12 cursor-pointer select-none items-center rounded-full px-6 font-nunito text-base font-bold tracking-wide
                     transition-all duration-200 active:scale-[0.97]
                     {{ $selectedSubcategoryId === $subcategory->id
                         ? 'bg-amber-400 text-emerald-950 shadow-lg shadow-amber-500/25'
-                        : 'bg-white/10 text-white/80 hover:bg-white/20 ring-1 ring-white/15' }}">
+                        : 'bg-white/10 text-white ring-1 ring-white/15 hover:bg-white/20' }}">
             {{ $subcategory->name }}
         </div>
     @empty
-        <div class="w-full text-center text-white/70 font-nunito py-8">
+        <div class="w-full py-8 text-center font-nunito text-white/70">
             Šioje kategorijoje subkategorijų nėra.
         </div>
     @endforelse

@@ -17,7 +17,7 @@ class CategorySeeder extends Seeder
                 'name' => 'Čeburekai', 'component_name' => 'ceburekai',
             ],
             [
-                'name' => 'Kibinai', 'component_name' => 'kibinai',
+                'name' => 'Kepiniai', 'component_name' => 'kepiniai',
             ],
             [
                 'name' => 'Gėrimai', 'component_name' => 'drinks',
@@ -27,6 +27,12 @@ class CategorySeeder extends Seeder
             ],
             [
                 'name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai',
+            ],
+            [
+                'name' => 'Koldūnai bei bulvytės', 'component_name' => 'koldunai',
+            ],
+            [
+                'name' => 'Alkoholis', 'component_name' => 'alkoholis',
             ],
         ];
 

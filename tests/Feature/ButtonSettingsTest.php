@@ -2,12 +2,12 @@
 
 use App\Livewire\Buttons\Ceburekai;
 use App\Livewire\Buttons\Drinks;
-use App\Livewire\Buttons\Kibinai;
+use App\Livewire\Buttons\Kepiniai;
 use App\Livewire\Buttons\OtherProducts;
 use App\Models\Category;
 use App\Models\Ceburek;
 use App\Models\Drink;
-use App\Models\Kibinai as KibinaiModel;
+use App\Models\Kepiniai as KepiniaiModel;
 use App\Models\OtherProduct;
 use App\Models\Subcategory;
 use Illuminate\Support\Facades\Cache;
@@ -68,10 +68,10 @@ it('renders every button component without error', function () {
     $sub = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
 
     Drink::create(['name' => 'Kava', 'price' => 2.0, 'show' => true, 'position' => 0, 'subcategory_id' => $sub->id]);
-    KibinaiModel::create(['name' => 'Kibinas', 'price' => 3.0, 'show' => true, 'position' => 0, 'subcategory_id' => $sub->id]);
+    KepiniaiModel::create(['name' => 'Kibinas', 'price' => 3.0, 'show' => true, 'position' => 0, 'subcategory_id' => $sub->id]);
     OtherProduct::create(['name' => 'Kita', 'price' => 1.0, 'show' => true, 'position' => 0, 'subcategory_id' => $sub->id]);
 
     Livewire::test(Drinks::class, ['subcategoryId' => $sub->id])->assertOk();
-    Livewire::test(Kibinai::class, ['subcategoryId' => $sub->id])->assertOk();
+    Livewire::test(Kepiniai::class, ['subcategoryId' => $sub->id])->assertOk();
     Livewire::test(OtherProducts::class, ['subcategoryId' => $sub->id])->assertOk();
 });

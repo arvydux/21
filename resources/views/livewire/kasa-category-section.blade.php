@@ -16,10 +16,10 @@
                 @include('livewire.partials.kasa-subcategory-chips')
             @else
                 {{-- Step 3: products of the selected subcategory --}}
-                <div class="mt-4">
+                <div class="mt-3">
                     <button wire:click="backToSubcategories"
-                            class="inline-flex items-center gap-2 rounded-xl py-2 px-4 text-white font-nunito font-bold
-                                   bg-emerald-600/30 hover:bg-emerald-500/40 transition-all duration-200 active:scale-[0.98]">
+                            class="inline-flex h-12 items-center gap-2 rounded-full px-5 font-nunito text-base font-bold text-white
+                                   bg-white/10 ring-1 ring-white/15 hover:bg-white/20 transition-all duration-200 active:scale-[0.97]">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                         </svg>

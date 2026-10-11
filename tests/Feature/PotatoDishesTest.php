@@ -268,3 +268,139 @@ it('shows the line total including paid sauces in the cart', function () {
         ->assertSeeHtml('&times; 2 = 15.6 €')
         ->assertDontSeeHtml('&times; 2 = 14.8 €');
 });
+
+it('shows the menu number on the cashier button', function () {
+    $this->dish->update(['number' => 7]);
+
+    Livewire::test(PotatoDishes::class, ['showAll' => true])
+        ->assertSeeInOrder(['>7<', 'Žemaičių blynai su kiauliena'], escape: false);
+});
+
+it('saves the menu number from the menu admin', function () {
+    $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai']);
+    $this->dish->update(['subcategory_id' => Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0])->id]);
+
+    Livewire::test(\App\Livewire\Menu\Tables\PotatoDishesTable::class)
+        ->call('editProduct', $this->dish->id)
+        ->set('number', 3)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($this->dish->fresh()->number)->toBe(3);
+});
+
+it('rejects a menu number that is not a positive whole number', function (mixed $number) {
+    Livewire::test(\App\Livewire\Menu\Tables\PotatoDishesTable::class)
+        ->call('editProduct', $this->dish->id)
+        ->set('number', $number)
+        ->call('save')
+        ->assertHasErrors(['number']);
+})->with([
+    'zero' => 0,
+    'negative' => -1,
+]);
+
+it('creates a dish with a menu number, or without one', function (mixed $number, ?int $expected) {
+    $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai']);
+    $subcategory = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+
+    Livewire::test(PotatoDishesCreateForm::class)
+        ->set('number', $number)
+        ->set('name', 'Naujas patiekalas')
+        ->set('half_price', 3.00)
+        ->set('price', 5.00)
+        ->set('subcategory_id', $subcategory->id)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect(PotatoDish::where('name', 'Naujas patiekalas')->value('number'))->toBe($expected);
+})->with([
+    'with number' => [8, 8],
+    'empty' => ['', null],
+]);
+
+it('numbers the existing dishes like the paper menu', function () {
+    PotatoDish::query()->delete();
+    (new \Database\Seeders\PotatoDishSeeder)->run();
+    PotatoDish::query()->update(['number' => null]);
+
+    $migration = require database_path('migrations/2026_10_08_145855_add_number_to_potato_dishes_table.php');
+    \Illuminate\Support\Facades\Schema::table('potato_dishes', fn ($table) => $table->dropColumn('number'));
+    $migration->up();
+
+    expect(PotatoDish::orderBy('number')->pluck('number', 'name')->all())->toBe([
+        'Žemaičių blynai su kiauliena' => 1,
+        'Žemaičių blynai su vištiena' => 2,
+        'Žemaičių blynai su pievagrybiais' => 3,
+        'Bulvinukai su sūriu' => 4,
+        'Bulviniai blynai su mėsa „Kėdainių“' => 5,
+        'Traškūs bulviniai blynai be mėsos' => 6,
+    ]);
+});
+
+it('moves the three Žemaičių blynai dishes into their own subcategory', function () {
+    PotatoDish::query()->delete();
+    $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai', 'position' => 4]);
+    $visi = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+    (new \Database\Seeders\PotatoDishSeeder)->run();
+    PotatoDish::query()->update(['subcategory_id' => $visi->id]);
+
+    $migration = require database_path('migrations/2026_10_10_201254_add_zemaiciu_blynai_subcategory.php');
+    $migration->up();
+    $migration->up();
+
+    $blynai = Subcategory::where('category_id', $category->id)->where('name', 'Žemaičių blynai')->sole();
+
+    expect($blynai->position)->toBe(1)
+        ->and(PotatoDish::where('subcategory_id', $blynai->id)->orderBy('number')->pluck('number', 'name')->all())->toBe([
+            'Žemaičių blynai su kiauliena' => 1,
+            'Žemaičių blynai su vištiena' => 2,
+            'Žemaičių blynai su pievagrybiais' => 3,
+        ])
+        ->and(PotatoDish::where('subcategory_id', $visi->id)->orderBy('number')->pluck('name')->all())->toBe([
+            'Bulvinukai su sūriu',
+            'Bulviniai blynai su mėsa „Kėdainių“',
+            'Traškūs bulviniai blynai be mėsos',
+        ])
+        ->and($visi->fresh())->not->toBeNull()
+        ->and(PotatoDish::count())->toBe(6);
+});
+
+it('moves the last three dishes into a "Bulviniai blynai" subcategory, renumbers them and removes the empty "Visi"', function () {
+    PotatoDish::query()->delete();
+    $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai', 'position' => 4]);
+    $visi = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+    (new \Database\Seeders\PotatoDishSeeder)->run();
+    PotatoDish::query()->update(['subcategory_id' => $visi->id]);
+    (new \Database\Seeders\ZemaiciuBlynaiSubcategorySeeder)->run();
+
+    $migration = require database_path('migrations/2026_10_10_201510_add_bulviniai_blynai_subcategory.php');
+    $migration->up();
+    $migration->up();
+
+    $pancakes = Subcategory::where('category_id', $category->id)->where('name', 'Bulviniai blynai')->sole();
+
+    expect($pancakes->position)->toBe(2)
+        ->and(PotatoDish::where('subcategory_id', $pancakes->id)->orderBy('number')->pluck('number', 'name')->all())->toBe([
+            'Bulvinukai su sūriu' => 1,
+            'Bulviniai blynai su mėsa „Kėdainių“' => 2,
+            'Traškūs bulviniai blynai be mėsos' => 3,
+        ])
+        ->and($visi->fresh())->toBeNull()
+        ->and(Subcategory::where('category_id', $category->id)->orderBy('position')->pluck('name')->all())->toBe(['Žemaičių blynai', 'Bulviniai blynai'])
+        ->and(PotatoDish::count())->toBe(6);
+});
+
+it('opens the potato dishes category without a "Visi" subcategory in every cashier layout', function (string $layoutMode) {
+    cache()->put('subcategory_layout_mode', $layoutMode);
+    $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai', 'position' => 4]);
+    $blynai = Subcategory::create(['name' => 'Žemaičių blynai', 'category_id' => $category->id, 'position' => 1]);
+    $this->dish->update(['subcategory_id' => $blynai->id]);
+
+    Livewire::test(\App\Livewire\KasaCategorySection::class)
+        ->call('showProductMenu', 'bulviniai', $category->id)
+        ->assertSet('selectedSubcategoryId', null)
+        ->assertSee('Žemaičių blynai')
+        ->call('selectSubcategory', $blynai->id)
+        ->assertSeeLivewire(PotatoDishes::class);
+})->with(['drilldown', 'persistent', 'visi_default']);

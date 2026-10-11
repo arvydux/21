@@ -1,19 +1,17 @@
-<div x-data x-init="initSwapSortable($el, $wire, 'updateOrder')" class="flex gap-3">
+<div x-data x-init="initSwapSortable($el, $wire, 'updateOrder')"
+     class="grid gap-2.5"
+     style="grid-template-columns: repeat({{ max($categories->count(), 1) }}, minmax(0, 1fr));">
     @foreach($categories as $categoryName)
+        @php $isSelected = $categoryMenuClicked === $categoryName->component_name; @endphp
         <div data-sortable-id="{{ $categoryName->id }}" wire:key="category-{{ $categoryName->id }}"
-             wire:click="categoryButtonClicked('{{ $categoryName->component_name }}', {{ $categoryName->id }})"
-             class="relative flex-1 cursor-pointer rounded-2xl py-4 px-5
-                    transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98]
-                    {{ ($categoryMenuClicked === $categoryName->component_name)
-                        ? 'bg-emerald-400/40 ring-2 ring-emerald-300/60'
-                        : 'bg-emerald-600/30 hover:bg-emerald-500/35' }}"
-             style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
-            <div class="flex items-center justify-center text-white font-nunito">
-                <span class="font-extrabold text-xl tracking-wide">{{ $categoryName->name }}</span>
-            </div>
-            @if($categoryMenuClicked === $categoryName->component_name)
-                <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-white/80 rounded-full"></div>
-            @endif
+             wire:click="categoryButtonClicked(@js($categoryName->component_name), {{ $categoryName->id }})"
+             class="flex h-20 cursor-pointer select-none items-center justify-center rounded-2xl px-3 text-center font-nunito
+                    transition-all duration-200 active:scale-[0.97]
+                    {{ $isSelected
+                        ? 'bg-white text-emerald-900 shadow-lg shadow-emerald-950/30'
+                        : 'bg-white/10 text-white ring-1 ring-white/15 hover:bg-white/20' }}"
+             @if(! $isSelected) style="box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15);" @endif>
+            <span class="line-clamp-2 text-lg font-extrabold leading-tight tracking-wide">{{ $categoryName->name }}</span>
         </div>
     @endforeach
 </div>

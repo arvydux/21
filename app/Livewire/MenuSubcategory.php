@@ -2,9 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Models\AlcoholicDrink;
 use App\Models\Ceburek;
 use App\Models\Drink;
-use App\Models\Kibinai;
+use App\Models\Kepiniai;
+use App\Models\KoldunaiDish;
 use App\Models\OtherProduct;
 use App\Models\PotatoDish;
 use App\Models\Subcategory;
@@ -22,10 +24,12 @@ class MenuSubcategory extends Component
      */
     private array $componentModels = [
         'ceburekai' => Ceburek::class,
-        'kibinai' => Kibinai::class,
+        'kepiniai' => Kepiniai::class,
         'drinks' => Drink::class,
         'other' => OtherProduct::class,
         'bulviniai' => PotatoDish::class,
+        'koldunai' => KoldunaiDish::class,
+        'alkoholis' => AlcoholicDrink::class,
     ];
 
     public ?int $categoryId = null;
