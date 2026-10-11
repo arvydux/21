@@ -9,6 +9,11 @@ function fullReceiptLines(): array
     return Livewire::test(OrdersList::class)->instance()->fullReceiptLines();
 }
 
+function receiptLine(string $text, ?string $price = null, int $indent = 0): array
+{
+    return ['text' => $text, 'price' => $price, 'indent' => $indent];
+}
+
 it('lists every item of the order with amount, price and toppings', function () {
     Order::create([
         'name' => json_encode([['Čeburekas su kiauliena' => 5.5]]),
@@ -22,12 +27,12 @@ it('lists every item of the order with amount, price and toppings', function () 
         'category' => 3,
     ]);
 
-    $lines = fullReceiptLines();
-
-    expect($lines)->toContain(str_pad('2 x Ceburekas su kiauliena', 43).'11.00')
-        ->toContain(str_pad('   + Suris', 44).'1.00')
-        ->toContain(str_pad('1 x Pepsi', 44).'1.80')
-        ->and(end($lines))->toBe(str_pad('Viso', 39).'13.80 EUR');
+    expect(fullReceiptLines())->toBe([
+        receiptLine('2 x Čeburekas su kiauliena', '11.00'),
+        receiptLine('+ Sūris', '1.00', 30),
+        receiptLine('1 x Pepsi', '1.80'),
+        receiptLine('Viso', '13.80 EUR'),
+    ]);
 });
 
 it('includes non-kitchen categories that the kitchen receipt skips', function (int $category) {
@@ -37,7 +42,7 @@ it('includes non-kitchen categories that the kitchen receipt skips', function (i
         'category' => $category,
     ]);
 
-    expect(implode("\n", fullReceiptLines()))->toContain('1 x Produktas');
+    expect(fullReceiptLines()[0])->toBe(receiptLine('1 x Produktas', '2.00'));
 })->with([
     'Kepiniai' => 2,
     'Gėrimai' => 3,
@@ -54,23 +59,21 @@ it('adds packaging, takeaway and comments and counts packaging in the total', fu
         'comments' => 'Be svogūnų',
     ]);
 
-    $lines = fullReceiptLines();
-
-    expect($lines)->toContain(str_pad('   + Pakuote', 44).'0.40')
-        ->toContain('   Issinesimui')
-        ->toContain('   Pageidavimai: Be svogunu')
-        ->and(end($lines))->toBe(str_pad('Viso', 40).'6.40 EUR');
+    expect(fullReceiptLines())->toBe([
+        receiptLine('2 x Kibinas', '6.00'),
+        receiptLine('+ Pakuotė', '0.40', 30),
+        receiptLine('Išsinešimui', null, 30),
+        receiptLine('Pageidavimai: Be svogūnų', null, 30),
+        receiptLine('Viso', '6.40 EUR'),
+    ]);
 });
 
-it('wraps long names and keeps every line within the printer width', function () {
+it('keeps Lithuanian letters and quotes as they are', function () {
     Order::create([
-        'name' => json_encode([['Labai ilgas patiekalo pavadinimas, kuris netelpa vienoje eilutėje' => 4.5]]),
+        'name' => json_encode([['Viskis JACK DANIEL’S (500 ml)' => 40.0]]),
         'amount' => 1,
-        'category' => 4,
+        'category' => 7,
     ]);
 
-    $lines = fullReceiptLines();
-
-    expect(collect($lines)->every(fn (string $line) => strlen($line) <= 48))->toBeTrue()
-        ->and($lines)->toContain(str_pad('4.50', 48, ' ', STR_PAD_LEFT));
+    expect(fullReceiptLines()[0]['text'])->toBe('1 x Viskis JACK DANIEL’S (500 ml)');
 });

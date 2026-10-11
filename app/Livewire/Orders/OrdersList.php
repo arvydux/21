@@ -15,11 +15,11 @@ use App\Models\OtherProduct;
 use App\Models\PotatoDish;
 use App\Models\PotatoTopping;
 use App\Models\Topping;
+use App\Printing\ReceiptCanvas;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Mike42\Escpos\CapabilityProfile;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
 
@@ -329,244 +329,181 @@ class OrdersList extends Component
         return Order::whereIn('category', $this->kitchenCategories())->exists();
     }
 
-    private function printOrderForKitchen(int $freeOrder, bool $byPhone): void
+    private const KITCHEN_PRINTER_IP = '192.168.32.100';
+
+    private const CLIENT_PRINTER_IP = '192.168.32.101';
+
+    public function kitchenReceipt(int $orderNumber, bool $byPhone): ReceiptCanvas
     {
-        try {
-            $profile = CapabilityProfile::load('TM-P80');
-            $connector = new NetworkPrintConnector('192.168.32.100', 9100, 2);
-            $printer = new Printer($connector, $profile);
-            $printer->setEmphasis(true);
-            $printer->setTextSize(4, 4);
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text($freeOrder."\n");
-            // change font
-            $printer->setFont(1);
-            $printer->setTextSize(2, 1);
-            $printer->text("\n".now('Europe/Vilnius')."\n");
-            $printer->text(str_repeat('-', 24)."\n"); // Adjust 48 to match your printer's width
-            $printer->feed();
-            $printer->setJustification();
-            // eksperimental part
-            // space between lines
-            $printer->setLineSpacing(1);
-            // set font 0-default, 1-other
-            $printer->setFont(0);
+        $receipt = (new ReceiptCanvas)
+            ->text((string) $orderNumber, 64, 'center')
+            ->text($this->printedAt(), 16, 'center')
+            ->separator();
 
-            foreach (Order::whereIn('category', $this->kitchenCategories())->orderBy('category')->get() as $order) {
-                foreach (json_decode($order->name) as $name) {
-                    foreach ($name as $name => $price) {
-                        $nameInNotLt = $this->convertTextFromLtToNotLt($name);
-                        // change font
-                        $printer->setFont(1);
-                        $printer->setTextSize(2, 2);
-                        $printer->text($order->amount.' -');
-                        $printer->text($nameInNotLt."\n");
-                    }
-                }
-
-                if (isset($order->toppings)) {
-                    $printer->feed();
-                    foreach (json_decode($order->toppings) as $topping) {
-                        foreach ($topping as $name => $toppingPrice) {
-                            $printer->setJustification(Printer::JUSTIFY_RIGHT);
-                            // change font
-                            $printer->setFont(1);
-                            $printer->setTextSize(2, 2);
-                            $nameInNotLt = $this->convertTextFromLtToNotLt($name);
-                            $printer->text($nameInNotLt."\n");
-                        }
-                    }
-                }
-                $printer->feed();
-                $printer->setJustification();
-                // change font
-                $printer->setFont(1);
-                $printer->setTextSize(2, 2);
-                $printer->setTextSize(2, 2);
-                $takeaway = $order->takeaway ? 'Išsinešimui' : 'Vietoje';
-                $printer->text($takeaway."\n");
-                // change font
-                $printer->setFont(0);
-                $printer->setTextSize(2, 1);
-
-                if ($order->comments) {
-                    $printer->setJustification(Printer::JUSTIFY_CENTER);
-                    $printer->text('Pageidavimai: '."\n");
-                    $printer->text($order->comments."\n");
-                    $printer->feed();
-                }
-                $printer->text(str_repeat('-', 24)."\n"); // Adjust 48 to match your printer's width
-                $printer->feed();
-            }
-            $printer->feed(1);
-            if ($byPhone) {
-                $printer->setTextSize(2, 2);
-                $printer->setJustification(Printer::JUSTIFY_CENTER);
-                $printer->text('Telefonu '."\n");
-            }
-            $printer->feed(1);
-            $printer->cut();
-            /* Close printer */
-            $printer->close();
-        } catch (Exception $e) {
-            echo "Couldn't print to kitchen this printer: ".$e->getMessage()."\n";
-        }
-    }
-
-    private function printOrderForClient(?int $freeOrder, bool $byPhone): void
-    {
-        try {
-            $profile = CapabilityProfile::load('TM-P80');
-            $connector = new NetworkPrintConnector('192.168.32.101', 9100, 2);
-            $printer = new Printer($connector, $profile);
-            $printer->setEmphasis(true);
-
-            $printer->feed();
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-            if ($freeOrder !== null) {
-                $printer->setTextSize(6, 5);
-                $printer->text($freeOrder."\n");
-            }
-            // change font
-            $printer->setFont(1);
-            $printer->setTextSize(2, 1);
-            $printer->text("\n".now('Europe/Vilnius')."\n");
-            $printer->text(str_repeat('-', 24)."\n"); // Adjust 48 to match your printer's width*/
-            $printer->feed();
-
-            $printer->text("Nefiskalinis kvitas \n");
-            $printer->feed(2);
-
-            $totalSum = Cache::get('totalSum');
-            $printer->text('Viso '.$totalSum.' EUR'."\n");
-
-            $printer->feed(1);
-            if ($byPhone) {
-                $printer->setTextSize(2, 2);
-                $printer->setJustification(Printer::JUSTIFY_CENTER);
-                $printer->text('Telefonu '."\n");
-            }
-            $printer->feed(1);
-            $printer->cut();
-            $printer->close();
-        } catch (Exception $e) {
-            echo "Couldn't print to client printer: ".$e->getMessage()."\n";
-        }
-    }
-
-    private const FULL_RECEIPT_WIDTH = 48;
-
-    /**
-     * Lines of the second client receipt: every item of the order with its price, then the total.
-     *
-     * @return list<string>
-     */
-    public function fullReceiptLines(): array
-    {
-        $lines = [];
-        $total = 0.0;
-
-        foreach (Order::orderBy('category')->orderBy('id')->get() as $order) {
+        foreach (Order::whereIn('category', $this->kitchenCategories())->orderBy('category')->get() as $order) {
             foreach (json_decode($order->name, true) ?? [] as $product) {
                 foreach ($product as $name => $price) {
-                    $linePrice = $order->amount * (float) $price;
-                    $total += $linePrice;
-                    array_push($lines, ...$this->receiptLine($order->amount.' x '.$name, $linePrice));
+                    $receipt->text($order->amount.' - '.$name, 24);
                 }
             }
 
             foreach (json_decode($order->toppings ?? '[]', true) ?? [] as $topping) {
                 foreach ($topping as $name => $price) {
-                    $linePrice = $order->amount * (float) $price;
-                    $total += $linePrice;
-                    array_push($lines, ...$this->receiptLine('   + '.$name, $linePrice));
+                    $receipt->text($name, 24, 'right');
+                }
+            }
+
+            $receipt->text($order->takeaway ? 'Išsinešimui' : 'Vietoje', 24);
+
+            if ($order->comments) {
+                $receipt->text('Pageidavimai:', 18, 'center')
+                    ->text($order->comments, 18, 'center');
+            }
+            $receipt->separator();
+        }
+
+        if ($byPhone) {
+            $receipt->text('Telefonu', 28, 'center');
+        }
+
+        return $receipt;
+    }
+
+    public function clientReceipt(?int $orderNumber, bool $byPhone): ReceiptCanvas
+    {
+        $receipt = new ReceiptCanvas;
+
+        if ($orderNumber !== null) {
+            $receipt->text((string) $orderNumber, 90, 'center');
+        }
+
+        $receipt->text($this->printedAt(), 16, 'center')
+            ->separator()
+            ->text('Nefiskalinis kvitas', 18, 'center')
+            ->space(16)
+            ->text('Viso '.number_format((float) Cache::get('totalSum'), 2, '.', '').' EUR', 22, 'center');
+
+        if ($byPhone) {
+            $receipt->space(12)->text('Telefonu', 28, 'center');
+        }
+
+        return $receipt;
+    }
+
+    public function fullClientReceipt(?int $orderNumber, bool $byPhone): ReceiptCanvas
+    {
+        $receipt = new ReceiptCanvas;
+
+        if ($orderNumber !== null) {
+            $receipt->text((string) $orderNumber, 48, 'center');
+        }
+
+        $receipt->text($this->printedAt(), 16, 'center')
+            ->text('Nefiskalinis kvitas', 16, 'center')
+            ->separator();
+
+        $lines = $this->fullReceiptLines();
+        $total = array_pop($lines);
+
+        foreach ($lines as $line) {
+            $line['price'] === null
+                ? $receipt->text($line['text'], 17, indent: $line['indent'])
+                : $receipt->row($line['text'], $line['price'], 17, $line['indent']);
+        }
+
+        $receipt->separator()->row($total['text'], $total['price'], 20);
+
+        if ($byPhone) {
+            $receipt->space(12)->text('Telefonu', 28, 'center');
+        }
+
+        return $receipt;
+    }
+
+    /**
+     * Lines of the second client receipt: every item of the order with its price, then the total.
+     *
+     * @return list<array{text: string, price: ?string, indent: int}>
+     */
+    public function fullReceiptLines(): array
+    {
+        $lines = [];
+        $total = 0.0;
+        $addLine = function (string $text, ?float $price = null, int $indent = 0) use (&$lines, &$total): void {
+            $total += $price ?? 0;
+            $lines[] = ['text' => $text, 'price' => $price === null ? null : $this->formatPrice($price), 'indent' => $indent];
+        };
+
+        foreach (Order::orderBy('category')->orderBy('id')->get() as $order) {
+            foreach (json_decode($order->name, true) ?? [] as $product) {
+                foreach ($product as $name => $price) {
+                    $addLine($order->amount.' x '.$name, $order->amount * (float) $price);
+                }
+            }
+
+            foreach (json_decode($order->toppings ?? '[]', true) ?? [] as $topping) {
+                foreach ($topping as $name => $price) {
+                    $addLine('+ '.$name, $order->amount * (float) $price, 30);
                 }
             }
 
             if ($order->package) {
-                $packagePrice = $order->amount * (float) $order->package;
-                $total += $packagePrice;
-                array_push($lines, ...$this->receiptLine('   + Pakuotė', $packagePrice));
+                $addLine('+ Pakuotė', $order->amount * (float) $order->package, 30);
             }
 
             if ($order->takeaway) {
-                $lines[] = $this->convertTextFromLtToNotLt('   Išsinešimui');
+                $addLine('Išsinešimui', indent: 30);
             }
 
             if ($order->comments) {
-                $lines[] = $this->convertTextFromLtToNotLt('   Pageidavimai: '.$order->comments);
+                $addLine('Pageidavimai: '.$order->comments, indent: 30);
             }
         }
 
-        $lines[] = str_repeat('-', self::FULL_RECEIPT_WIDTH);
-        array_push($lines, ...$this->receiptLine('Viso', $total, ' EUR'));
+        $lines[] = ['text' => 'Viso', 'price' => $this->formatPrice($total).' EUR', 'indent' => 0];
 
         return $lines;
     }
 
-    /**
-     * @return list<string>
-     */
-    private function receiptLine(string $label, float $price, string $suffix = ''): array
+    private function formatPrice(float $price): string
     {
-        $label = $this->convertTextFromLtToNotLt($label);
-        $price = number_format($price, 2, '.', '').$suffix;
+        return number_format($price, 2, '.', '');
+    }
 
-        if (strlen($label) + 1 + strlen($price) <= self::FULL_RECEIPT_WIDTH) {
-            return [str_pad($label, self::FULL_RECEIPT_WIDTH - strlen($price)).$price];
-        }
+    private function printedAt(): string
+    {
+        return now('Europe/Vilnius')->format('Y-m-d H:i:s');
+    }
 
-        return [
-            ...explode("\n", wordwrap($label, self::FULL_RECEIPT_WIDTH, "\n", true)),
-            str_pad($price, self::FULL_RECEIPT_WIDTH, ' ', STR_PAD_LEFT),
-        ];
+    private function printOrderForKitchen(int $freeOrder, bool $byPhone): void
+    {
+        $this->printReceipt(self::KITCHEN_PRINTER_IP, fn () => $this->kitchenReceipt($freeOrder, $byPhone));
+    }
+
+    private function printOrderForClient(?int $freeOrder, bool $byPhone): void
+    {
+        $this->printReceipt(self::CLIENT_PRINTER_IP, fn () => $this->clientReceipt($freeOrder, $byPhone));
     }
 
     private function printFullOrderForClient(?int $freeOrder, bool $byPhone): void
     {
+        $this->printReceipt(self::CLIENT_PRINTER_IP, fn () => $this->fullClientReceipt($freeOrder, $byPhone));
+    }
+
+    /**
+     * @param  callable(): ReceiptCanvas  $receipt
+     */
+    private function printReceipt(string $printerIp, callable $receipt): void
+    {
         try {
-            $profile = CapabilityProfile::load('TM-P80');
-            $connector = new NetworkPrintConnector('192.168.32.101', 9100, 2);
-            $printer = new Printer($connector, $profile);
-            $printer->setEmphasis(true);
-
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-            if ($freeOrder !== null) {
-                $printer->setTextSize(3, 3);
-                $printer->text($freeOrder."\n");
-            }
-            $printer->setFont(0);
-            $printer->setTextSize(1, 1);
-            $printer->text(now('Europe/Vilnius')."\n");
-            $printer->text("Nefiskalinis kvitas\n");
-            $printer->text(str_repeat('-', self::FULL_RECEIPT_WIDTH)."\n");
-
-            $printer->setJustification();
-            $printer->setTextSize(1, 2);
-            foreach ($this->fullReceiptLines() as $line) {
-                $printer->text($line."\n");
-            }
-
-            if ($byPhone) {
-                $printer->feed();
-                $printer->setTextSize(2, 2);
-                $printer->setJustification(Printer::JUSTIFY_CENTER);
-                $printer->text('Telefonu '."\n");
-            }
+            $printer = new Printer(new NetworkPrintConnector($printerIp, 9100, 2));
+            $receipt()->print($printer);
             $printer->feed(2);
             $printer->cut();
             $printer->close();
         } catch (Exception $e) {
-            echo "Couldn't print full order to client printer: ".$e->getMessage()."\n";
+            echo "Couldn't print to printer {$printerIp}: ".$e->getMessage()."\n";
         }
-    }
-
-    private function convertTextFromLtToNotLt($text)
-    {
-        $search = ['½', '„', '“', 'Ž', 'Š', 'Ė', 'Ū', 'Č', 'ė', 'ū', 'ų', 'š', 'ž', 'ą', 'ė', 'į', 'ė', 'ą', 'ė', 'į', 'ū', 'ų', 'č', 'ė', 'ū', 'ų'];
-        $replace = ['1/2', '"', '"', 'Z', 'S', 'E', 'U', 'C', 'e', 'u', 'u', 's', 'z', 'a', 'e', 'i', 'e', 'a', 'e', 'i', 'u', 'u', 'c', 'e', 'u', 'u'];
-
-        return str_replace($search, $replace, $text);
     }
 
     public function mount()
