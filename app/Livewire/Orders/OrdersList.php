@@ -17,7 +17,6 @@ use App\Models\PotatoTopping;
 use App\Models\Topping;
 use App\Printing\ReceiptCanvas;
 use Exception;
-use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
@@ -126,7 +125,6 @@ class OrdersList extends Component
             $this->printOrderForKitchen($orderNumber, $this->byPhone);
         }
         $this->printOrderForClient($orderNumber, $this->byPhone);
-        $this->printFullOrderForClient($orderNumber, $this->byPhone);
         $this->decrementCeburekLeft();
         $this->decrementKepiniaiLeft();
         $this->decrementDrinkLeft();
@@ -333,6 +331,8 @@ class OrdersList extends Component
 
     private const CLIENT_PRINTER_IP = '192.168.32.101';
 
+    public const CLIENT_RECEIPT_COPIES = 2;
+
     public function kitchenReceipt(int $orderNumber, bool $byPhone): ReceiptCanvas
     {
         $receipt = (new ReceiptCanvas)
@@ -364,27 +364,6 @@ class OrdersList extends Component
 
         if ($byPhone) {
             $receipt->text('Telefonu', 28, 'center');
-        }
-
-        return $receipt;
-    }
-
-    public function clientReceipt(?int $orderNumber, bool $byPhone): ReceiptCanvas
-    {
-        $receipt = new ReceiptCanvas;
-
-        if ($orderNumber !== null) {
-            $receipt->text((string) $orderNumber, 90, 'center');
-        }
-
-        $receipt->text($this->printedAt(), 16, 'center')
-            ->separator()
-            ->text('Nefiskalinis kvitas', 18, 'center')
-            ->space(16)
-            ->text('Viso '.number_format((float) Cache::get('totalSum'), 2, '.', '').' EUR', 22, 'center');
-
-        if ($byPhone) {
-            $receipt->space(12)->text('Telefonu', 28, 'center');
         }
 
         return $receipt;
@@ -482,12 +461,11 @@ class OrdersList extends Component
 
     private function printOrderForClient(?int $freeOrder, bool $byPhone): void
     {
-        $this->printReceipt(self::CLIENT_PRINTER_IP, fn () => $this->clientReceipt($freeOrder, $byPhone));
-    }
+        $receipt = $this->fullClientReceipt($freeOrder, $byPhone);
 
-    private function printFullOrderForClient(?int $freeOrder, bool $byPhone): void
-    {
-        $this->printReceipt(self::CLIENT_PRINTER_IP, fn () => $this->fullClientReceipt($freeOrder, $byPhone));
+        for ($copy = 0; $copy < self::CLIENT_RECEIPT_COPIES; $copy++) {
+            $this->printReceipt(self::CLIENT_PRINTER_IP, fn () => $receipt);
+        }
     }
 
     /**
