@@ -118,8 +118,39 @@ class OrdersList extends Component
         $this->dispatch('reset-orders');
     }
 
-    private function makeOrderNumber(): int
+    private function makeOrderNumber(): ?int
     {
+        $orderNumber = $this->takeOrderNumber();
+
+        if ($orderNumber !== null) {
+            $this->printOrderForKitchen($orderNumber, $this->byPhone);
+        }
+        $this->printOrderForClient($orderNumber, $this->byPhone);
+        $this->printFullOrderForClient($orderNumber, $this->byPhone);
+        $this->decrementCeburekLeft();
+        $this->decrementKepiniaiLeft();
+        $this->decrementDrinkLeft();
+        $this->decrementOtherProductLeft();
+        $this->decrementToppingLeft();
+        $this->decrementPotatoDishLeft();
+        $this->decrementKoldunaiDishLeft();
+        $this->decrementAlcoholicDrinkLeft();
+        $this->resetOrders();
+        $this->byPhone = false;
+
+        return $orderNumber;
+    }
+
+    /**
+     * Reserves the next order number, but only when something goes to the kitchen.
+     * Orders without kitchen items get no number and leave the counter untouched.
+     */
+    public function takeOrderNumber(): ?int
+    {
+        if (! $this->shouldPrintForKitchen()) {
+            return null;
+        }
+
         // free number maximum value
         if (FreeNumbers::first()->number >= $this->limit) {
             FreeNumbers::first()->update(['number' => 1]);
@@ -133,22 +164,6 @@ class OrdersList extends Component
             'created_at' => now(),
         ]);
         FreeNumbers::first()->update(['number' => $this->freeNumber + 1]);
-
-        if ($this->shouldPrintForKitchen()) {
-            $this->printOrderForKitchen($this->freeNumber, $this->byPhone);
-        }
-        $this->printOrderForClient($this->freeNumber, $this->byPhone);
-        $this->printFullOrderForClient($this->freeNumber, $this->byPhone);
-        $this->decrementCeburekLeft();
-        $this->decrementKepiniaiLeft();
-        $this->decrementDrinkLeft();
-        $this->decrementOtherProductLeft();
-        $this->decrementToppingLeft();
-        $this->decrementPotatoDishLeft();
-        $this->decrementKoldunaiDishLeft();
-        $this->decrementAlcoholicDrinkLeft();
-        $this->resetOrders();
-        $this->byPhone = false;
 
         return $this->freeNumber;
     }
@@ -398,7 +413,7 @@ class OrdersList extends Component
         }
     }
 
-    private function printOrderForClient(int $freeOrder, bool $byPhone): void
+    private function printOrderForClient(?int $freeOrder, bool $byPhone): void
     {
         try {
             $profile = CapabilityProfile::load('TM-P80');
@@ -407,9 +422,11 @@ class OrdersList extends Component
             $printer->setEmphasis(true);
 
             $printer->feed();
-            $printer->setTextSize(6, 5);
             $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text($freeOrder."\n");
+            if ($freeOrder !== null) {
+                $printer->setTextSize(6, 5);
+                $printer->text($freeOrder."\n");
+            }
             // change font
             $printer->setFont(1);
             $printer->setTextSize(2, 1);
@@ -505,7 +522,7 @@ class OrdersList extends Component
         ];
     }
 
-    private function printFullOrderForClient(int $freeOrder, bool $byPhone): void
+    private function printFullOrderForClient(?int $freeOrder, bool $byPhone): void
     {
         try {
             $profile = CapabilityProfile::load('TM-P80');
@@ -513,9 +530,11 @@ class OrdersList extends Component
             $printer = new Printer($connector, $profile);
             $printer->setEmphasis(true);
 
-            $printer->setTextSize(3, 3);
             $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text($freeOrder."\n");
+            if ($freeOrder !== null) {
+                $printer->setTextSize(3, 3);
+                $printer->text($freeOrder."\n");
+            }
             $printer->setFont(0);
             $printer->setTextSize(1, 1);
             $printer->text(now('Europe/Vilnius')."\n");
