@@ -69,6 +69,7 @@
 
                     const down = (e) => {
                         if (e.pointerType === 'touch' || e.button !== 0) return;
+                        if (e.target.closest('dialog, input, textarea, select')) return;
                         cancelAnimationFrame(frame);
                         start = last = position(e);
                         lastTime = e.timeStamp;

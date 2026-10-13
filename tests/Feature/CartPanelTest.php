@@ -182,3 +182,28 @@ it('does not warn about the age check without alcohol', function () {
         ->assertDontSeeHtml('data-adults-warning')
         ->assertDontSeeHtml('>18+</span>');
 });
+
+it('edits a cart line comment in the cashier styled popup', function () {
+    $order = Order::create([
+        'name' => json_encode([['Kibinas su kopūstais' => '2.00']]),
+        'order_price' => 2.00,
+        'amount' => 1,
+        'category' => 2,
+        'comments' => 'Šiltas',
+    ]);
+
+    Livewire::test(OrdersList::class)
+        ->assertSeeHtml('data-comment-modal')
+        ->assertSeeHtml("wire:submit.prevent=\"makeCommentForOrder({$order->id})\"")
+        ->assertSee('Komentarai bei pageidavimai')
+        ->call('openCommentForOrder', $order->id)
+        ->assertSet('comments', 'Šiltas')
+        ->set('comments', 'Be svogūnų')
+        ->call('makeCommentForOrder', $order->id);
+
+    expect($order->fresh()->comments)->toBe('Be svogūnų');
+});
+
+it('lets fields and popups inside drag-scroll lists keep their own pointer handling', function () {
+    $this->get(route('kasa'))->assertSee("e.target.closest('dialog, input, textarea, select')", false);
+});

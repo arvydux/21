@@ -203,25 +203,46 @@
                     </div>
                 </div>
 
-                <flux:modal name="add-comment-for-order-{{ $order->id }}" class="w-full">
-                    <div class="space-y-6">
-                        <div>
-                            @foreach(json_decode($order->name, true) as $name)
-                                @foreach($name as $key => $value)
-                                @endforeach
-                            @endforeach
-                            <flux:heading size="lg">{{ $key }}</flux:heading>
+                <flux:modal name="add-comment-for-order-{{ $order->id }}" variant="bare"
+                            class="w-full max-w-xl p-4 outline-none focus:outline-none backdrop:bg-emerald-950/80! backdrop:backdrop-blur-md">
+                    <form wire:submit.prevent="makeCommentForOrder({{ $order->id }})" x-on:submit="$flux.modals().close()" data-comment-modal
+                          class="flex flex-col overflow-hidden rounded-3xl bg-linear-to-br from-emerald-800 to-teal-900 font-nunito text-white shadow-2xl shadow-black/50 ring-1 ring-white/20">
+                        <div class="flex items-center gap-3 border-b border-white/10 px-6 py-4">
+                            <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-amber-400 text-emerald-950 shadow-md shadow-amber-500/20">
+                                <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8-1.657 0-3.204-.402-4.5-1.1L3 19l1.1-3.5C3.402 14.204 3 12.657 3 11c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                </svg>
+                            </span>
+                            <div class="min-w-0 flex-1">
+                                <p class="kasa-meta uppercase tracking-widest">Komentaras</p>
+                                <h2 class="kasa-title line-clamp-2">{{ array_key_first(json_decode($order->name, true)[0] ?? []) }}</h2>
+                            </div>
+                            <button type="button" title="Uždaryti" x-on:click="$flux.modals().close()"
+                                    class="flex size-12 shrink-0 touch-manipulation items-center justify-center rounded-xl bg-white/10 text-white/80 ring-1 ring-white/15 transition-all duration-200 hover:bg-white/20 active:scale-[0.95]">
+                                <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
                         </div>
 
-                        <flux:textarea label="Komentarai bei pageidavimai." wire:model="comments" />
-
-                        <div class="flex">
-                            <flux:spacer />
-
-                            <flux:button wire:click="makeCommentForOrder({{ $order->id }})" x-on:click="$flux.modals().close()"
-                                         type="submit" variant="primary">Pridėti komentarus</flux:button>
+                        <div class="flex flex-col gap-2.5 px-6 py-5">
+                            <label for="comment-for-order-{{ $order->id }}" class="kasa-meta uppercase tracking-widest">Komentarai bei pageidavimai</label>
+                            <textarea id="comment-for-order-{{ $order->id }}" wire:model="comments" rows="4" autofocus
+                                      placeholder="Pvz.: be svogūnų, daugiau padažo…"
+                                      class="min-h-32 w-full resize-none select-text rounded-2xl bg-black/25 p-4 text-lg font-semibold text-white ring-1 ring-white/15 outline-none transition placeholder:font-normal placeholder:text-white/40 focus:ring-2 focus:ring-amber-400"></textarea>
                         </div>
-                    </div>
+
+                        <div class="grid grid-cols-2 gap-3 border-t border-white/10 px-6 py-4">
+                            <button type="button" x-on:click="$flux.modals().close()"
+                                    class="flex h-14 touch-manipulation items-center justify-center rounded-2xl bg-white/10 px-4 text-lg font-bold text-white ring-1 ring-white/15 transition-all duration-200 hover:bg-white/20 active:scale-[0.97]">
+                                Atšaukti
+                            </button>
+                            <button type="submit"
+                                    class="flex h-14 touch-manipulation items-center justify-center rounded-2xl bg-white px-4 text-lg font-extrabold text-emerald-800 shadow-lg shadow-emerald-950/30 transition-all duration-200 hover:bg-emerald-50 active:scale-[0.97]">
+                                Išsaugoti
+                            </button>
+                        </div>
+                    </form>
                 </flux:modal>
             </div>
         @empty
