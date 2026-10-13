@@ -108,24 +108,3 @@ select:focus[data-flux-control] {
         scale: 100%;
     }
 }
-
-/* Pickup screen: a freshly ready order number pulses five times over its first 10 seconds. */
-@keyframes ready-flash {
-    0%, 20%, 40%, 60%, 80%, 100% {
-        transform: scale(1);
-        filter: brightness(1);
-        box-shadow: 0 0 0 0 rgba(22, 145, 71, 0);
-    }
-
-    10%, 30%, 50%, 70%, 90% {
-        transform: scale(1.05);
-        filter: brightness(1.1);
-        box-shadow: 0 0 0 4px #ffffff, 0 0 0 9px rgba(22, 145, 71, 0.55), 0 0 44px 10px rgba(22, 145, 71, 0.4);
-    }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .ready-flash {
-        animation: ready-flash 10s ease-in-out 1 both;
-    }
-}
