@@ -18,6 +18,37 @@ new class extends Component {
 
 <div class="grid grid-cols-2 gap-4">
 
+    {{-- Kasa --}}
+    <label class="cursor-pointer">
+        <input type="radio" wire:model.live="template" value="kasa" class="sr-only">
+        <div class="rounded-xl overflow-hidden transition-all
+            {{ $template === 'kasa' ? 'ring-2 ring-white scale-105' : 'ring-1 ring-white/30 opacity-60' }}">
+            <div class="flex h-36 w-full gap-1.5 overflow-hidden bg-[#f3f3f1] p-2 font-nunito">
+                <div class="flex flex-1 flex-col overflow-hidden rounded-lg bg-white">
+                    <div class="bg-[#17191b] px-1.5 py-1 text-[0.45rem] font-black uppercase text-white">Gaminami</div>
+                    <div class="grid grid-cols-3 gap-1 p-1.5">
+                        @foreach([60, 61, 62, 63, 64, 65] as $n)
+                            <div class="flex aspect-[4/3] items-center justify-center rounded bg-[#fdbf2d] text-[0.55rem] font-black text-[#151515]">{{ $n }}</div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="flex flex-1 flex-col overflow-hidden rounded-lg bg-white">
+                    <div class="bg-[#17191b] px-1.5 py-1 text-[0.45rem] font-black uppercase text-white">Paruošti</div>
+                    <div class="grid grid-cols-3 gap-1 p-1.5">
+                        <div class="col-span-3 flex items-center rounded bg-[#169147] px-1.5 py-0.5 text-sm font-black text-white">59</div>
+                        @foreach([58, 57, 56] as $n)
+                            <div class="flex aspect-[4/3] items-center justify-center rounded bg-[#169147] text-[0.55rem] font-black text-white">{{ $n }}</div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between bg-white/10 text-white px-3 py-2 text-sm">
+                <span>Kasa</span>
+                @if($template === 'kasa') <flux:icon.check-circle class="size-4" /> @endif
+            </div>
+        </div>
+    </label>
+
     {{-- Original --}}
     <label class="cursor-pointer">
         <input type="radio" wire:model.live="template" value="original" class="sr-only">
