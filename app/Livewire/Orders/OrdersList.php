@@ -545,6 +545,23 @@ class OrdersList extends Component
         return view('livewire.orders.orders-list', [
             'itemCount' => (int) $orders->sum('amount'),
             'cartTotal' => $orders->sum(fn (Order $order): float => $this->unitPrice($order) * $order->amount),
+            'categorySums' => $this->categorySums(),
         ]);
+    }
+
+    /**
+     * Cart sums shown above the total: food, drinks and packages, leaving out the empty ones.
+     *
+     * @return array<string, float>
+     */
+    public function categorySums(): array
+    {
+        $orders = collect($this->orders);
+
+        return array_filter([
+            'Kepiniai' => (float) $orders->where('category', '!=', 3)->sum(fn (Order $order): float => $order->order_price * $order->amount),
+            'Gėrimai' => (float) $orders->where('category', 3)->sum(fn (Order $order): float => $order->order_price * $order->amount),
+            'Pakuotės' => (float) $orders->sum(fn (Order $order): float => (float) $order->package * $order->amount),
+        ], fn (float $sum): bool => $sum > 0);
     }
 }

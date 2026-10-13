@@ -137,6 +137,16 @@
     </div>
 
     <div class="flex flex-col gap-3 border-t border-white/10 p-4 font-nunito">
+        @if(count($categorySums) > 0)
+            <dl class="flex flex-col gap-1 border-b border-dashed border-white/15 pb-3 text-sm">
+                @foreach($categorySums as $label => $sum)
+                    <div class="flex items-baseline justify-between gap-3">
+                        <dt class="font-semibold text-white/55">{{ $label }}</dt>
+                        <dd class="font-bold tabular-nums text-white/80">{{ $money($sum) }}</dd>
+                    </div>
+                @endforeach
+            </dl>
+        @endif
         <div class="flex items-baseline justify-between">
             <span class="font-semibold text-white/60">Iš viso</span>
             <span class="text-3xl font-extrabold tracking-tight text-white">{{ $money($cartTotal) }}</span>

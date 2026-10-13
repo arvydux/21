@@ -81,3 +81,23 @@ it('does not poll for ready orders from the cart', function () {
         ->assertDontSeeHtml('fetchReadyOrders')
         ->assertDontSeeHtml('/get-ready-orders');
 });
+
+it('splits the cart sum into food, drinks and packages', function () {
+    Order::create(['name' => json_encode([['Kibinas' => '3.50']]), 'order_price' => 3.50, 'amount' => 2, 'package' => 0.20, 'category' => 2]);
+    Order::create(['name' => json_encode([['Kava juoda' => '2.00']]), 'order_price' => 2.00, 'amount' => 1, 'category' => 3]);
+
+    $component = Livewire::test(OrdersList::class);
+
+    expect($component->instance()->categorySums())->toEqualWithDelta([
+        'Kepiniai' => 7.00,
+        'Gėrimai' => 2.00,
+        'Pakuotės' => 0.40,
+    ], 0.001);
+    $component->assertSeeInOrder(['Kepiniai', '7,00 €', 'Gėrimai', '2,00 €', 'Pakuotės', '0,40 €', 'Iš viso', '9,40 €']);
+});
+
+it('hides the empty category sums', function () {
+    Order::create(['name' => json_encode([['Kava juoda' => '2.00']]), 'order_price' => 2.00, 'amount' => 1, 'category' => 3]);
+
+    expect(Livewire::test(OrdersList::class)->instance()->categorySums())->toBe(['Gėrimai' => 2.0]);
+});
