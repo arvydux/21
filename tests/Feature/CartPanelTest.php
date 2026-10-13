@@ -101,3 +101,36 @@ it('hides the empty category sums', function () {
 
     expect(Livewire::test(OrdersList::class)->instance()->categorySums())->toBe(['Gėrimai' => 2.0]);
 });
+
+it('shows the whole order in a summary popup without action buttons', function () {
+    Order::create([
+        'name' => json_encode([['Kibinas su kopūstais' => '2.00']]),
+        'order_price' => 2.00,
+        'amount' => 5,
+        'category' => 1,
+    ]);
+    Order::create([
+        'name' => json_encode([['Kibinas su kopūstais' => '2.00']]),
+        'order_price' => 2.00,
+        'package' => 0.20,
+        'amount' => 1,
+        'category' => 1,
+        'takeaway' => true,
+        'comments' => 'Be svogūnų',
+    ]);
+
+    $html = Livewire::test(OrdersList::class)
+        ->assertSeeHtml('data-order-summary-trigger')
+        ->assertSeeHtml('x-on:keydown.escape.window="summaryOpen = false"')
+        ->assertSee('Visas užsakymas')
+        ->html();
+
+    $summary = str(preg_split('/data-order-summary(?!-)/', $html)[1])->before('Iš viso')->toString();
+
+    expect(substr_count($summary, 'wire:key="summary-'))->toBe(2)
+        ->and($summary)->toContain('5×')
+        ->and($summary)->toContain('10,00 €')
+        ->and($summary)->toContain('Be svogūnų')
+        ->and($summary)->toContain('Išsinešimui')
+        ->and($summary)->not->toContain('wire:click');
+});
