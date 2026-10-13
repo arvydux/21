@@ -9,53 +9,16 @@
     $buttonColumns = (int) $__btnSettings['pos_button_columns'];
     $buttonGap = (int) $__btnSettings['pos_button_gap'];
     $buttonPadding = (int) $__btnSettings['pos_button_padding'];
-    $btnPx = match($buttonPadding) { 1 => 'px-0', 2 => 'px-2', 4 => 'px-4', 5 => 'px-5', default => 'px-3' };
-    $btnPy = match($buttonPadding) { 1 => 'py-0', 2 => 'py-2', 4 => 'py-4', 5 => 'py-5', default => 'py-3' };
 @endphp
-<div x-data="{ koreguoti: window.koreguotiActive, editingProduct: '', editingProductId: null, editingLeft: '', editingAttention: false, editingToppingName: '', editingToppingId: null, editingToppingLeft: '', editingToppingAttention: false }" x-init="initSwapSortable($el, $wire, 'updateOrder')" @koreguoti-changed.window="koreguoti = $event.detail.active" class="grid {{ $buttonColumns === 3 ? 'md:grid-cols-3' : ($buttonColumns === 5 ? 'md:grid-cols-5' : 'md:grid-cols-4') }} auto-rows-min {{ $buttonGap === 1 ? 'gap-1' : ($buttonGap === 2 ? 'gap-2' : ($buttonGap === 3 ? 'gap-3' : ($buttonGap === 5 ? 'gap-5' : 'gap-4'))) }} mt-4">
+<div x-data="{ koreguoti: window.koreguotiActive, editingProduct: '', editingProductId: null, editingLeft: '', editingAttention: false, editingToppingName: '', editingToppingId: null, editingToppingLeft: '', editingToppingAttention: false }" x-init="initSwapSortable($el, $wire, 'updateOrder')" @koreguoti-changed.window="koreguoti = $event.detail.active" class="grid {{ $buttonColumns === 3 ? 'md:grid-cols-3' : ($buttonColumns === 5 ? 'md:grid-cols-5' : 'md:grid-cols-4') }} auto-rows-min {{ $buttonGap === 1 ? 'gap-2' : ($buttonGap === 2 ? 'gap-3' : ($buttonGap === 3 ? 'gap-3' : ($buttonGap === 5 ? 'gap-5' : 'gap-4'))) }} mt-4">
     @foreach(\App\Models\Ceburek::when(! $showAll, fn ($q) => $q->where('subcategory_id', $subcategoryId))->orderBy('position')->get() as $productName)
         <div data-sortable-id="{{ $productName->id }}" wire:key="ceburek-{{ $productName->id }}"
              @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ({{ $productName->attention ? 'true' : 'false' }}) { $wire.toggleAttention({{ $productName->id }}); } else { editingProduct = @js($productName->name); editingProductId = {{ $productName->id }}; editingLeft = ''; editingAttention = false; $flux.modal('koreguoti-edit').show(); } }">
         @if(!is_numeric($productName->name))
         <flux:modal.trigger name="choose-toppings">
         @endif
-            <div wire:click="{{ is_numeric($productName->name) ? '' : 'getProductName('.\Illuminate\Support\Js::from($productName->name).')' }}" class="relative {{ $buttonStyle === 'large' ? 'aspect-[5/3]' : 'aspect-[5/2.3]' }} overflow-hidden rounded-2xl
-                {{ is_numeric($productName->name) ? 'cursor-default pointer-events-none' : 'cursor-pointer' }}
-                {{ $productName->attention ? 'bg-red-500/70 hover:bg-red-500/70' : ($productName->show ? 'bg-white/10 hover:bg-white/20' : 'bg-red-400 hover:bg-red-400') }} backdrop-blur-lg border border-white/25
-                {{ !is_numeric($productName->name) ? 'hover:scale-[1.03] hover:-translate-y-0.5 active:scale-[0.98]' : '' }}
-                transition-all duration-300"
-                style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);">
-                @if(!is_numeric($productName->name))
-                <div class="flex h-full text-white items-center font-nunito">
-                    <div class="flex-1 {{ $btnPx }} {{ $btnPy }} text-center">
-                        @if($productName->number !== null)
-                            <div class="mx-auto mb-1 flex size-6 items-center justify-center rounded-full bg-white/90 text-xs font-black leading-none text-emerald-900 shadow">{{ $productName->number }}</div>
-                        @endif
-                        <div class="font-extrabold leading-tight antialiased {{ $productName->number !== null ? 'flex items-center justify-center '.($buttonStyle === 'large' ? 'min-h-[3.125rem]' : 'min-h-10') : '' }} {{ $productName->left !== null ? ($buttonStyle === 'large' ? 'text-sm' : 'text-xs') : ($buttonStyle === 'large' ? 'text-xl' : 'text-base') }}" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">
-                            {{ $productName->name }}
-                        </div>
-                    </div>
-                    @if($productName->left !== null)
-                    <div class="w-px bg-white/20 self-stretch {{ $buttonStyle === 'large' ? 'my-3' : 'my-4' }} shrink-0"></div>
-                    <div class="flex items-baseline justify-center {{ $btnPx }} shrink-0 gap-0.5">
-                        <div class="font-black {{ $buttonStyle === 'large' ? 'text-2xl' : 'text-xl' }} leading-none" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-                            <span x-show="editingProductId === {{ $productName->id }} && editingLeft !== ''"
-                                  x-text="editingLeft"></span>
-                            <span x-show="!(editingProductId === {{ $productName->id }} && editingLeft !== '')">{{ $productName->left }}</span>
-                        </div>
-                        <div class="{{ $buttonStyle === 'large' ? 'text-sm' : 'text-xs' }} font-semibold opacity-75">vnt.</div>
-                    </div>
-                    @else
-                    <div class="w-px bg-white/20 self-stretch {{ $buttonStyle === 'large' ? 'my-3' : 'my-4' }} shrink-0"
-                         x-show="editingProductId === {{ $productName->id }} && editingLeft !== ''"></div>
-                    <div class="flex items-baseline justify-center px-3 shrink-0 gap-0.5"
-                         x-show="editingProductId === {{ $productName->id }} && editingLeft !== ''">
-                        <div x-text="editingLeft" class="font-black {{ $buttonStyle === 'large' ? 'text-2xl' : 'text-xl' }} leading-none" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>
-                        <div class="{{ $buttonStyle === 'large' ? 'text-sm' : 'text-xs' }} font-semibold opacity-75">vnt.</div>
-                    </div>
-                    @endif
-                </div>
-                @endif
+            <div wire:click="{{ is_numeric($productName->name) ? '' : 'getProductName('.\Illuminate\Support\Js::from($productName->name).')' }}">
+                <x-kasa.product-card :product="$productName" :price="number_format((float) $productName->price, 2, ',', '').' €'" :button-style="$buttonStyle" :padding="$buttonPadding" :disabled="is_numeric($productName->name)" />
             </div>
         @if(!is_numeric($productName->name))
         </flux:modal.trigger>

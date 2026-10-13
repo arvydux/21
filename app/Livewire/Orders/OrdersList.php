@@ -49,6 +49,52 @@ class OrdersList extends Component
     public function fetchOrders()
     {
         $this->orders = Order::orderBy('created_at', 'desc')->get();
+        $this->dispatch('cart-updated', counts: $this->cartCounts());
+    }
+
+    /**
+     * Amount in the cart of every ordered product name, used for the badges on the product buttons.
+     *
+     * @return array<string, int>
+     */
+    public function cartCounts(): array
+    {
+        $counts = [];
+        foreach ($this->orders as $order) {
+            foreach (json_decode($order->name, true) ?? [] as $product) {
+                foreach (array_keys($product) as $name) {
+                    $counts[$name] = ($counts[$name] ?? 0) + $order->amount;
+                }
+            }
+        }
+
+        return $counts;
+    }
+
+    /**
+     * Price of one unit of the cart line: product, toppings and package.
+     */
+    public function unitPrice(Order $order): float
+    {
+        $price = 0.0;
+        foreach ([$order->name, $order->toppings ?? '[]'] as $json) {
+            foreach (json_decode($json, true) ?? [] as $item) {
+                $price += array_sum(array_map('floatval', $item));
+            }
+        }
+
+        return $price + (float) $order->package;
+    }
+
+    public function itemCountLabel(int $count): string
+    {
+        $word = match (true) {
+            $count % 10 === 1 && $count % 100 !== 11 => 'prekė',
+            $count % 10 === 0 || ($count % 100 >= 11 && $count % 100 <= 19) => 'prekių',
+            default => 'prekės',
+        };
+
+        return $count.' '.$word;
     }
 
     public function openCommentForOrder($orderId)
@@ -489,10 +535,16 @@ class OrdersList extends Component
         $this->byPhone = false;
         $this->koreguoti = false;
         $this->orders = Order::orderBy('created_at', 'desc')->get();
+        $this->dispatch('cart-updated', counts: $this->cartCounts());
     }
 
     public function render()
     {
-        return view('livewire.orders.orders-list');
+        $orders = collect($this->orders);
+
+        return view('livewire.orders.orders-list', [
+            'itemCount' => (int) $orders->sum('amount'),
+            'cartTotal' => $orders->sum(fn (Order $order): float => $this->unitPrice($order) * $order->amount),
+        ]);
     }
 }

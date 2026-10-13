@@ -10,9 +10,9 @@ beforeEach(function () {
     Category::create(['name' => 'Kiti', 'component_name' => 'other', 'position' => 2]);
 });
 
-it('lays the categories out in equal columns, in their saved order', function () {
+it('lays the categories out in one row, or two even rows on narrow screens, in their saved order', function () {
     Livewire::test(KasaMenu::class)
-        ->assertSeeHtml('repeat(3, minmax(0, 1fr))')
+        ->assertSeeHtml('--tabs-all: 3; --tabs-half: 2;')
         ->assertSeeInOrder(['Čeburekai', 'Koldūnai bei bulvytės', 'Kiti']);
 });
 

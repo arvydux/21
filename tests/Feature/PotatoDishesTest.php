@@ -265,8 +265,8 @@ it('shows the line total including paid sauces in the cart', function () {
     ]);
 
     Livewire::test(OrdersList::class)
-        ->assertSeeHtml('&times; 2 = 15.6 €')
-        ->assertDontSeeHtml('&times; 2 = 14.8 €');
+        ->assertSee('15,60 €')
+        ->assertDontSee('14,80 €');
 });
 
 it('shows the menu number on the cashier button', function () {

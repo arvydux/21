@@ -10,9 +10,33 @@
             {{ $slot }}
         </flux:main>
     @endif
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.store('cart', {
+                    items: {},
+                    count(name) {
+                        let total = 0;
+                        for (const [orderName, amount] of Object.entries(this.items)) {
+                            if (orderName === name || orderName.startsWith(name + ' (')) {
+                                total += amount;
+                            }
+                        }
+                        return total;
+                    },
+                });
+            });
+            window.addEventListener('cart-updated', (e) => {
+                if (window.Alpine) {
+                    Alpine.store('cart').items = e.detail.counts;
+                }
+            });
+        </script>
         @livewireScripts
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
         <style>
+            [x-cloak] {
+                display: none !important;
+            }
             .swap-highlight {
                 outline: 3px solid rgba(255, 255, 255, 0.6);
                 outline-offset: -3px;
