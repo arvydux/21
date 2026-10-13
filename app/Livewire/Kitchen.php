@@ -8,6 +8,13 @@ use Livewire\Component;
 
 class Kitchen extends Component
 {
+    /**
+     * Minutes after which a preparing order is shown as late, then as very late.
+     */
+    public const LATE_AFTER_MINUTES = 15;
+
+    public const VERY_LATE_AFTER_MINUTES = 25;
+
     public function makeOrderReady($number): void
     {
         OrderNumbers::where('number', $number)->update(['is_ready' => true]);
@@ -27,6 +34,9 @@ class Kitchen extends Component
 
     public function render(): \Illuminate\View\View
     {
-        return view('livewire.kitchen');
+        return view('livewire.kitchen', [
+            'preparingOrders' => OrderNumbers::where('is_ready', false)->orderBy('created_at')->get(),
+            'readyOrders' => OrderNumbers::where('is_ready', true)->where('is_taken', false)->orderBy('updated_at', 'desc')->get(),
+        ]);
     }
 }
