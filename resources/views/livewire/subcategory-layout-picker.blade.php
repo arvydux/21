@@ -1,13 +1,14 @@
 <?php
 
+use App\Livewire\KasaCategorySection;
 use Livewire\Volt\Component;
 
 new class extends Component {
-    public string $mode = 'drilldown';
+    public string $mode = KasaCategorySection::DEFAULT_LAYOUT_MODE;
 
     public function mount(): void
     {
-        $this->mode = cache('subcategory_layout_mode', 'drilldown');
+        $this->mode = cache('subcategory_layout_mode', KasaCategorySection::DEFAULT_LAYOUT_MODE);
     }
 
     public function updatedMode(): void

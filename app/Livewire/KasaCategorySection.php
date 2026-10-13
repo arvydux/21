@@ -10,6 +10,12 @@ use Livewire\Component;
 
 class KasaCategorySection extends Component
 {
+    /**
+     * Layout used until one is picked in the settings: every category opens on its
+     * "Visi" tab with all of its products.
+     */
+    public const DEFAULT_LAYOUT_MODE = 'visi_default';
+
     public ?string $buttonName = null;
 
     public ?int $categoryId = null;
@@ -30,7 +36,7 @@ class KasaCategorySection extends Component
         $this->categoryId = $categoryId;
         $this->selectedSubcategoryId = null;
 
-        if ($categoryId && cache('subcategory_layout_mode', 'drilldown') === 'visi_default') {
+        if ($categoryId && cache('subcategory_layout_mode', self::DEFAULT_LAYOUT_MODE) === 'visi_default') {
             $this->selectedSubcategoryId = Subcategory::where('category_id', $categoryId)
                 ->where('name', 'Visi')
                 ->value('id');
@@ -53,7 +59,7 @@ class KasaCategorySection extends Component
             ? Subcategory::where('category_id', $this->categoryId)->orderBy('position')->get()
             : collect();
 
-        $layoutMode = cache('subcategory_layout_mode', 'drilldown');
+        $layoutMode = cache('subcategory_layout_mode', self::DEFAULT_LAYOUT_MODE);
         $visiId = $this->subcategories->firstWhere('name', 'Visi')?->id;
 
         $showAll = $layoutMode === 'visi_default'

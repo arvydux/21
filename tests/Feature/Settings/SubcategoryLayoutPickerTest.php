@@ -2,11 +2,11 @@
 
 use Livewire\Volt\Volt;
 
-it('defaults to drilldown mode', function () {
+it('defaults to the Visi mode', function () {
     cache()->forget('subcategory_layout_mode');
 
     Volt::test('subcategory-layout-picker')
-        ->assertSet('mode', 'drilldown');
+        ->assertSet('mode', 'visi_default');
 });
 
 it('persists the selected mode to cache', function () {

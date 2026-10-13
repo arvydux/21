@@ -20,6 +20,7 @@ function makeCeburekCategoryWithSubcategories(): array
 }
 
 it('shows subcategory buttons after a category is clicked', function () {
+    cache()->forever('subcategory_layout_mode', 'drilldown');
     ['category' => $category] = makeCeburekCategoryWithSubcategories();
 
     Livewire::test(KasaCategorySection::class)
@@ -53,6 +54,7 @@ it('returns to the subcategory list via backToSubcategories', function () {
 });
 
 it('resets the selected subcategory when switching category', function () {
+    cache()->forever('subcategory_layout_mode', 'drilldown');
     ['category' => $category, 'meat' => $meat] = makeCeburekCategoryWithSubcategories();
     $other = Category::create(['name' => 'Kiti', 'component_name' => 'other']);
 
@@ -87,14 +89,14 @@ it('keeps subcategory buttons and hides the back button in persistent mode', fun
         ->assertSee('Su kiauliena');
 });
 
-it('defaults to drilldown mode when no preference is stored', function () {
+it('opens every category on Visi when no preference is stored, e.g. on a new computer', function () {
     cache()->forget('subcategory_layout_mode');
-    ['category' => $category, 'meat' => $meat] = makeCeburekCategoryWithSubcategories();
+    $category = Category::create(['name' => 'Čeburekai', 'component_name' => 'ceburekai']);
 
     Livewire::test(KasaCategorySection::class)
         ->call('showProductMenu', 'ceburekai', $category->id)
-        ->call('selectSubcategory', $meat->id)
-        ->assertSee('Atgal');
+        ->assertSet('selectedSubcategoryId', Subcategory::where('category_id', $category->id)->where('name', 'Visi')->value('id'))
+        ->assertViewHas('showAll', true);
 });
 
 function makeCeburekCategoryWithVisi(): array

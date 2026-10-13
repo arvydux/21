@@ -238,6 +238,7 @@ it('leaves a fresh database to the seeders', function () {
 });
 
 it('shows the potato dishes when the category is opened on the cashier screen', function () {
+    cache()->forever('subcategory_layout_mode', 'drilldown');
     $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai']);
     $visi = Subcategory::firstOrCreate(['name' => 'Visi', 'category_id' => $category->id], ['position' => 0]);
     $this->dish->update(['subcategory_id' => $visi->id]);
