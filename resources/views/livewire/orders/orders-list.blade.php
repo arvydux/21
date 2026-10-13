@@ -56,17 +56,31 @@
                 </div>
 
                 <div x-drag-scroll x-scroll-fade class="no-scrollbar min-h-0 flex-1 touch-pan-y select-none overflow-y-auto overscroll-contain px-6 py-3">
+                    @if(collect($orders)->contains(fn ($order) => $order->isForAdults()))
+                        <div data-adults-warning class="mb-2 mt-1 flex items-center gap-3 rounded-2xl bg-red-50 px-4 py-3 ring-1 ring-red-200">
+                            <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-red-600 text-sm font-black text-white shadow-md shadow-red-600/30">18+</span>
+                            <p class="font-bold leading-snug text-red-800">Užsakyme yra alkoholio. Patikrinkite, ar pirkėjui yra 18 metų.</p>
+                        </div>
+                    @endif
                     @forelse($orders as $order)
                         @php $unitPrice = $this->unitPrice($order); @endphp
                         @if($loop->first)
                             <div @class(['gap-x-10', 'lg:columns-2' => count($orders) > 8])>
                         @endif
-                        <div class="flex break-inside-avoid items-start gap-4 border-b border-dashed border-stone-300 py-3.5" wire:key="summary-{{ $order->id }}">
-                            <span class="flex h-9 min-w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-700 px-2 text-lg font-extrabold tabular-nums text-white shadow-sm">{{ $order->amount }}×</span>
+                        <div @class([
+                                'flex break-inside-avoid items-start gap-4 border-b border-dashed py-3.5',
+                                'border-stone-300' => ! $order->isForAdults(),
+                                '-mx-3 rounded-xl border-red-200 bg-red-50 px-3' => $order->isForAdults(),
+                             ]) wire:key="summary-{{ $order->id }}">
+                            <span @class([
+                                'flex h-9 min-w-11 shrink-0 items-center justify-center rounded-xl px-2 text-lg font-extrabold tabular-nums text-white shadow-sm',
+                                'bg-emerald-700' => ! $order->isForAdults(),
+                                'bg-red-600' => $order->isForAdults(),
+                            ])>{{ $order->amount }}×</span>
                             <div class="min-w-0 flex-1">
                                 @foreach(json_decode($order->name) as $name)
                                     @foreach($name as $name => $price)
-                                        <p class="text-lg font-bold leading-snug text-stone-900">{{ $name }}</p>
+                                        <p class="text-lg font-bold leading-snug text-stone-900">{{ $name }}@if($order->isForAdults())<span class="ml-1.5 inline-flex -translate-y-px items-center rounded-md bg-red-600 px-1.5 py-0.5 align-middle text-xs font-extrabold leading-none text-white" title="Tik suaugusiems">18+</span>@endif</p>
                                     @endforeach
                                 @endforeach
                                 @if(isset($order->toppings))
@@ -120,12 +134,16 @@
     <div x-drag-scroll x-scroll-fade data-drag-scroll class="no-scrollbar flex min-h-0 flex-1 touch-pan-y select-none flex-col gap-2 overflow-y-auto overscroll-contain p-3 font-nunito">
         @forelse($orders as $order)
             @php $unitPrice = $this->unitPrice($order); @endphp
-            <div class="flex flex-col gap-3 rounded-2xl bg-white/10 p-4 ring-1 ring-white/10" wire:key="order-{{ $order->id }}">
+            <div @class([
+                    'flex flex-col gap-3 rounded-2xl bg-white/10 p-4 ring-1',
+                    'ring-white/10' => ! $order->isForAdults(),
+                    'ring-red-400/60' => $order->isForAdults(),
+                 ]) wire:key="order-{{ $order->id }}">
                 <div class="flex items-start justify-between gap-3">
                     <div class="min-w-0">
                         @foreach(json_decode($order->name) as $name)
                             @foreach($name as $name => $price)
-                                <h3 class="kasa-item text-white">{{ $name }}</h3>
+                                <h3 class="kasa-item text-white">{{ $name }}@if($order->isForAdults())<span class="ml-1.5 inline-flex -translate-y-px items-center rounded-md bg-red-600 px-1.5 py-0.5 align-middle text-xs font-extrabold leading-none text-white" title="Tik suaugusiems">18+</span>@endif</h3>
                             @endforeach
                         @endforeach
 

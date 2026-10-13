@@ -146,3 +146,39 @@ it('lets the cashier drag the cart and product lists with a finger', function ()
     $this->get(route('kasa'))->assertSee("Alpine.directive('drag-scroll'", false)
         ->assertSee("Alpine.directive('scroll-fade'", false);
 });
+
+it('marks alcohol lines as 18+ and warns about the age check', function () {
+    Order::create([
+        'name' => json_encode([['Vynas „KAGOR“ (150 ml)' => '5.20']]),
+        'order_price' => 5.20,
+        'amount' => 1,
+        'category' => \App\Models\AlcoholicDrink::ORDER_CATEGORY,
+    ]);
+    Order::create([
+        'name' => json_encode([['Kava Espresso' => '2.20']]),
+        'order_price' => 2.20,
+        'amount' => 1,
+        'category' => 3,
+    ]);
+
+    $html = Livewire::test(OrdersList::class)
+        ->assertSeeHtml('data-adults-warning')
+        ->assertSee('Patikrinkite, ar pirkėjui yra 18 metų.')
+        ->html();
+
+    expect(substr_count($html, '>18+</span>'))->toBe(3)
+        ->and(substr_count($html, 'ring-red-400/60'))->toBe(1);
+});
+
+it('does not warn about the age check without alcohol', function () {
+    Order::create([
+        'name' => json_encode([['Kava Espresso' => '2.20']]),
+        'order_price' => 2.20,
+        'amount' => 1,
+        'category' => 3,
+    ]);
+
+    Livewire::test(OrdersList::class)
+        ->assertDontSeeHtml('data-adults-warning')
+        ->assertDontSeeHtml('>18+</span>');
+});
