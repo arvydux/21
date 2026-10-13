@@ -6,7 +6,7 @@
         @php $isSelected = $selectedSubcategoryId === $subcategory->id; @endphp
         <div wire:key="subcategory-{{ $subcategory->id }}"
              wire:click="selectSubcategory({{ $subcategory->id }})"
-             class="relative flex h-14 shrink-0 touch-manipulation cursor-pointer select-none items-center rounded-t-xl px-4 text-lg font-bold tracking-wide
+             class="relative flex h-14 shrink-0 touch-manipulation cursor-pointer select-none items-center rounded-t-xl px-4 kasa-nav
                     transition-colors duration-100
                     {{ $isSelected ? 'text-white' : 'text-white/55 hover:text-white/85 active:bg-white/10' }}">
             {{ $subcategory->name }}

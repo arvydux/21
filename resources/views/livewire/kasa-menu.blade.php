@@ -9,7 +9,7 @@
                     {{ $isSelected
                         ? 'bg-white text-emerald-900 shadow-lg shadow-emerald-950/30'
                         : 'text-white/85 hover:bg-white/10 active:bg-white/20' }}">
-            <span class="line-clamp-2 text-lg font-extrabold leading-tight tracking-wide">{{ $categoryName->name }}</span>
+            <span class="kasa-nav line-clamp-2">{{ $categoryName->name }}</span>
         </div>
     @endforeach
 </div>

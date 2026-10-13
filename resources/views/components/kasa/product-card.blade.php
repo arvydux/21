@@ -33,14 +33,14 @@
      style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
     @unless($disabled)
         <div class="flex min-h-7 items-start justify-between gap-2">
-            <span class="text-sm font-bold tabular-nums text-white/55">{{ $product->number }}</span>
+            <span class="kasa-meta tabular-nums">{{ $product->number }}</span>
             <span x-cloak
                   x-show="$store.cart.count({{ $productNameJs }}) > 0"
                   x-text="$store.cart.count({{ $productNameJs }})"
                   class="flex size-7 shrink-0 items-center justify-center rounded-full bg-white text-sm font-black text-emerald-800 shadow-lg shadow-emerald-950/30"></span>
         </div>
 
-        <div class="line-clamp-3 flex-1 font-bold leading-snug antialiased {{ $buttonStyle === 'large' ? 'text-lg' : 'text-base' }}"
+        <div class="kasa-item line-clamp-3 flex-1"
              style="text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);">
             {{ $product->name }}
         </div>
@@ -51,11 +51,11 @@
                     <span class="font-extrabold text-amber-300 {{ $buttonStyle === 'large' ? 'text-xl' : 'text-lg' }}" style="text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);">{{ $price }}</span>
                 @endif
                 @if($product->left !== null)
-                    <span class="text-sm font-bold text-white/80">
+                    <span class="kasa-meta text-white/80">
                         <span x-show="editingProductId === {{ $product->id }} && editingLeft !== ''" x-text="editingLeft"></span><span x-show="!(editingProductId === {{ $product->id }} && editingLeft !== '')">{{ $product->left }}</span> vnt.
                     </span>
                 @else
-                    <span x-cloak x-show="editingProductId === {{ $product->id }} && editingLeft !== ''" class="text-sm font-bold text-white/80">
+                    <span x-cloak x-show="editingProductId === {{ $product->id }} && editingLeft !== ''" class="kasa-meta text-white/80">
                         <span x-text="editingLeft"></span> vnt.
                     </span>
                 @endif

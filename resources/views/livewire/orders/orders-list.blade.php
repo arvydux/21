@@ -4,8 +4,8 @@
      xmlns:flux="http://www.w3.org/1999/html">
     <div class="flex items-start justify-between gap-3 border-b border-white/10 px-5 py-4 font-nunito">
         <div>
-            <h2 class="text-xl font-extrabold tracking-wide text-white antialiased">Krepšelis</h2>
-            <p class="text-sm font-semibold text-white/60">{{ $this->itemCountLabel($itemCount) }}</p>
+            <h2 class="kasa-title">Krepšelis</h2>
+            <p class="kasa-meta">{{ $this->itemCountLabel($itemCount) }}</p>
         </div>
         <div id="sound-activation-slot" wire:ignore class="@container flex min-w-0 flex-1 justify-center"></div>
         <div class="flex items-center gap-2">
@@ -125,29 +125,29 @@
                     <div class="min-w-0">
                         @foreach(json_decode($order->name) as $name)
                             @foreach($name as $name => $price)
-                                <h3 class="font-bold leading-snug text-white antialiased">{{ $name }}</h3>
+                                <h3 class="kasa-item text-white">{{ $name }}</h3>
                             @endforeach
                         @endforeach
 
                         @if(isset($order->toppings))
                             @foreach(json_decode($order->toppings) as $topping)
                                 @foreach($topping as $name => $toppingPrice)
-                                    <p class="text-sm font-semibold text-white/70">+ {{ $name }} <span class="text-white/50">{{ $money((float) $toppingPrice) }}</span></p>
+                                    <p class="kasa-meta text-white/75">+ {{ $name }} <span class="text-white/55">{{ $money((float) $toppingPrice) }}</span></p>
                                 @endforeach
                             @endforeach
                         @endif
 
                         @if($order->package)
-                            <p class="text-sm font-semibold text-white/70">+ Pakuotė <span class="text-white/50">{{ $money((float) $order->package) }}</span></p>
+                            <p class="kasa-meta text-white/75">+ Pakuotė <span class="text-white/55">{{ $money((float) $order->package) }}</span></p>
                         @endif
 
-                        <p class="mt-0.5 text-sm text-white/50">{{ $money($unitPrice) }} / vnt.</p>
+                        <p class="kasa-meta mt-0.5">{{ $money($unitPrice) }} / vnt.</p>
 
                         @if($order->comments)
                             <p class="mt-1 text-sm italic text-amber-200/90">„{{ $order->comments }}“</p>
                         @endif
                     </div>
-                    <div class="shrink-0 text-right font-extrabold text-white">{{ $money($unitPrice * $order->amount) }}</div>
+                    <div class="kasa-item shrink-0 text-right font-extrabold text-white">{{ $money($unitPrice * $order->amount) }}</div>
                 </div>
 
                 <div class="flex items-center justify-between gap-2">
@@ -218,17 +218,17 @@
 
     <div class="flex flex-col gap-3 border-t border-white/10 p-4 font-nunito">
         @if(count($categorySums) > 0)
-            <dl class="flex flex-col gap-1 border-b border-dashed border-white/15 pb-3 text-sm">
+            <dl class="flex flex-col gap-1 border-b border-dashed border-white/15 pb-3">
                 @foreach($categorySums as $label => $sum)
                     <div class="flex items-baseline justify-between gap-3">
-                        <dt class="font-semibold text-white/55">{{ $label }}</dt>
-                        <dd class="font-bold tabular-nums text-white/80">{{ $money($sum) }}</dd>
+                        <dt class="kasa-meta">{{ $label }}</dt>
+                        <dd class="kasa-meta tabular-nums text-white/80">{{ $money($sum) }}</dd>
                     </div>
                 @endforeach
             </dl>
         @endif
         <div class="flex items-baseline justify-between">
-            <span class="font-semibold text-white/60">Iš viso</span>
+            <span class="kasa-nav text-white/70">Iš viso</span>
             <span class="text-3xl font-extrabold tracking-tight text-white">{{ $money($cartTotal) }}</span>
         </div>
         <div class="@container flex gap-2">

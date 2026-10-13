@@ -55,3 +55,11 @@ it('removes the page padding so the panels fill the whole screen', function () {
         ->assertSee('p-0!', false)
         ->assertSee('sticky top-0 h-dvh', false);
 });
+
+it('uses one type scale for the panel titles and loads the lighter Nunito weights', function () {
+    $html = $this->get(route('kasa'))->assertOk()->getContent();
+
+    expect(substr_count($html, 'class="kasa-title'))->toBe(2)
+        ->and($html)->toContain('nunito:400,600,700,800,900')
+        ->and($html)->toContain('<h2 class="kasa-title">Krepšelis</h2>');
+});

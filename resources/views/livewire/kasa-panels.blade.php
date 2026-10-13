@@ -65,7 +65,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7 7-7M3 12h18"></path>
                 </svg>
             </button>
-            <h2 class="truncate text-xl font-extrabold tracking-wide text-white antialiased">Meniu</h2>
+            <h2 class="kasa-title truncate">Meniu</h2>
         </div>
         <div class="min-h-0 flex-1 p-3">
             <livewire:kasa-menu/>

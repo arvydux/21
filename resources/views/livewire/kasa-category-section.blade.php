@@ -6,7 +6,7 @@
         @endphp
 
         <div class="border-b border-white/10 px-5 pt-4">
-            <h2 class="text-xl font-extrabold tracking-wide text-white antialiased">{{ $categoryName }}</h2>
+            <h2 class="kasa-title">{{ $categoryName }}</h2>
 
             @if($showTabs)
                 @include('livewire.partials.kasa-subcategory-chips')
@@ -20,7 +20,7 @@
                         </svg>
                         Atgal
                     </button>
-                    <span class="text-lg font-bold text-amber-300">{{ $subcategories->firstWhere('id', $selectedSubcategoryId)?->name }}</span>
+                    <span class="kasa-nav text-amber-300">{{ $subcategories->firstWhere('id', $selectedSubcategoryId)?->name }}</span>
                 </div>
             @endif
         </div>

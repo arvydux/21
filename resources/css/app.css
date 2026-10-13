@@ -29,6 +29,23 @@
     --color-accent-foreground: var(--color-white);
 }
 
+/* Cashier (kasa) type scale: every text on the POS screen uses one of these. */
+@utility kasa-title {
+    @apply font-nunito text-xl font-extrabold tracking-wide text-white antialiased;
+}
+
+@utility kasa-nav {
+    @apply font-nunito text-lg leading-tight font-bold tracking-wide;
+}
+
+@utility kasa-item {
+    @apply font-nunito text-base leading-snug font-bold antialiased;
+}
+
+@utility kasa-meta {
+    @apply font-nunito text-sm font-semibold text-white/55;
+}
+
 @layer theme {
     .dark {
         --color-accent: var(--color-white);
