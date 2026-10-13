@@ -10,108 +10,21 @@
     $buttonGap = (int) $__btnSettings['pos_button_gap'];
     $buttonPadding = (int) $__btnSettings['pos_button_padding'];
 @endphp
-<div x-data="{ koreguoti: window.koreguotiActive, editingProduct: '', editingProductId: null, editingLeft: '', editingAttention: false, editingToppingName: '', editingToppingId: null, editingToppingLeft: '', editingToppingAttention: false }" x-init="initSwapSortable($el, $wire, 'updateOrder')" @koreguoti-changed.window="koreguoti = $event.detail.active" class="grid grid-cols-2 @xl:grid-cols-3 {{ $buttonColumns === 3 ? '@3xl:grid-cols-3' : ($buttonColumns === 5 ? '@3xl:grid-cols-5' : '@3xl:grid-cols-4') }} auto-rows-min {{ $buttonGap === 1 ? 'gap-2' : ($buttonGap === 2 ? 'gap-3' : ($buttonGap === 3 ? 'gap-3' : ($buttonGap === 5 ? 'gap-5' : 'gap-4'))) }}">
+<div x-data="{ koreguoti: window.koreguotiActive, chosenName: '', chosenPrice: '', editingProduct: '', editingProductId: null, editingLeft: '', editingAttention: false, editingToppingName: '', editingToppingId: null, editingToppingLeft: '', editingToppingAttention: false }" x-init="initSwapSortable($el, $wire, 'updateOrder')" @koreguoti-changed.window="koreguoti = $event.detail.active" class="grid grid-cols-2 @xl:grid-cols-3 {{ $buttonColumns === 3 ? '@3xl:grid-cols-3' : ($buttonColumns === 5 ? '@3xl:grid-cols-5' : '@3xl:grid-cols-4') }} auto-rows-min {{ $buttonGap === 1 ? 'gap-2' : ($buttonGap === 2 ? 'gap-3' : ($buttonGap === 3 ? 'gap-3' : ($buttonGap === 5 ? 'gap-5' : 'gap-4'))) }}">
     @foreach($products as $product)
         <div data-sortable-id="{{ $product->id }}" wire:key="koldunai-dish-{{ $product->id }}"
              @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ({{ $product->attention ? 'true' : 'false' }}) { $wire.toggleAttention({{ $product->id }}); } else { editingProduct = @js($product->name); editingProductId = {{ $product->id }}; editingLeft = ''; editingAttention = false; $flux.modal('koldunai-koreguoti-edit').show(); } }">
         <flux:modal.trigger name="choose-koldunai-toppings">
-            <div wire:click="chooseProduct({{ $product->id }})">
+            <div wire:click="chooseProduct({{ $product->id }})"
+                 x-on:click="chosenName = @js($product->name); chosenPrice = @js(number_format((float) $product->price, 2, ',', '').' €')">
                 <x-kasa.product-card :product="$product" :price="number_format((float) $product->price, 2, ',', '').' €'" :button-style="$buttonStyle" :padding="$buttonPadding" />
             </div>
         </flux:modal.trigger>
         </div>
     @endforeach
-        <flux:modal name="choose-koldunai-toppings" class="w-full max-w-2xl bg-white! rounded-xl shadow-2xl blur-none relative">
-            <button type="button" x-on:click="koreguoti = !koreguoti; window.koreguotiActive = koreguoti; window.dispatchEvent(new CustomEvent('koreguoti-changed', { detail: { active: koreguoti } }))"
-                    :class="koreguoti
-                        ? 'bg-red-500 border-red-500 text-white shadow-md shadow-red-200 hover:bg-red-600 hover:border-red-600'
-                        : 'bg-white border-gray-200 text-slate-500 shadow-sm hover:shadow-md hover:border-gray-300'"
-                    class="absolute top-4 right-16 inline-flex items-center justify-center py-1.5 px-4 border rounded-xl cursor-pointer transition-all duration-200 text-sm font-bold z-10 outline-none focus:outline-none">
-                Koreguoti
-            </button>
-            <form wire:submit.prevent="addOrder">
-                <h3 class="mx-3 mt-8 mb-3.5 text-xs font-bold text-center text-slate-500 tracking-widest uppercase">{{ $selectedProduct?->name }}</h3>
-
-                <div class="bg-linear-to-b from-slate-50 to-slate-100 rounded-xl mx-3 p-3.5">
-                    <h3 class="text-xs mb-3 font-bold text-center text-slate-500 tracking-widest uppercase">Pasirinkti priedus</h3>
-                    <ul x-init="initSwapSortable($el, $wire, 'updateToppingOrder')" class="grid w-full gap-2 md:grid-cols-5">
-                        @foreach($koldunaiToppings as $topping)
-                            <li data-sortable-id="{{ $topping->id }}" wire:key="koldunai-topping-{{ $topping->id }}"
-                                data-attention="{{ $topping->attention ? '1' : '0' }}"
-                                @click.capture="if (koreguoti) { $event.stopImmediatePropagation(); $event.preventDefault(); if ($el.dataset.attention === '1') { $wire.toggleToppingAttention({{ $topping->id }}); } else { editingToppingName = @js($topping->name); editingToppingId = {{ $topping->id }}; editingToppingLeft = ''; editingToppingAttention = false; $flux.modal('koldunai-koreguoti-topping-edit').show(); } }">
-                                <input type="checkbox" id="koldunai-topping-{{ $topping->id }}" value="{{ $topping->name }}" wire:model.live="toppings"
-                                       class="hidden peer">
-                                <label for="koldunai-topping-{{ $topping->id }}"
-                                       class="flex items-center aspect-square w-full overflow-hidden bg-linear-to-br text-white/90 rounded-xl cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 peer-checked:from-emerald-500 peer-checked:to-teal-600 peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-emerald-500/30 peer-checked:-translate-y-0.5 peer-checked:ring-2 peer-checked:ring-emerald-400/50 peer-checked:ring-offset-1 peer-checked:hover:from-emerald-500 peer-checked:hover:to-teal-600 font-bold leading-tight {{ $topping->attention ? 'from-red-500 to-red-700 hover:from-red-400 hover:to-red-600' : 'from-slate-600 to-slate-800 hover:from-slate-500 hover:to-slate-700' }}">
-                                    <div class="flex-1 p-1 text-center">
-                                        <div class="font-extrabold leading-tight antialiased text-sm" style="text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3);">{{ $topping->name }}</div>
-                                    </div>
-                                    @if($topping->left !== null)
-                                    <div class="w-px bg-white/20 self-stretch my-3 shrink-0"></div>
-                                    <div class="flex items-baseline justify-center px-1.5 shrink-0 gap-0.5">
-                                        <div class="font-black text-base leading-none" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-                                            <span x-show="editingToppingId === {{ $topping->id }} && editingToppingLeft !== ''" x-text="editingToppingLeft"></span>
-                                            <span x-show="!(editingToppingId === {{ $topping->id }} && editingToppingLeft !== '')">{{ $topping->left }}</span>
-                                        </div>
-                                        <div class="text-[10px] font-semibold opacity-75">vnt.</div>
-                                    </div>
-                                    @else
-                                    <div class="w-px bg-white/20 self-stretch my-3 shrink-0"
-                                         x-show="editingToppingId === {{ $topping->id }} && editingToppingLeft !== ''"></div>
-                                    <div class="flex items-baseline justify-center px-1.5 shrink-0 gap-0.5"
-                                         x-show="editingToppingId === {{ $topping->id }} && editingToppingLeft !== ''">
-                                        <div x-text="editingToppingLeft" class="font-black text-base leading-none" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>
-                                        <div class="text-[10px] font-semibold opacity-75">vnt.</div>
-                                    </div>
-                                    @endif
-                                </label>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-
-            <div class="mx-3 mt-3.5">
-                <h3 class="mb-2.5 text-xs font-bold text-center text-slate-500 tracking-widest uppercase">Kur valgys?</h3>
-                <ul class="grid w-full gap-2.5 md:grid-cols-2">
-                    <li>
-                        <input type="radio" id="koldunai-hosting-big" name="koldunai-hosting" wire:model="takeaway" value="0" class="hidden peer">
-                        <label for="koldunai-hosting-big" class="inline-flex items-center justify-center w-full py-3 px-4 text-slate-500 bg-white border border-gray-200 rounded-xl cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md hover:border-gray-300 peer-checked:bg-emerald-50 peer-checked:border-emerald-500 peer-checked:text-emerald-700 peer-checked:shadow-md">
-                            <svg class="w-5 h-5 mr-2 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.15c0 .415.336.75.75.75z" />
-                            </svg>
-                            <div class="text-base font-bold">Vietoje</div>
-                        </label>
-                    </li>
-                    <li>
-                        <input type="radio" id="koldunai-hosting-small" name="koldunai-hosting" wire:model="takeaway" value="1" class="hidden peer" />
-                        <label for="koldunai-hosting-small" class="inline-flex items-center justify-center w-full py-3 px-4 text-slate-500 bg-white border border-gray-200 rounded-xl cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md hover:border-gray-300 peer-checked:bg-emerald-50 peer-checked:border-emerald-500 peer-checked:text-emerald-700 peer-checked:shadow-md">
-                            <svg class="w-5 h-5 mr-2 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                            </svg>
-                            <div class="text-base font-bold">Išsinešimui</div>
-                        </label>
-                    </li>
-                </ul>
-            </div>
-
-                <div class="flex justify-center w-full px-3 pt-4 pb-1.5 gap-2.5">
-                    <button type="submit" x-on:click="$flux.modals().close()"
-                            class="rounded-xl cursor-pointer flex-1 bg-linear-to-r from-emerald-600 to-teal-600 py-2.5 text-white inline-flex items-center justify-center shadow-lg shadow-emerald-500/20 hover:from-emerald-700 hover:to-teal-700 hover:shadow-xl focus:ring-2 focus:outline-none focus:ring-emerald-300 transition-all duration-200 active:scale-[0.98]">
-                        <div class="flex-1 text-base font-bold leading-tight text-center">
-                            Pridėti ir uždaryti
-                        </div>
-                    </button>
-
-                    <button type="submit"
-                            class="rounded-xl cursor-pointer flex-1 bg-linear-to-r from-emerald-600 to-teal-600 py-2.5 text-white inline-flex items-center justify-center shadow-lg shadow-emerald-500/20 hover:from-emerald-700 hover:to-teal-700 hover:shadow-xl focus:ring-2 focus:outline-none focus:ring-emerald-300 transition-all duration-200 active:scale-[0.98]">
-                        <div class="flex-1 text-base font-bold leading-tight text-center">
-                            Pridėti dar vieną
-                        </div>
-                    </button>
-                </div>
-
-            </form>
-        </flux:modal>
+        <x-kasa.topping-modal name="choose-koldunai-toppings" id-prefix="koldunai"
+                             :toppings="$koldunaiToppings"
+                             topping-edit-modal="koldunai-koreguoti-topping-edit" />
 
         <flux:modal name="koldunai-koreguoti-topping-edit" class="w-80">
             <div class="space-y-6">
