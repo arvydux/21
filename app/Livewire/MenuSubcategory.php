@@ -63,7 +63,10 @@ class MenuSubcategory extends Component
             return;
         }
 
-        $this->validate(['newName' => 'required|string|max:255']);
+        $this->validate(
+            ['newName' => ['required', 'string', 'max:255', 'not_in:'.Subcategory::DEFAULT_NAME]],
+            $this->nameMessages('newName'),
+        );
 
         $position = Subcategory::where('category_id', $this->categoryId)->max('position') + 1;
 
@@ -80,15 +83,27 @@ class MenuSubcategory extends Component
     public function editSubcategory(int $id): void
     {
         $subcategory = Subcategory::findOrFail($id);
+
+        if ($subcategory->isDefault()) {
+            return;
+        }
+
         $this->editingId = $subcategory->id;
         $this->editName = $subcategory->name;
     }
 
     public function update(): void
     {
-        $this->validate(['editName' => 'required|string|max:255']);
+        $this->validate(
+            ['editName' => ['required', 'string', 'max:255', 'not_in:'.Subcategory::DEFAULT_NAME]],
+            $this->nameMessages('editName'),
+        );
 
         $subcategory = Subcategory::findOrFail($this->editingId);
+
+        if ($subcategory->isDefault()) {
+            return;
+        }
         $subcategory->update(['name' => $this->editName]);
 
         $this->editingId = 0;
@@ -105,6 +120,10 @@ class MenuSubcategory extends Component
     public function deleteSubcategory(int $id): void
     {
         $subcategory = Subcategory::findOrFail($id);
+
+        if ($subcategory->isDefault()) {
+            return;
+        }
 
         $modelClass = $this->componentModels[$this->componentName] ?? null;
 
@@ -131,8 +150,21 @@ class MenuSubcategory extends Component
     public function updateOrder($list): void
     {
         foreach ($list as $item) {
-            Subcategory::where('id', $item['value'])->update(['position' => $item['order']]);
+            Subcategory::where('id', $item['value'])
+                ->where('name', '!=', Subcategory::DEFAULT_NAME)
+                ->update(['position' => $item['order']]);
         }
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function nameMessages(string $field): array
+    {
+        return [
+            "{$field}.required" => 'Pavadinimas turi būti užpildytas',
+            "{$field}.not_in" => 'Subkategorija „'.Subcategory::DEFAULT_NAME.'“ jau yra kiekvienoje kategorijoje',
+        ];
     }
 
     public function render()

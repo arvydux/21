@@ -44,6 +44,7 @@ class DatabaseSeeder extends Seeder
             ComboSubcategorySeeder::class,
             ZemaiciuBlynaiSubcategorySeeder::class,
             BulviniaiBlynaiSubcategorySeeder::class,
+            DefaultSubcategorySeeder::class,
         ]);
     }
 }

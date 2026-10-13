@@ -173,7 +173,7 @@ it('decrements the stock of potato dishes and sauces when the order is made', fu
 
 it('creates a potato dish with half and full portion prices from the menu admin', function () {
     $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai']);
-    $subcategory = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+    $subcategory = Subcategory::firstOrCreate(['name' => 'Visi', 'category_id' => $category->id], ['position' => 0]);
 
     Livewire::test(PotatoDishesCreateForm::class)
         ->set('name', 'Bulvinukai su sūriu')
@@ -190,7 +190,7 @@ it('creates a potato dish with half and full portion prices from the menu admin'
 
 it('requires the half portion price', function () {
     $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai']);
-    $subcategory = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+    $subcategory = Subcategory::firstOrCreate(['name' => 'Visi', 'category_id' => $category->id], ['position' => 0]);
 
     Livewire::test(PotatoDishesCreateForm::class)
         ->set('name', 'Be pusės kainos')
@@ -239,7 +239,7 @@ it('leaves a fresh database to the seeders', function () {
 
 it('shows the potato dishes when the category is opened on the cashier screen', function () {
     $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai']);
-    $visi = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+    $visi = Subcategory::firstOrCreate(['name' => 'Visi', 'category_id' => $category->id], ['position' => 0]);
     $this->dish->update(['subcategory_id' => $visi->id]);
 
     Livewire::test(\App\Livewire\KasaCategorySection::class)
@@ -278,7 +278,7 @@ it('shows the menu number on the cashier button', function () {
 
 it('saves the menu number from the menu admin', function () {
     $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai']);
-    $this->dish->update(['subcategory_id' => Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0])->id]);
+    $this->dish->update(['subcategory_id' => Subcategory::firstOrCreate(['name' => 'Visi', 'category_id' => $category->id], ['position' => 0])->id]);
 
     Livewire::test(\App\Livewire\Menu\Tables\PotatoDishesTable::class)
         ->call('editProduct', $this->dish->id)
@@ -302,7 +302,7 @@ it('rejects a menu number that is not a positive whole number', function (mixed 
 
 it('creates a dish with a menu number, or without one', function (mixed $number, ?int $expected) {
     $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai']);
-    $subcategory = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+    $subcategory = Subcategory::firstOrCreate(['name' => 'Visi', 'category_id' => $category->id], ['position' => 0]);
 
     Livewire::test(PotatoDishesCreateForm::class)
         ->set('number', $number)
@@ -341,7 +341,7 @@ it('numbers the existing dishes like the paper menu', function () {
 it('moves the three Žemaičių blynai dishes into their own subcategory', function () {
     PotatoDish::query()->delete();
     $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai', 'position' => 4]);
-    $visi = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+    $visi = Subcategory::firstOrCreate(['name' => 'Visi', 'category_id' => $category->id], ['position' => 0]);
     (new \Database\Seeders\PotatoDishSeeder)->run();
     PotatoDish::query()->update(['subcategory_id' => $visi->id]);
 
@@ -366,10 +366,10 @@ it('moves the three Žemaičių blynai dishes into their own subcategory', funct
         ->and(PotatoDish::count())->toBe(6);
 });
 
-it('moves the last three dishes into a "Bulviniai blynai" subcategory, renumbers them and removes the empty "Visi"', function () {
+it('moves the last three dishes into a "Bulviniai blynai" subcategory, renumbers them and keeps "Visi" first', function () {
     PotatoDish::query()->delete();
     $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai', 'position' => 4]);
-    $visi = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+    $visi = Subcategory::firstOrCreate(['name' => 'Visi', 'category_id' => $category->id], ['position' => 0]);
     (new \Database\Seeders\PotatoDishSeeder)->run();
     PotatoDish::query()->update(['subcategory_id' => $visi->id]);
     (new \Database\Seeders\ZemaiciuBlynaiSubcategorySeeder)->run();
@@ -386,12 +386,12 @@ it('moves the last three dishes into a "Bulviniai blynai" subcategory, renumbers
             'Bulviniai blynai su mėsa „Kėdainių“' => 2,
             'Traškūs bulviniai blynai be mėsos' => 3,
         ])
-        ->and($visi->fresh())->toBeNull()
-        ->and(Subcategory::where('category_id', $category->id)->orderBy('position')->pluck('name')->all())->toBe(['Žemaičių blynai', 'Bulviniai blynai'])
+        ->and($visi->fresh())->not->toBeNull()
+        ->and(Subcategory::where('category_id', $category->id)->orderBy('position')->pluck('name')->all())->toBe(['Visi', 'Žemaičių blynai', 'Bulviniai blynai'])
         ->and(PotatoDish::count())->toBe(6);
 });
 
-it('opens the potato dishes category without a "Visi" subcategory in every cashier layout', function (string $layoutMode) {
+it('opens the potato dishes category on "Visi" only in the visi_default layout', function (string $layoutMode) {
     cache()->put('subcategory_layout_mode', $layoutMode);
     $category = Category::create(['name' => 'Bulviniai patiekalai', 'component_name' => 'bulviniai', 'position' => 4]);
     $blynai = Subcategory::create(['name' => 'Žemaičių blynai', 'category_id' => $category->id, 'position' => 1]);
@@ -399,7 +399,9 @@ it('opens the potato dishes category without a "Visi" subcategory in every cashi
 
     Livewire::test(\App\Livewire\KasaCategorySection::class)
         ->call('showProductMenu', 'bulviniai', $category->id)
-        ->assertSet('selectedSubcategoryId', null)
+        ->assertSet('selectedSubcategoryId', $layoutMode === 'visi_default'
+            ? Subcategory::where('category_id', $category->id)->where('name', 'Visi')->value('id')
+            : null)
         ->assertSee('Žemaičių blynai')
         ->call('selectSubcategory', $blynai->id)
         ->assertSeeLivewire(PotatoDishes::class);

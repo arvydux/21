@@ -23,9 +23,7 @@ abstract class PotatoDishSubcategorySeeder extends Seeder
 
     /**
      * Add the subcategory to "Bulviniai patiekalai", move the dishes into it
-     * and number them from 1, keeping their prices. Once every dish has a
-     * subcategory of its own, the empty default "Visi" one is removed. Safe to
-     * re-run.
+     * and number them from 1, keeping their prices. Safe to re-run.
      */
     public function run(): void
     {
@@ -42,12 +40,6 @@ abstract class PotatoDishSubcategorySeeder extends Seeder
 
         foreach ($this->dishes() as $name => $number) {
             PotatoDish::where('name', $name)->update(['subcategory_id' => $subcategory->id, 'number' => $number]);
-        }
-
-        $visi = Subcategory::where('category_id', $category->id)->where('name', 'Visi')->first();
-
-        if ($visi !== null && ! PotatoDish::where('subcategory_id', $visi->id)->exists()) {
-            $visi->delete();
         }
     }
 }

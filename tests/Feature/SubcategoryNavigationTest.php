@@ -101,7 +101,7 @@ function makeCeburekCategoryWithVisi(): array
 {
     $category = Category::create(['name' => 'Čeburekai', 'component_name' => 'ceburekai']);
 
-    $visi = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+    $visi = Subcategory::firstOrCreate(['name' => 'Visi', 'category_id' => $category->id], ['position' => 0]);
     $meat = Subcategory::create(['name' => 'Mėsiniai', 'category_id' => $category->id, 'position' => 1]);
 
     Ceburek::create(['name' => 'Produktas Visi', 'price' => 3.5, 'sign' => 'A', 'show' => true, 'category' => 1, 'position' => 0, 'subcategory_id' => $visi->id]);

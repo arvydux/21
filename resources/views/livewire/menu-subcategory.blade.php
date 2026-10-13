@@ -9,7 +9,7 @@
                     <input wire:model="newName" wire:keydown.enter="create"
                            class="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                            placeholder="Įveskite pavadinimą..." />
-                    @error('newName') <span class="text-sm text-red-500">Pavadinimas turi būti užpildytas</span> @enderror
+                    @error('newName') <span class="text-sm text-red-500">{{ $message }}</span> @enderror
                 </div>
                 <button wire:click="create"
                         class="px-6 py-2 bg-emerald-700 hover:bg-emerald-600 rounded-lg text-white font-semibold whitespace-nowrap transition-colors">
@@ -19,6 +19,17 @@
 
             <div x-data x-init="initSwapSortable($el, $wire, 'updateOrder')" class="flex flex-col gap-2">
                 @forelse($subcategories as $subcategory)
+                    @if($subcategory->isDefault())
+                        <div wire:key="subcategory-row-{{ $subcategory->id }}" data-default-subcategory
+                             class="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-2 shadow-sm">
+                            <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                            <span class="flex-1 font-medium text-gray-700">{{ $subcategory->name }}</span>
+                            <span class="text-sm text-emerald-700">Rodo visus produktus · visada pirma</span>
+                        </div>
+                        @continue
+                    @endif
                     <div data-sortable-id="{{ $subcategory->id }}" wire:key="subcategory-row-{{ $subcategory->id }}"
                          class="flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-2 shadow-sm">
                         <svg class="w-5 h-5 text-gray-300 cursor-move shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -30,6 +41,7 @@
                                    class="flex-1 px-3 py-1.5 rounded-lg bg-white border border-emerald-300 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
                             <flux:button wire:click="update" variant="primary">Išsaugoti</flux:button>
                             <flux:button wire:click="cancelEdit">Atšaukti</flux:button>
+                            @error('editName') <span class="text-sm text-red-500">{{ $message }}</span> @enderror
                         @else
                             <span class="flex-1 font-medium text-gray-700">{{ $subcategory->name }}</span>
                             <flux:button wire:click="editSubcategory({{ $subcategory->id }})" variant="primary">Pakeisti</flux:button>

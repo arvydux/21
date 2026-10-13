@@ -49,7 +49,7 @@ it('renames a subcategory', function () {
 
 it('moves products to the default Visi subcategory when their subcategory is deleted', function () {
     $category = ceburekCategory();
-    $visi = Subcategory::create(['name' => 'Visi', 'category_id' => $category->id, 'position' => 0]);
+    $visi = Subcategory::firstOrCreate(['name' => 'Visi', 'category_id' => $category->id], ['position' => 0]);
     $meat = Subcategory::create(['name' => 'Mėsiniai', 'category_id' => $category->id, 'position' => 1]);
     $product = Ceburek::create(['name' => 'Su kiauliena', 'price' => 3.5, 'sign' => 'A', 'show' => true, 'category' => 1, 'position' => 0, 'subcategory_id' => $meat->id]);
 
