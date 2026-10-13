@@ -7,6 +7,7 @@
             <h2 class="text-xl font-extrabold tracking-wide text-white antialiased">Krepšelis</h2>
             <p class="text-sm font-semibold text-white/60">{{ $this->itemCountLabel($itemCount) }}</p>
         </div>
+        <div id="sound-activation-slot" wire:ignore class="@container flex min-w-0 flex-1 justify-center"></div>
         <div class="flex items-center gap-2">
             <button wire:click="toggleKoreguoti" title="Koreguoti"
                     class="flex size-11 items-center justify-center rounded-xl ring-1 transition-all duration-200 active:scale-[0.95]
