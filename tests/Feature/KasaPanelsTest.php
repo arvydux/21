@@ -48,3 +48,10 @@ it('renders the cashier page with the resizable panels', function () {
         ->assertSuccessful()
         ->assertSeeLivewire(KasaPanels::class);
 });
+
+it('removes the page padding so the panels fill the whole screen', function () {
+    $this->get(route('kasa'))
+        ->assertSuccessful()
+        ->assertSee('p-0!', false)
+        ->assertSee('sticky top-0 h-dvh', false);
+});

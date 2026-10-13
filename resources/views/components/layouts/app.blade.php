@@ -6,7 +6,7 @@
             {{ $slot }}
         </flux:main>
     @else
-        <flux:main class="bg-gradient-to-tr from-lime-600 via-emerald-600 to-teal-800">
+        <flux:main :class="Arr::toCssClasses(['bg-gradient-to-tr from-lime-600 via-emerald-600 to-teal-800', 'p-0!' => Route::is('kasa')])">
             {{ $slot }}
         </flux:main>
     @endif

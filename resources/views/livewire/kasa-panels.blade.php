@@ -1,6 +1,6 @@
 @php
     $panelStyle = 'background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);';
-    $panelHeight = 'sticky top-6 h-[calc(100dvh-3rem)] lg:top-8 lg:h-[calc(100dvh-4rem)]';
+    $panelHeight = 'sticky top-0 h-dvh';
     $limits = [
         'menu' => ['min' => \App\Livewire\KasaPanels::MENU_MIN, 'max' => \App\Livewire\KasaPanels::MENU_MAX, 'default' => \App\Livewire\KasaPanels::MENU_DEFAULT],
         'cart' => ['min' => \App\Livewire\KasaPanels::CART_MIN, 'max' => \App\Livewire\KasaPanels::CART_MAX, 'default' => \App\Livewire\KasaPanels::CART_DEFAULT],
@@ -55,7 +55,7 @@
      }"
      class="flex w-full flex-1 items-start"
      x-bind:class="dragging && 'cursor-col-resize select-none'">
-    <aside class="{{ $panelHeight }} flex shrink-0 flex-col overflow-hidden rounded-3xl"
+    <aside class="{{ $panelHeight }} flex shrink-0 flex-col overflow-hidden"
            style="width: {{ $menuWidth }}px; {{ $panelStyle }}"
            x-bind:style="{ width: widths.menu + 'px' }">
         <div class="flex items-center gap-3 border-b border-white/10 px-4 py-4 font-nunito">
@@ -74,7 +74,7 @@
 
     <x-kasa.panel-handle side="menu" :class="$panelHeight" />
 
-    <section class="{{ $panelHeight }} min-w-0 flex-1 overflow-hidden rounded-3xl" style="{{ $panelStyle }}">
+    <section class="{{ $panelHeight }} min-w-0 flex-1 overflow-hidden" style="{{ $panelStyle }}">
         <livewire:kasa-category-section/>
     </section>
 
