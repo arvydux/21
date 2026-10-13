@@ -25,7 +25,7 @@
             @endif
         </div>
 
-        <div class="@container min-h-0 flex-1 overflow-y-auto p-4">
+        <div x-data x-drag-scroll x-scroll-fade data-drag-scroll class="no-scrollbar @container min-h-0 flex-1 touch-pan-y select-none overflow-y-auto overscroll-contain p-4">
             @if($selectedSubcategoryId !== null)
                 @include('livewire.partials.kasa-subcategory-products')
             @elseif($subcategories->isNotEmpty())

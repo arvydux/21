@@ -55,7 +55,7 @@
                     <span class="rounded-full bg-amber-400 px-4 py-1.5 text-base font-extrabold text-emerald-950 shadow-md">{{ $this->itemCountLabel($itemCount) }}</span>
                 </div>
 
-                <div class="min-h-0 flex-1 overflow-y-auto px-6 py-3">
+                <div x-drag-scroll x-scroll-fade class="no-scrollbar min-h-0 flex-1 touch-pan-y select-none overflow-y-auto overscroll-contain px-6 py-3">
                     @forelse($orders as $order)
                         @php $unitPrice = $this->unitPrice($order); @endphp
                         @if($loop->first)
@@ -117,7 +117,7 @@
         <livewire:kasa-orders/>
     </flux:modal>
 
-    <div class="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto p-3 font-nunito">
+    <div x-drag-scroll x-scroll-fade data-drag-scroll class="no-scrollbar flex min-h-0 flex-1 touch-pan-y select-none flex-col gap-2 overflow-y-auto overscroll-contain p-3 font-nunito">
         @forelse($orders as $order)
             @php $unitPrice = $this->unitPrice($order); @endphp
             <div class="flex flex-col gap-3 rounded-2xl bg-white/10 p-4 ring-1 ring-white/10" wire:key="order-{{ $order->id }}">
@@ -153,13 +153,13 @@
                 <div class="flex items-center justify-between gap-2">
                     <div class="flex items-center gap-2">
                         <button wire:click="changeTakeaway({{ $order->id }})"
-                                class="rounded-lg px-3 py-1.5 text-sm font-bold transition-all duration-200 active:scale-[0.95]
+                                class="flex h-10 touch-manipulation items-center rounded-lg px-4 text-sm font-bold transition-all duration-200 active:scale-[0.95]
                                        {{ $order->takeaway ? 'bg-amber-400/90 text-emerald-950' : 'bg-emerald-400/20 text-emerald-200 ring-1 ring-emerald-300/30' }}">
                             {{ $order->takeaway ? 'Išsinešimui' : 'Vietoje' }}
                         </button>
                         <flux:modal.trigger wire:click="openCommentForOrder({{ $order->id }})" name="add-comment-for-order-{{ $order->id }}">
                             <button title="Komentaras"
-                                    class="flex size-9 items-center justify-center rounded-lg transition-all duration-200 active:scale-[0.95]
+                                    class="flex size-10 touch-manipulation items-center justify-center rounded-lg transition-all duration-200 active:scale-[0.95]
                                            {{ $order->comments ? 'bg-amber-300/20 text-amber-200' : 'text-white/70 hover:bg-white/10' }}">
                                 <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8-1.657 0-3.204-.402-4.5-1.1L3 19l1.1-3.5C3.402 14.204 3 12.657 3 11c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
@@ -170,14 +170,14 @@
 
                     <div class="flex items-center gap-1 rounded-full bg-black/25 p-1">
                         <button wire:click="removeOneOrder({{ $order->id }})"
-                                class="flex size-10 items-center justify-center rounded-full text-white/80 transition-all duration-200 hover:bg-white/10 active:scale-[0.92]">
+                                class="flex size-11 touch-manipulation items-center justify-center rounded-full text-white/80 transition-all duration-200 hover:bg-white/10 active:scale-[0.92]">
                             <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
                             </svg>
                         </button>
                         <span class="min-w-7 text-center text-lg font-extrabold text-white">{{ $order->amount }}</span>
                         <button wire:click="addOneOrder({{ $order->id }})"
-                                class="flex size-10 items-center justify-center rounded-full bg-white text-emerald-800 shadow-lg shadow-emerald-950/30 transition-all duration-200 hover:bg-emerald-50 active:scale-[0.92]">
+                                class="flex size-11 touch-manipulation items-center justify-center rounded-full bg-white text-emerald-800 shadow-lg shadow-emerald-950/30 transition-all duration-200 hover:bg-emerald-50 active:scale-[0.92]">
                             <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v12M6 12h12"></path>
                             </svg>

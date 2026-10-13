@@ -134,3 +134,15 @@ it('shows the whole order in a summary popup without action buttons', function (
         ->and($summary)->toContain('Išsinešimui')
         ->and($summary)->not->toContain('wire:click');
 });
+
+it('lets the cashier drag the cart and product lists with a finger', function () {
+    Livewire::test(OrdersList::class)
+        ->assertSeeHtml('x-drag-scroll x-scroll-fade data-drag-scroll class="no-scrollbar flex min-h-0 flex-1 touch-pan-y select-none');
+
+    Livewire::test(\App\Livewire\KasaCategorySection::class)
+        ->call('showProductMenu', 'drinks', null)
+        ->assertSeeHtml('x-drag-scroll x-scroll-fade data-drag-scroll class="no-scrollbar @container');
+
+    $this->get(route('kasa'))->assertSee("Alpine.directive('drag-scroll'", false)
+        ->assertSee("Alpine.directive('scroll-fade'", false);
+});

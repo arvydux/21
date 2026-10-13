@@ -25,7 +25,7 @@
         $paddingClass,
         $stateClasses,
         'pointer-events-none' => $disabled,
-        'cursor-pointer select-none active:scale-[0.98]' => ! $disabled,
+        'cursor-pointer touch-manipulation select-none active:scale-[0.98]' => ! $disabled,
      ])
      @unless($disabled)
      x-bind:class="$store.cart.count({{ $productNameJs }}) > 0 && 'outline-2 outline-white/70'"

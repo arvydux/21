@@ -42,6 +42,14 @@
     @apply font-nunito text-base leading-snug font-bold antialiased;
 }
 
+@utility no-scrollbar {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
 @utility kasa-meta {
     @apply font-nunito text-sm font-semibold text-white/55;
 }

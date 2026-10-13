@@ -1,7 +1,8 @@
 <div x-data="{ fadeEnd: false, check() { this.fadeEnd = this.$el.scrollLeft + this.$el.clientWidth < this.$el.scrollWidth - 4 } }"
      x-init="check()" x-on:scroll.passive="check()" x-on:resize.window="check()"
      x-bind:style="fadeEnd && '-webkit-mask-image: linear-gradient(to right, black 85%, transparent); mask-image: linear-gradient(to right, black 85%, transparent);'"
-     class="-mx-2 mt-1 flex overflow-x-auto" style="scrollbar-width: none;">
+     x-drag-scroll.x
+     class="-mx-2 mt-1 flex touch-pan-x select-none overflow-x-auto overscroll-contain" style="scrollbar-width: none;">
     @forelse($subcategories as $subcategory)
         @php $isSelected = $selectedSubcategoryId === $subcategory->id; @endphp
         <div wire:key="subcategory-{{ $subcategory->id }}"
