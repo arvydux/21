@@ -20,7 +20,8 @@
 </script>
 @endscript
 
-<div class="fixed bottom-0 left-0 w-full text-center p-2">
+{{-- Ready numbers docked at the bottom of the middle cashier panel; tapping one marks it taken. --}}
+<div wire:poll.5s="checkAndPlaySound" class="shrink-0 font-nunito">
 
     @if(! $soundEnabled)
         @teleport('#sound-activation-slot')
@@ -35,14 +36,35 @@
         @endteleport
     @endif
 
-    <div wire:poll.5s="checkAndPlaySound" class="grid md:grid-cols-10 auto-rows-min gap-1">
-        @foreach(\App\Models\OrderNumbers::where('is_ready', true)->where('is_taken', false)->orderBy('updated_at', 'desc')->get() as $order)
-            <div wire:click="makeOrderTaken('{{ $order->number }}')" class="text-center shadow-md p-3 hover:drop-shadow-2xl hover:shadow-md hover:scale-101
-                    aspect-video overflow-hidden rounded-xl bg-emerald-800/80 dark:border-neutral-700">
-                <div class="flex grid content-center flex-col gap-2 h-full text-white/80 rounded-xl w-full">
-                    <div class="font-semibold text-6xl">{{ $order->number }}</div>
-                </div>
+    @if($readyOrders->isNotEmpty())
+        <div data-ready-strip class="flex flex-col gap-2.5 border-t border-white/10 bg-black/20 px-4 pb-4 pt-3">
+            <div class="flex items-center gap-2.5">
+                <span class="flex size-6 items-center justify-center rounded-full bg-[#169147] text-white">
+                    <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </span>
+                <span class="kasa-meta uppercase tracking-widest text-white/75">Paruošti atsiimti</span>
+                <span class="rounded-full bg-[#169147] px-2 py-0.5 text-xs font-black tabular-nums text-white">{{ $readyOrders->count() }}</span>
+                <span class="kasa-meta ml-auto truncate text-white/40">Bakstelėkite numerį, kai užsakymas atsiimtas</span>
             </div>
-        @endforeach
-    </div>
+            <div x-data="{ fadeEnd: false, check() { this.fadeEnd = this.$el.scrollLeft + this.$el.clientWidth < this.$el.scrollWidth - 4 } }"
+                 x-init="check(); new ResizeObserver(() => check()).observe($el)" x-on:scroll.passive="check()"
+                 x-bind:style="fadeEnd && '-webkit-mask-image: linear-gradient(to right, black 85%, transparent); mask-image: linear-gradient(to right, black 85%, transparent);'"
+                 x-drag-scroll.x class="no-scrollbar -mx-1 flex touch-pan-x select-none gap-2.5 overflow-x-auto overscroll-contain px-1 py-1">
+                @foreach($readyOrders as $order)
+                    <button type="button" wire:key="ready-{{ $order->id }}" wire:click="makeOrderTaken('{{ $order->number }}')"
+                            title="Pažymėti atsiimtu"
+                            class="relative flex h-16 min-w-24 shrink-0 touch-manipulation items-center justify-center gap-2 rounded-2xl bg-[#169147] px-5 text-3xl font-black tabular-nums text-white shadow-lg shadow-black/20 ring-1 ring-white/20 transition-all duration-100 hover:brightness-110 active:scale-[0.95]">
+                        {{ $order->number }}
+                        @if($order->by_phone)
+                            <svg class="size-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                        @endif
+                    </button>
+                @endforeach
+            </div>
+        </div>
+    @endif
 </div>

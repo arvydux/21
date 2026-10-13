@@ -31,6 +31,8 @@ class ReadyOrders extends Component
 
     public function render(): \Illuminate\View\View
     {
-        return view('livewire.ready-orders');
+        return view('livewire.ready-orders', [
+            'readyOrders' => OrderNumbers::where('is_ready', true)->where('is_taken', false)->orderBy('updated_at', 'desc')->get(),
+        ]);
     }
 }

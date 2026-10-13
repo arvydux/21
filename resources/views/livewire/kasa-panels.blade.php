@@ -74,8 +74,11 @@
 
     <x-kasa.panel-handle side="menu" :class="$panelHeight" />
 
-    <section class="{{ $panelHeight }} min-w-0 flex-1 overflow-hidden" style="{{ $panelStyle }}">
-        <livewire:kasa-category-section/>
+    <section class="{{ $panelHeight }} flex min-w-0 flex-1 flex-col overflow-hidden" style="{{ $panelStyle }}">
+        <div class="min-h-0 flex-1">
+            <livewire:kasa-category-section/>
+        </div>
+        <livewire:ready-orders/>
     </section>
 
     <x-kasa.panel-handle side="cart" :class="$panelHeight" />
