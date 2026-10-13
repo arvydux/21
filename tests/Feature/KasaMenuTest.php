@@ -16,11 +16,11 @@ it('lists the categories in a vertical sidebar, in their saved order', function 
         ->assertSeeInOrder(['Čeburekai', 'Koldūnai bei bulvytės', 'Kiti']);
 });
 
-it('highlights only the selected category', function () {
+it('marks only the selected category with the amber bar', function () {
     $component = Livewire::test(KasaMenu::class)->call('categoryButtonClicked', 'koldunai', 2);
 
-    expect(substr_count($component->html(), 'bg-white text-emerald-900'))->toBe(1)
-        ->and($component->html())->toMatch('/bg-white text-emerald-900[^>]*>\s*<span[^>]*>Koldūnai bei bulvytės/');
+    expect(substr_count($component->html(), 'data-selected-category-bar'))->toBe(1)
+        ->and($component->html())->toMatch('/data-selected-category-bar[^>]*bg-amber-400(?:(?!data-sortable-id)[\s\S])*?>Koldūnai bei bulvytės</');
 });
 
 it('tells the category section which category was chosen', function () {
