@@ -2,12 +2,15 @@
 
 namespace App\Livewire\Menu\CreateForm;
 
+use App\Livewire\Concerns\NormalizesMoneyInput;
 use App\Models\Subcategory;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class PotatoDishesCreateForm extends Component
 {
+    use NormalizesMoneyInput;
+
     public $number;
 
     public $name;
@@ -22,13 +25,15 @@ class PotatoDishesCreateForm extends Component
 
     public function save()
     {
+        $this->normalizeMoney('price', 'half_price');
+
         $this->validate([
             'number' => 'nullable|integer|min:1',
             'name' => 'required',
-            'price' => 'required|numeric',
-            'half_price' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
+            'half_price' => 'required|numeric|min:0',
             'subcategory_id' => 'required|exists:subcategories,id',
-        ]);
+        ], $this->moneyMessages('price', 'half_price'));
 
         // Save to database
         \App\Models\PotatoDish::create([

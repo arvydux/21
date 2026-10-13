@@ -2,22 +2,25 @@
 
 namespace App\Livewire\Menu\Tables;
 
+use App\Livewire\Concerns\AppliesValueToAllProducts;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class PotatoToppingsTable extends Component
 {
+    use AppliesValueToAllProducts;
+
     public int $editedProductNameId = 0;
 
     public \App\Models\PotatoTopping $product;
 
     public string $name;
 
-    public float $price;
+    public $price;
 
     public string $sign;
 
-    public ?float $package = null;
+    public $package = null;
 
     public bool $show = false;
 
@@ -39,11 +42,14 @@ class PotatoToppingsTable extends Component
 
     public function save()
     {
+        $this->normalizeMoney('price', 'package');
+
         $this->validate([
             'name' => 'required',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
+            'package' => 'nullable|numeric|min:0',
             'sign' => 'required',
-        ]);
+        ], $this->moneyMessages('price', 'package'));
 
         if (is_null($this->product)) {
             $position = \App\Models\PotatoTopping::max('position') + 1;
@@ -71,6 +77,22 @@ class PotatoToppingsTable extends Component
     public function cancel(): void
     {
         $this->editedProductNameId = 0;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function bulkFields(): array
+    {
+        return [
+            'package' => 'Pakuotės kaina',
+            'price' => 'Kaina',
+        ];
+    }
+
+    protected function bulkModel(): string
+    {
+        return \App\Models\PotatoTopping::class;
     }
 
     public function render()

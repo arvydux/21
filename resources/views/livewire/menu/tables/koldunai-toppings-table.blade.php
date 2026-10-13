@@ -1,7 +1,9 @@
 <div class="relative mt-6 text-white/80">
     <livewire:menu.create-form.koldunai-toppings-create-form/>
 
-    <div class="mt-4 overflow-x-auto shadow-md sm:rounded-lg">
+    @include('livewire.menu.tables.partials.apply-to-all')
+
+    <div class="overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left">
             <thead class="text-xs uppercase bg-emerald-700/70 text-white/80">
                 <tr>
@@ -50,8 +52,8 @@
                             </div>
                             <div class="w-32">
                                 <label class="block mb-1 text-xs font-medium text-white/70">Kaina</label>
-                                <input type="number" wire:model="price" class="w-full bg-white/90 px-3 py-2 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
-                                @error('price') <span class="text-xs text-red-300">Gali būti tik skaičiai</span> @enderror
+                                <input type="text" inputmode="decimal" placeholder="0,00" wire:model="price" class="w-full bg-white/90 px-3 py-2 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+                                @error('price') <span class="text-xs text-red-300">{{ $message }}</span> @enderror
                             </div>
                             <div>
                                 <label class="block mb-1 text-xs font-medium text-white/70">Rodyti</label>
@@ -69,8 +71,8 @@
                             </div>
                             <div class="w-32">
                                 <label class="block mb-1 text-xs font-medium text-white/70">Pakuotės kaina</label>
-                                <input type="number" min="0" wire:model="package" id="package-price" class="w-full bg-white/90 px-3 py-2 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
-                                @error('package-price') <span class="text-xs text-red-300">Pakuotės kaina turi būti užpildytas</span> @enderror
+                                <input type="text" inputmode="decimal" placeholder="0,00" wire:model="package" id="package-price" class="w-full bg-white/90 px-3 py-2 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+                                @error('package') <span class="text-xs text-red-300">{{ $message }}</span> @enderror
                             </div>
                             <div class="flex gap-2 shrink-0">
                                 <flux:button wire:click="save({{ $productName->id }})" variant="primary">Išsaugoti</flux:button>

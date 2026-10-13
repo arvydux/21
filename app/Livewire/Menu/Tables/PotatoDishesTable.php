@@ -2,11 +2,14 @@
 
 namespace App\Livewire\Menu\Tables;
 
+use App\Livewire\Concerns\AppliesValueToAllProducts;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class PotatoDishesTable extends Component
 {
+    use AppliesValueToAllProducts;
+
     public int $editedProductNameId = 0;
 
     public \App\Models\PotatoDish $product;
@@ -15,11 +18,11 @@ class PotatoDishesTable extends Component
 
     public string $name;
 
-    public float $price;
+    public $price;
 
-    public float $half_price;
+    public $half_price;
 
-    public ?float $package = null;
+    public $package = null;
 
     public string $sign;
 
@@ -45,13 +48,16 @@ class PotatoDishesTable extends Component
 
     public function save()
     {
+        $this->normalizeMoney('price', 'package', 'half_price');
+
         $this->validate([
             'number' => 'nullable|integer|min:1',
             'name' => 'required',
-            'price' => 'required|numeric',
-            'half_price' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
+            'package' => 'nullable|numeric|min:0',
+            'half_price' => 'required|numeric|min:0',
             'subcategory_id' => 'required|exists:subcategories,id',
-        ]);
+        ], $this->moneyMessages('price', 'package', 'half_price'));
 
         if (is_null($this->product)) {
             $position = \App\Models\PotatoDish::max('position') + 1;
@@ -83,6 +89,23 @@ class PotatoDishesTable extends Component
 
     #[On('subcategoryChanged')]
     public function refreshSubcategories(): void {}
+
+    /**
+     * @return array<string, string>
+     */
+    protected function bulkFields(): array
+    {
+        return [
+            'package' => 'Pakuotės kaina',
+            'price' => 'Pilnos porcijos kaina',
+            'half_price' => 'Pusės porcijos kaina',
+        ];
+    }
+
+    protected function bulkModel(): string
+    {
+        return \App\Models\PotatoDish::class;
+    }
 
     public function render()
     {

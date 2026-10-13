@@ -2,19 +2,29 @@
 
 namespace App\Livewire\Menu\Tables;
 
+use App\Livewire\Concerns\AppliesValueToAllProducts;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ToppingsTable extends Component
 {
+    use AppliesValueToAllProducts;
+
     public int $editedProductNameId = 0;
+
     public \App\Models\Topping $product;
+
     public string $name;
-    public float $price;
+
+    public $price;
+
     public string $sign;
-    public ?float $package = null;
+
+    public $package = null;
+
     public bool $show = false;
-    public $products= [];
+
+    public $products = [];
 
     public function editProduct(int $productNameId): void
     {
@@ -29,11 +39,14 @@ class ToppingsTable extends Component
 
     public function save()
     {
+        $this->normalizeMoney('price', 'package');
+
         $this->validate([
             'name' => 'required',
-            'price' => 'required|numeric',
-            'sign' => 'required'
-        ]);
+            'price' => 'required|numeric|min:0',
+            'package' => 'nullable|numeric|min:0',
+            'sign' => 'required',
+        ], $this->moneyMessages('price', 'package'));
 
         if (is_null($this->product)) {
             $position = \App\Models\Topping::max('position') + 1;
@@ -57,9 +70,26 @@ class ToppingsTable extends Component
     {
         $this->products = \App\Models\Topping::all();
     }
+
     public function cancel(): void
     {
         $this->editedProductNameId = 0;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function bulkFields(): array
+    {
+        return [
+            'package' => 'Pakuotės kaina',
+            'price' => 'Kaina',
+        ];
+    }
+
+    protected function bulkModel(): string
+    {
+        return \App\Models\Topping::class;
     }
 
     public function render()

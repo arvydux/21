@@ -2,11 +2,14 @@
 
 namespace App\Livewire\Menu\Tables;
 
+use App\Livewire\Concerns\AppliesValueToAllProducts;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class OtherProductsTable extends Component
 {
+    use AppliesValueToAllProducts;
+
     public int $editedProductNameId = 0;
 
     public \App\Models\OtherProduct $simpleProduct;
@@ -15,9 +18,9 @@ class OtherProductsTable extends Component
 
     public string $name;
 
-    public float $price;
+    public $price;
 
-    public ?float $package = null;
+    public $package = null;
 
     public bool $show = false;
 
@@ -39,12 +42,15 @@ class OtherProductsTable extends Component
 
     public function save()
     {
+        $this->normalizeMoney('price', 'package');
+
         $this->validate([
             'number' => 'nullable|integer|min:1',
             'name' => 'required',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
+            'package' => 'nullable|numeric|min:0',
             'subcategory_id' => 'required|exists:subcategories,id',
-        ]);
+        ], $this->moneyMessages('price', 'package'));
 
         if (is_null($this->simpleProduct)) {
             $position = \App\Models\OtherProduct::max('position') + 1;
@@ -76,6 +82,22 @@ class OtherProductsTable extends Component
 
     #[On('subcategoryChanged')]
     public function refreshSubcategories(): void {}
+
+    /**
+     * @return array<string, string>
+     */
+    protected function bulkFields(): array
+    {
+        return [
+            'package' => 'Pakuotės kaina',
+            'price' => 'Kaina',
+        ];
+    }
+
+    protected function bulkModel(): string
+    {
+        return \App\Models\OtherProduct::class;
+    }
 
     public function render()
     {

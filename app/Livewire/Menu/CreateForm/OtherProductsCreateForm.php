@@ -2,12 +2,15 @@
 
 namespace App\Livewire\Menu\CreateForm;
 
+use App\Livewire\Concerns\NormalizesMoneyInput;
 use App\Models\Subcategory;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class OtherProductsCreateForm extends Component
 {
+    use NormalizesMoneyInput;
+
     public $number;
 
     public $name;
@@ -18,12 +21,14 @@ class OtherProductsCreateForm extends Component
 
     public function save()
     {
+        $this->normalizeMoney('price');
+
         $this->validate([
             'number' => 'nullable|integer|min:1',
             'name' => 'required',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
             'subcategory_id' => 'required|exists:subcategories,id',
-        ]);
+        ], $this->moneyMessages('price'));
 
         // Save to database
         \App\Models\OtherProduct::create([
