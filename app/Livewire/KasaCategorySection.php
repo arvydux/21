@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
@@ -62,6 +63,7 @@ class KasaCategorySection extends Component
         return view('livewire.kasa-category-section', [
             'layoutMode' => $layoutMode,
             'showAll' => $showAll,
+            'categoryName' => $this->categoryId ? Category::whereKey($this->categoryId)->value('name') : null,
         ]);
     }
 }

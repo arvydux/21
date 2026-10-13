@@ -1,16 +1,21 @@
-<div class="mt-4 flex flex-wrap gap-2">
+<div x-data="{ fadeEnd: false, check() { this.fadeEnd = this.$el.scrollLeft + this.$el.clientWidth < this.$el.scrollWidth - 4 } }"
+     x-init="check()" x-on:scroll.passive="check()" x-on:resize.window="check()"
+     x-bind:style="fadeEnd && '-webkit-mask-image: linear-gradient(to right, black 85%, transparent); mask-image: linear-gradient(to right, black 85%, transparent);'"
+     class="-mx-2 mt-1 flex overflow-x-auto" style="scrollbar-width: none;">
     @forelse($subcategories as $subcategory)
+        @php $isSelected = $selectedSubcategoryId === $subcategory->id; @endphp
         <div wire:key="subcategory-{{ $subcategory->id }}"
              wire:click="selectSubcategory({{ $subcategory->id }})"
-             class="flex h-12 cursor-pointer select-none items-center rounded-full px-6 font-nunito text-base font-bold tracking-wide
-                    transition-all duration-200 active:scale-[0.97]
-                    {{ $selectedSubcategoryId === $subcategory->id
-                        ? 'bg-amber-400 text-emerald-950 shadow-lg shadow-amber-500/25'
-                        : 'bg-white/10 text-white ring-1 ring-white/15 hover:bg-white/20' }}">
+             class="relative flex h-14 shrink-0 touch-manipulation cursor-pointer select-none items-center rounded-t-xl px-4 text-lg font-bold tracking-wide
+                    transition-colors duration-100
+                    {{ $isSelected ? 'text-white' : 'text-white/55 hover:text-white/85 active:bg-white/10' }}">
             {{ $subcategory->name }}
+            @if($isSelected)
+                <span class="absolute inset-x-3 bottom-0 h-1 rounded-full bg-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.6)]"></span>
+            @endif
         </div>
     @empty
-        <div class="w-full py-8 text-center font-nunito text-white/70">
+        <div class="px-2 py-4 text-white/60">
             Šioje kategorijoje subkategorijų nėra.
         </div>
     @endforelse

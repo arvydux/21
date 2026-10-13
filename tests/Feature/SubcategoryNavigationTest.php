@@ -142,3 +142,13 @@ it('does not auto-select Visi in drilldown or persistent modes', function () {
         ->call('showProductMenu', 'ceburekai', $category->id)
         ->assertSet('selectedSubcategoryId', null);
 });
+
+it('labels the subcategory tray with the selected category name', function () {
+    $category = Category::create(['name' => 'Gėrimai', 'component_name' => 'drinks']);
+    Subcategory::create(['name' => 'Karšti gėrimai', 'category_id' => $category->id, 'position' => 0]);
+
+    Livewire::test(KasaCategorySection::class)
+        ->call('showProductMenu', 'drinks', $category->id)
+        ->assertSee('Gėrimai')
+        ->assertSee('Karšti gėrimai');
+});

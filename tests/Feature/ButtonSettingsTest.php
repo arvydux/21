@@ -36,7 +36,7 @@ it('uses the default column count when no setting is stored', function () {
     $sub = ceburekSubcategory();
 
     Livewire::test(Ceburekai::class, ['subcategoryId' => $sub->id])
-        ->assertSee('md:grid-cols-4', false);
+        ->assertSee('@3xl:grid-cols-4', false);
 });
 
 it('respects the stored column setting via Cache::many', function () {
@@ -44,8 +44,8 @@ it('respects the stored column setting via Cache::many', function () {
     $sub = ceburekSubcategory();
 
     Livewire::test(Ceburekai::class, ['subcategoryId' => $sub->id])
-        ->assertSee('md:grid-cols-5', false)
-        ->assertDontSee('md:grid-cols-4', false);
+        ->assertSee('@3xl:grid-cols-5', false)
+        ->assertDontSee('@3xl:grid-cols-4', false);
 });
 
 it('reads all four button settings in a single Cache::many call', function () {
