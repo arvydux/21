@@ -63,3 +63,10 @@ it('uses one type scale for the panel titles and loads the lighter Nunito weight
         ->and($html)->toContain('nunito:400,600,700,800,900')
         ->and($html)->toContain('<h2 class="kasa-title">Krepšelis</h2>');
 });
+
+it('draws the panel dividers as a seam with a dotted grip', function () {
+    $html = $this->get(route('kasa'))->assertOk()->getContent();
+
+    expect(substr_count($html, 'data-panel-grip'))->toBe(2)
+        ->and($html)->not->toContain('border: 1px solid rgba(255, 255, 255, 0.2);');
+});

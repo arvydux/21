@@ -1,6 +1,6 @@
 @php $money = fn (float $amount): string => number_format($amount, 2, ',', ' ').' €'; @endphp
 <div class="flex h-full flex-col overflow-hidden" x-data="{ summaryOpen: false }"
-     style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);"
+     style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);"
      xmlns:flux="http://www.w3.org/1999/html">
     <div class="flex items-start justify-between gap-3 border-b border-white/10 px-5 py-4 font-nunito">
         <div>

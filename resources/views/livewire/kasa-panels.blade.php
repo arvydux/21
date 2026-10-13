@@ -1,5 +1,5 @@
 @php
-    $panelStyle = 'background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);';
+    $panelStyle = 'background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);';
     $panelHeight = 'sticky top-0 h-dvh';
     $limits = [
         'menu' => ['min' => \App\Livewire\KasaPanels::MENU_MIN, 'max' => \App\Livewire\KasaPanels::MENU_MAX, 'default' => \App\Livewire\KasaPanels::MENU_DEFAULT],
