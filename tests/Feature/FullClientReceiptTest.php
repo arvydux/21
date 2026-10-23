@@ -35,6 +35,52 @@ it('lists every item of the order with amount, price and toppings', function () 
     ]);
 });
 
+it('shows free toppings without a price', function () {
+    Order::create([
+        'name' => json_encode([['Žemaičių blynai' => 7.4]]),
+        'toppings' => json_encode([['Grietinė' => 0]]),
+        'amount' => 1,
+        'category' => 5,
+    ]);
+
+    expect(fullReceiptLines())->toBe([
+        receiptLine('1 x Žemaičių blynai', '7.40'),
+        receiptLine('+ Grietinė', null, 30),
+        receiptLine('Viso', '7.40 EUR'),
+    ]);
+});
+
+it('draws the full client receipt with and without the phone mark', function () {
+    Order::create([
+        'name' => json_encode([['Baltasis sausas vynas „COLPASSO“ (750 ml)' => 22.0]]),
+        'amount' => 1,
+        'category' => 7,
+    ]);
+    $component = Livewire::test(OrdersList::class)->instance();
+
+    $plain = $component->fullClientReceipt(42, false)->toImage();
+    $byPhone = $component->fullClientReceipt(42, true)->toImage();
+
+    expect(imagesx($plain))->toBe(App\Printing\ReceiptCanvas::WIDTH)
+        ->and(imagesy($byPhone))->toBe(imagesy($plain))
+        ->and(darkPixels($byPhone))->toBeGreaterThan(darkPixels($plain))
+        ->and(darkPixels(imagecrop($plain, ['x' => 0, 'y' => 0, 'width' => 576, 'height' => 200])))->toBeGreaterThan(1000);
+});
+
+function darkPixels(GdImage $image): int
+{
+    $dark = 0;
+    for ($x = 0; $x < imagesx($image); $x++) {
+        for ($y = 0; $y < imagesy($image); $y++) {
+            if ((imagecolorat($image, $x, $y) & 0xFF) < 128) {
+                $dark++;
+            }
+        }
+    }
+
+    return $dark;
+}
+
 it('includes non-kitchen categories that the kitchen receipt skips', function (int $category) {
     Order::create([
         'name' => json_encode([['Produktas' => 2.0]]),
@@ -80,4 +126,19 @@ it('keeps Lithuanian letters and quotes as they are', function () {
 
 it('prints two copies of the full receipt for the client', function () {
     expect(OrdersList::CLIENT_RECEIPT_COPIES)->toBe(2);
+});
+
+it('ends the client receipt with the QR code of the online order board', function () {
+    Order::create([
+        'name' => json_encode([['Kava Cappuccino' => 2.5]]),
+        'amount' => 1,
+        'category' => 3,
+    ]);
+    $qr = imagecreatefrompng(resource_path('images/receipt-qr.png'));
+    imagepalettetotruecolor($qr);
+    $receipt = Livewire::test(OrdersList::class)->instance()->fullClientReceipt(42, false)->toImage();
+    $bottom = imagecrop($receipt, ['x' => 0, 'y' => imagesy($receipt) - 30 - imagesy($qr), 'width' => 576, 'height' => imagesy($qr)]);
+
+    expect(imagesx($qr))->toBe(imagesy($qr))
+        ->and(darkPixels($bottom))->toBe(darkPixels($qr));
 });

@@ -417,32 +417,59 @@ class OrdersList extends Component
 
     public function fullClientReceipt(?int $orderNumber, bool $byPhone): ReceiptCanvas
     {
-        $receipt = new ReceiptCanvas;
+        $font = fn (string $name): string => resource_path("fonts/{$name}.ttf");
+        $text = fn (string $text, string $fontName, float $size, string $align, int $baseline): array => ['text' => $text, 'font' => $font($fontName), 'size' => $size, 'align' => $align, 'baseline' => $baseline];
+        $now = now('Europe/Vilnius');
 
-        if ($orderNumber !== null) {
-            $receipt->text((string) $orderNumber, 48, 'center');
-        }
-
-        $receipt->text($this->printedAt(), 18, 'center')
-            ->text('Nefiskalinis kvitas', 18, 'center')
-            ->separator();
+        $receipt = (new ReceiptCanvas($font('Inter-Regular')))
+            ->space(4)
+            ->image(resource_path('images/receipt-kibinas.png'))
+            ->group($orderNumber === null ? 112 : 150, [
+                $text('UŽEIGA', 'Montserrat-Bold', 42.7, 'center', 53),
+                $text('Prusakovų', 'Montserrat-Regular', 17.2, 'center', 77),
+                $text($orderNumber === null ? '' : 'UŽSAKYMAS Nr.', 'Montserrat-Regular', 11, 'left', 98),
+                $text($orderNumber === null ? '' : (string) $orderNumber, 'Montserrat-Bold', 40, 'left', 140),
+                $text($now->format('Y-m-d  H:i'), 'Inter-Medium', 9.5, 'right', $orderNumber === null ? 87 : 120),
+                $text('Nefiskalinis kvitas', 'Inter-Regular', 9.7, 'right', $orderNumber === null ? 106 : 139),
+            ])
+            ->separator(dashed: true, thickness: 2, dash: 6, gap: 3)
+            ->space(1);
 
         $lines = $this->fullReceiptLines();
         $total = array_pop($lines);
+        $itemFonts = ['amount' => $font('Montserrat-Light'), 'name' => $font('Inter-Regular'), 'price' => $font('Montserrat-Light')];
 
-        foreach ($lines as $line) {
-            $line['price'] === null
-                ? $receipt->text($line['text'], 19, indent: $line['indent'])
-                : $receipt->row($line['text'], $line['price'], 19, $line['indent']);
+        foreach ($lines as $index => $line) {
+            if (preg_match('/^(\d+) x (.+)$/su', $line['text'], $item)) {
+                $receipt->space($index === 0 ? 0 : 5)->line($item[1].'×', $item[2], $line['price'] ?? '', 12, 33, $itemFonts);
+
+                continue;
+            }
+
+            $receipt->line('', '•  '.$line['text'], $line['price'] ?? '', 10, 41, ['amount' => $font('Inter-Regular'), 'name' => $font('Inter-Regular'), 'price' => $font('Montserrat-Light')]);
         }
 
-        $receipt->separator()->row($total['text'], $total['price'], 22);
-
-        if ($byPhone) {
-            $receipt->space(12)->text('Telefonu', 28, 'center');
-        }
-
-        return $receipt;
+        return $receipt->space(8)
+            ->separator(thickness: 3)
+            ->space(-9)
+            ->separator(thickness: 2)
+            ->group(42, [
+                $text('VISO', 'Montserrat-ExtraLight', 18.3, 'left', 35),
+                $text(str_replace(' EUR', ' €', $total['price']), 'Montserrat-ExtraLight', 23.6, 'right', 35),
+            ])
+            ->separator(thickness: 2)
+            ->group(17, [
+                $text($this->itemCountLabel((int) Order::sum('amount')), 'Inter-Regular', 9.7, 'left', 13),
+                $text($byPhone ? 'Užsakyta: TELEFONU' : '', 'Inter-Regular', 9.7, 'right', 13),
+            ])
+            ->separator(dashed: true, thickness: 2, dash: 6, gap: 3)
+            ->group(42, [
+                $text('Ačiū ir skanaus!', 'Montserrat-Light', 14.4, 'center', 29),
+            ])
+            ->image(resource_path('images/receipt-qr.png'))
+            ->group(30, [
+                $text('status.prusakovuuzeiga.lt/online', 'Inter-Regular', 9.7, 'center', 14),
+            ]);
     }
 
     /**
@@ -468,7 +495,7 @@ class OrdersList extends Component
 
             foreach (json_decode($order->toppings ?? '[]', true) ?? [] as $topping) {
                 foreach ($topping as $name => $price) {
-                    $addLine('+ '.$name, $order->amount * (float) $price, 30);
+                    $addLine('+ '.$name, (float) $price > 0 ? $order->amount * (float) $price : null, 30);
                 }
             }
 
