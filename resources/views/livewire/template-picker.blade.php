@@ -78,6 +78,39 @@ new class extends Component {
         </div>
     </label>
 
+    {{-- Užeiga --}}
+    <label class="cursor-pointer">
+        <input type="radio" wire:model.live="template" value="uzeiga" class="sr-only">
+        <div class="rounded-xl overflow-hidden transition-all
+            {{ $template === 'uzeiga' ? 'ring-2 ring-white scale-105' : 'ring-1 ring-white/30 opacity-60' }}">
+            <div class="flex h-36 w-full flex-col gap-1 overflow-hidden bg-[#FBF7F0] p-2 font-['Manrope',system-ui,sans-serif]">
+                <div class="text-center font-['Playfair_Display',Georgia,serif] text-[0.6rem] leading-none font-bold text-[#14664A]">Prusakovų užeiga</div>
+                <div class="flex min-h-0 flex-1 gap-1.5">
+                    <div class="flex flex-1 flex-col overflow-hidden rounded-lg border border-[#E8E0D2] bg-white">
+                        <div class="px-1.5 pt-1 text-[0.45rem] font-extrabold uppercase tracking-wider text-[#B5761B]">● Gaminami</div>
+                        <div class="grid grid-cols-3 gap-1 p-1.5">
+                            @foreach([60, 61, 62, 63, 64, 65] as $n)
+                                <div class="flex aspect-[4/3] items-center justify-center rounded bg-[#F3ECDF] text-[0.55rem] font-extrabold text-[#2A2620]">{{ $n }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="flex flex-1 flex-col overflow-hidden rounded-lg border border-[#E8E0D2] bg-white">
+                        <div class="px-1.5 pt-1 text-[0.45rem] font-extrabold uppercase tracking-wider text-[#14664A]">● Paruošti</div>
+                        <div class="grid grid-cols-3 gap-1 p-1.5">
+                            @foreach([59, 58, 57, 56, 55, 54] as $n)
+                                <div class="flex aspect-[4/3] items-center justify-center rounded bg-[#14664A] text-[0.55rem] font-extrabold text-white">{{ $n }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between bg-white/10 text-white px-3 py-2 text-sm">
+                <span>Užeiga</span>
+                @if($template === 'uzeiga') <flux:icon.check-circle class="size-4" /> @endif
+            </div>
+        </div>
+    </label>
+
     {{-- Original --}}
     <label class="cursor-pointer">
         <input type="radio" wire:model.live="template" value="original" class="sr-only">
