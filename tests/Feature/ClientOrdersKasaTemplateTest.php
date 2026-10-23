@@ -18,7 +18,10 @@ it('shows preparing and ready numbers on the pickup screen as equal tiles', func
     $html = Livewire::test(ClientOrders::class)
         ->assertSeeHtml('data-pickup-screen')
         ->assertSee('Gaminami')
-        ->assertSee('Gaminamas')
+        ->assertDontSee('Gaminamas')
+        ->assertDontSee('Atsiėmimui')
+        ->assertDontSee('Užsakymas')
+        ->assertDontSeeHtml('M3 5a2 2 0 012-2h3.28')
         ->assertSee('Paruošti')
         ->html();
 

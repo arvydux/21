@@ -8,11 +8,11 @@
      */
     $gradient ??= false;
     $amber = $gradient
-        ? ['fill' => 'bg-linear-to-br from-[#ffd35c] to-[#eba521] ring-1 ring-[#ffe08a]/70', 'tile' => 'shadow-[0_10px_24px_-12px_rgba(140,90,10,0.55)]', 'text' => 'text-[#ffd35c]']
-        : ['fill' => 'bg-[#fdbf2d]', 'tile' => '', 'text' => 'text-[#fdbf2d]'];
+        ? ['fill' => 'bg-linear-to-br from-[#ffd35c] to-[#eba521] ring-1 ring-[#ffe08a]/70', 'tile' => 'shadow-[0_10px_24px_-12px_rgba(140,90,10,0.55)]']
+        : ['fill' => 'bg-[#fdbf2d]', 'tile' => ''];
     $green = $gradient
-        ? ['fill' => 'bg-linear-to-br from-[#23805a] to-[#145a3e] ring-1 ring-[#3fbf86]/50', 'tile' => 'shadow-[0_10px_24px_-12px_rgba(6,60,40,0.6)]', 'text' => 'text-[#1b6e4b]']
-        : ['fill' => 'bg-[#169147]', 'tile' => '', 'text' => 'text-[#169147]'];
+        ? ['fill' => 'bg-linear-to-br from-[#23805a] to-[#145a3e] ring-1 ring-[#3fbf86]/50', 'tile' => 'shadow-[0_10px_24px_-12px_rgba(6,60,40,0.6)]']
+        : ['fill' => 'bg-[#169147]', 'tile' => ''];
 
     // First guess for the column count; the browser then picks the smallest count at
     // which every tile fits on the screen and keeps it up to date.
@@ -31,8 +31,6 @@
         'clock' => '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
         'checks' => '<path d="M18 6 7 17l-5-5"/><path d="m22 10-7.5 7.5L13 16"/>',
         'check' => '<path d="M20 6 9 17l-5-5"/>',
-        'pickup' => '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
-        'phone' => '<path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>',
     ];
     $icon = fn (string $name, string $class) => '<svg class="'.$class.'" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">'.$icons[$name].'</svg>';
 
@@ -42,10 +40,8 @@
     $subtitle = 'mt-1.5 text-[clamp(0.85rem,1vw,1.1rem)] font-semibold text-white/70';
     $count = 'flex aspect-square h-[75%] shrink-0 items-center justify-center rounded-full text-[clamp(1.25rem,1.7vw,1.9rem)] font-black tabular-nums';
     $tile = '@container relative aspect-[4/3] rounded-3xl';
-    $tileBody = 'absolute inset-0 flex flex-col items-center justify-between p-[6cqw]';
-    $label = 'text-[4.2cqw] font-extrabold uppercase tracking-[0.2em]';
-    $number = 'text-[30cqw] font-black leading-none tabular-nums';
-    $pill = 'flex items-center gap-[2cqw] rounded-full px-[5cqw] py-[1.8cqw] text-[4.4cqw] font-extrabold uppercase tracking-wider';
+    $tileBody = 'absolute inset-0 flex items-center justify-center p-[6cqw]';
+    $number = 'text-[46cqw] font-black leading-none tabular-nums';
     $corner = 'absolute right-[6cqw] top-[5.2cqw] z-10 flex items-center gap-[1.5cqw]';
 @endphp
 <div data-pickup-screen wire:ignore.self
@@ -101,18 +97,10 @@
                     <div wire:key="preparing-{{ $order->id }}" data-pickup-tile
                          class="{{ $tile }} {{ $amber['fill'] }} {{ $amber['tile'] }} text-[#151515]">
                         <span class="{{ $corner }} text-[#151515]/50">
-                            @if($order->by_phone)
-                                {!! $icon('phone', 'size-[5.5cqw]') !!}
-                            @endif
                             {!! $icon('clock', 'size-[5.5cqw]') !!}
                         </span>
                         <div class="{{ $tileBody }}">
-                            <span class="{{ $label }} text-[#151515]/55">Užsakymas</span>
                             <span class="{{ $number }}">{{ $order->number }}</span>
-                            <span class="{{ $pill }} bg-[#151515] {{ $amber['text'] }}">
-                                {!! $icon('chef', 'size-[5cqw]') !!}
-                                Gaminamas
-                            </span>
                         </div>
                     </div>
                 @endforeach
@@ -141,20 +129,12 @@
                     <div wire:key="ready-{{ $order->id }}" data-order-number="{{ $order->number }}" data-pickup-tile
                          class="{{ $tile }} {{ $green['fill'] }} {{ $green['tile'] }} text-white">
                         <span class="{{ $corner }}">
-                            @if($order->by_phone)
-                                <span class="flex size-[7cqw] items-center justify-center rounded-full bg-white text-[#151515]">{!! $icon('phone', 'size-[55%]') !!}</span>
-                            @endif
                             <span class="flex size-[7cqw] items-center justify-center rounded-full bg-black/20 text-white">
                                 {!! $icon('check', 'size-[60%]') !!}
                             </span>
                         </span>
                         <div class="{{ $tileBody }}">
-                            <span class="{{ $label }} text-white/70">Užsakymas</span>
                             <span class="{{ $number }}">{{ $order->number }}</span>
-                            <span class="{{ $pill }} bg-white {{ $green['text'] }}">
-                                {!! $icon('pickup', 'size-[5cqw]') !!}
-                                Atsiėmimui
-                            </span>
                         </div>
                     </div>
                 @endforeach

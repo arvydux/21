@@ -19,7 +19,6 @@
     $empty = 'flex flex-1 items-center justify-center text-center text-[clamp(1rem,1.4vw,1.5rem)] font-semibold text-[#7A7064]';
     $tile = '@container relative flex aspect-[4/3] items-center justify-center rounded-[1.4rem]';
     $number = 'text-[38cqw] font-extrabold leading-none tabular-nums';
-    $phone = '<svg class="absolute right-[7cqw] top-[7cqw] size-[9cqw] opacity-60" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>';
 @endphp
 <div data-pickup-screen data-pickup-uzeiga wire:ignore.self
      style="--pickup-cols: repeat({{ $initialColumns }}, minmax(0, 1fr))"
@@ -76,9 +75,6 @@
                     @foreach($gaminamiOrders as $order)
                         <div wire:key="preparing-{{ $order->id }}" data-pickup-tile
                              class="{{ $tile }} bg-[#F3ECDF] text-[#2A2620]">
-                            @if($order->by_phone)
-                                {!! $phone !!}
-                            @endif
                             <span class="{{ $number }}">{{ $order->number }}</span>
                         </div>
                     @endforeach
@@ -101,9 +97,6 @@
                     @foreach($paruostiOrders as $order)
                         <div wire:key="ready-{{ $order->id }}" data-order-number="{{ $order->number }}" data-pickup-tile
                              class="{{ $tile }} bg-[#14664A] text-white">
-                            @if($order->by_phone)
-                                {!! $phone !!}
-                            @endif
                             <span class="{{ $number }}">{{ $order->number }}</span>
                         </div>
                     @endforeach

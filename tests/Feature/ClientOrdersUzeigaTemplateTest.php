@@ -17,6 +17,7 @@ it('shows preparing and ready numbers in the Užeiga colours', function () {
         ->assertSee('Prusakovų užeiga')
         ->assertSee('Gaminami')
         ->assertSee('Paruošti — atsiimkite')
+        ->assertDontSeeHtml('M3 5a2 2 0 012-2h3.28')
         ->html();
 
     $preparing = str($html)->between('data-pickup-preparing', 'data-pickup-ready')->toString();
