@@ -17,6 +17,7 @@
         "livewire/flux": "^2.0",
         "livewire/volt": "^1.7",
         "mike42/escpos-php": "^4.0",
+        "minishlink/web-push": "^10.0",
         "sentry/sentry-laravel": "^4.13"
     },
     "require-dev": {
