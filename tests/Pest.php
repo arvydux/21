@@ -45,3 +45,11 @@ function something()
 {
     // ..
 }
+
+/**
+ * @return array{endpoint: string, keys: array{p256dh: string, auth: string}}
+ */
+function browserSubscription(string $endpoint = 'https://fcm.googleapis.com/fcm/send/abc'): array
+{
+    return ['endpoint' => $endpoint, 'keys' => ['p256dh' => 'public-key', 'auth' => 'auth-token']];
+}

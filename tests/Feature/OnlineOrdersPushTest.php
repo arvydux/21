@@ -17,14 +17,6 @@ function pushOrder(int $number, bool $isReady = false, bool $isTaken = false): O
     return OrderNumbers::create(['number' => $number, 'is_ready' => $isReady, 'by_phone' => false, 'is_taken' => $isTaken]);
 }
 
-/**
- * @return array{endpoint: string, keys: array{p256dh: string, auth: string}}
- */
-function browserSubscription(string $endpoint = 'https://fcm.googleapis.com/fcm/send/abc'): array
-{
-    return ['endpoint' => $endpoint, 'keys' => ['p256dh' => 'public-key', 'auth' => 'auth-token']];
-}
-
 it('subscribes a browser to a preparing order', function () {
     $order = pushOrder(47);
 

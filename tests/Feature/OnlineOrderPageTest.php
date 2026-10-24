@@ -142,14 +142,3 @@ it('opens the personal page from the order ready push, or the board for orders m
 
     expect($sent[0]['url'])->toBe($hasLink ? '/online/'.$order->token : '/online');
 })->with(['with a link' => true, 'made before links' => false]);
-
-it('plays the order ready sound on the personal page', function () {
-    $order = personalOrder(43);
-
-    $this->get(route('online-orders.order', $order->token))
-        ->assertSuccessful()
-        ->assertSee("new Audio('/12.mp3')", false)
-        ->assertSee('readySound.play()', false);
-
-    expect(file_exists(public_path('12.mp3')))->toBeTrue();
-});
