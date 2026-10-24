@@ -434,13 +434,13 @@ class OrdersList extends Component
         $receipt = (new ReceiptCanvas($font('Inter-Regular')))
             ->space(4)
             ->image(resource_path('images/receipt-kibinas.png'))
-            ->group($orderNumber === null ? 112 : 150, [
+            ->group($orderNumber === null ? 134 : 150, [
                 $text('UŽEIGA', 'Montserrat-Bold', 42.7, 'center', 53),
                 $text('Prusakovų', 'Montserrat-Regular', 17.2, 'center', 77),
                 $text($orderNumber === null ? '' : 'UŽSAKYMAS Nr.', 'Montserrat-Bold', 12, 'left', 98),
                 $text($orderNumber === null ? '' : (string) $orderNumber, 'Montserrat-Bold', 40, 'left', 140),
-                $text($now->format('Y-m-d  H:i'), 'Inter-Medium', 12, 'right', $orderNumber === null ? 87 : 118),
-                $text('Nefiskalinis kvitas', 'Inter-Medium', 11, 'right', $orderNumber === null ? 106 : 139),
+                $text($now->format('Y-m-d  H:i'), 'Inter-Medium', 16, 'right', $orderNumber === null ? 106 : 112),
+                $text('Nefiskalinis kvitas', 'Inter-Medium', 15, 'right', $orderNumber === null ? 129 : 139),
             ])
             ->separator(dashed: true, thickness: 2, dash: 6, gap: 3)
             ->space(1);
@@ -451,12 +451,12 @@ class OrdersList extends Component
 
         foreach ($lines as $index => $line) {
             if (preg_match('/^(\d+) x (.+)$/su', $line['text'], $item)) {
-                $receipt->space($index === 0 ? 0 : 8)->line($item[1].'×', $item[2], $line['price'] ?? '', 24, 58, $itemFonts);
+                $receipt->space($index === 0 ? 0 : 7)->line($item[1].'×', $item[2], $line['price'] ?? '', 21, 51, $itemFonts);
 
                 continue;
             }
 
-            $receipt->line('', '•  '.$line['text'], $line['price'] ?? '', 21, 69, ['amount' => $font('Inter-Medium'), 'name' => $font('Inter-Medium'), 'price' => $font('Montserrat-Regular')]);
+            $receipt->line('', '•  '.$line['text'], $line['price'] ?? '', 18, 60, ['amount' => $font('Inter-Medium'), 'name' => $font('Inter-Medium'), 'price' => $font('Montserrat-Regular')]);
         }
 
         return $receipt->space(8)
@@ -468,13 +468,13 @@ class OrdersList extends Component
                 $text(str_replace(' EUR', ' €', $total['price']), 'Montserrat-Bold', 26, 'right', 39),
             ])
             ->separator(thickness: 2)
-            ->group(22, [
-                $text($this->itemCountLabel((int) Order::sum('amount')), 'Inter-Medium', 12, 'left', 17),
-                $text($byPhone ? 'Užsakyta: TELEFONU' : '', 'Inter-Medium', 12, 'right', 17),
+            ->group(29, [
+                $text($this->itemCountLabel((int) Order::sum('amount')), 'Inter-Medium', 16, 'left', 22),
+                $text($byPhone ? 'Užsakyta: TELEFONU' : '', 'Inter-Medium', 16, 'right', 22),
             ])
             ->separator(dashed: true, thickness: 2, dash: 6, gap: 3)
-            ->group(42, [
-                $text('Ačiū ir skanaus!', 'Montserrat-Regular', 16, 'center', 30),
+            ->group(50, [
+                $text('Ačiū ir skanaus!', 'Montserrat-Regular', 21, 'center', 37),
             ])
             ->qrCode($statusUrl)
             ->group(32, [
