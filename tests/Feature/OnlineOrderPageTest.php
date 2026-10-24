@@ -152,3 +152,23 @@ it('follows the order without a tap when the phone already allowed notifications
         ->and($html)->toContain('pushManager.getSubscription()')
         ->and($html)->toContain('followAutomatically();');
 });
+
+it('explains how to turn on notifications on Android and iPhone while the order is being made', function () {
+    $order = personalOrder(43);
+
+    $html = $this->get(route('online-orders.order', $order->token))
+        ->assertSuccessful()
+        ->assertSee('Neateina pranešimas? Kaip įjungti')
+        ->assertSeeInOrder(['Android', 'Svetainės nustatymai', 'Baterija', 'iPhone', 'Į pradžios ekraną', 'Garsai'])
+        ->getContent();
+
+    expect($html)->not->toMatch('/data-help-panel\s+hidden/');
+});
+
+it('hides the notification help once the order is ready or taken', function (bool $isTaken) {
+    $order = personalOrder(43, isReady: true, isTaken: $isTaken);
+
+    $html = $this->get(route('online-orders.order', $order->token))->assertSuccessful()->getContent();
+
+    expect($html)->toMatch('/data-help-panel\s+hidden/');
+})->with(['ready' => false, 'taken' => true]);

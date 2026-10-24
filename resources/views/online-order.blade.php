@@ -56,13 +56,21 @@
         .notify button:disabled { background: var(--green-soft); color: var(--green); }
         .notify p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.45; }
 
+        .help { margin-top: 16px; border-radius: 20px; background: #fff; border: 1px solid var(--line); }
+        .help[hidden] { display: none; }
+        .help summary { padding: 16px 20px; color: var(--green); font-size: 15px; font-weight: 700; cursor: pointer; }
+        .help .platforms { display: flex; flex-direction: column; gap: 16px; padding: 0 20px 20px; }
+        .help[data-platform="ios"] [data-help="ios"] { order: -1; }
+        .help h3 { margin: 0 0 6px; font-size: 15px; font-weight: 800; }
+        .help ol { margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.5; }
+        .help li + li { margin-top: 4px; }
         .links { display: flex; justify-content: center; gap: 20px; margin-top: 20px; font-size: 15px; font-weight: 700; }
         .links a { color: var(--green); }
         footer { margin-top: 16px; text-align: center; color: var(--muted); font-size: 13px; }
         footer .offline { display: none; color: #B3412F; font-weight: 700; }
         footer.is-offline .offline { display: block; }
         main.is-unavailable .unavailable { display: block; }
-        main.is-unavailable :is(.order, .links, footer) { display: none !important; }
+        main.is-unavailable :is(.order, .help, .links, footer) { display: none !important; }
     </style>
 </head>
 <body>
@@ -102,6 +110,31 @@
         <p>Jūsų užsakymas gaminamas kaip įprasta. Paruoštų užsakymų numerius matysite ekrane prie prekystalio.</p>
         <p class="retry">Puslapis atsinaujins automatiškai</p>
     </div>
+
+    <details class="help" data-help-panel @if ($status !== 'preparing') hidden @endif>
+        <summary>Neateina pranešimas? Kaip įjungti</summary>
+        <div class="platforms">
+            <section data-help="android">
+                <h3>Android</h3>
+                <ol>
+                    <li>Paspauskite „🔔 Pranešti man, kai bus paruoštas“ ir pasirinkite „Leisti“.</li>
+                    <li>Jei pranešimai užblokuoti: Chrome → ⋮ → Nustatymai → Svetainės nustatymai → Pranešimai → status.prusakovuuzeiga.lt → Leisti.</li>
+                    <li>Kad pranešimas skambėtų: telefono Nustatymai → Programos → Chrome → Pranešimai → įjunkite garsą.</li>
+                    <li>Jei pranešimas ateina tik atrakinus telefoną: Nustatymai → Programos → Chrome → Baterija → „Neribota“.</li>
+                    <li>Išjunkite režimą „Netrukdyti“.</li>
+                </ol>
+            </section>
+            <section data-help="ios">
+                <h3>iPhone</h3>
+                <ol>
+                    <li>Safari spauskite „Bendrinti“ ⎙ → „Į pradžios ekraną“ (reikia iOS 16.4 ar naujesnės).</li>
+                    <li>Atidarykite puslapį iš pradžios ekrano, paspauskite „🔔 Pranešti man, kai bus paruoštas“ ir pasirinkite „Leisti“.</li>
+                    <li>Kad pranešimas skambėtų: Nustatymai → Pranešimai → Užsakymai → įjunkite „Leisti pranešimus“ ir „Garsai“.</li>
+                    <li>Išjunkite „Fokusavimą“ arba „Netrukdyti“.</li>
+                </ol>
+            </section>
+        </div>
+    </details>
 
     <nav class="links">
         <a href="{{ route('online-orders', absolute: false) }}">Visi užsakymai</a>
@@ -202,6 +235,7 @@
             const needsHomeScreen = ! pushSupported && isIos && ! isStandalone;
 
             area.hidden = status !== 'preparing' || (! pushSupported && ! needsHomeScreen);
+            document.querySelector('[data-help-panel]').hidden = status !== 'preparing';
             button.hidden = ! pushSupported || isBlocked;
             button.disabled = isNotified || subscribing;
             button.textContent = isNotified ? '🔔 Pranešimas įjungtas' : (subscribing ? 'Įjungiama…' : '🔔 Pranešti man, kai bus paruoštas');
@@ -262,6 +296,7 @@
             navigator.serviceWorker.getRegistration('/').then((registration) => registration?.update()).catch(() => {});
         }
 
+        document.querySelector('[data-help-panel]').dataset.platform = isIos ? 'ios' : 'android';
         render();
         followAutomatically();
     })();
