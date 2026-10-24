@@ -142,3 +142,13 @@ it('opens the personal page from the order ready push, or the board for orders m
 
     expect($sent[0]['url'])->toBe($hasLink ? '/online/'.$order->token : '/online');
 })->with(['with a link' => true, 'made before links' => false]);
+
+it('follows the order without a tap when the phone already allowed notifications', function () {
+    $order = personalOrder(43);
+
+    $html = $this->get(route('online-orders.order', $order->token))->assertSuccessful()->getContent();
+
+    expect($html)->toContain("Notification.permission !== 'granted'")
+        ->and($html)->toContain('pushManager.getSubscription()')
+        ->and($html)->toContain('followAutomatically();');
+});

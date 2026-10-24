@@ -145,6 +145,18 @@
             return Uint8Array.from(atob(padded), (char) => char.charCodeAt(0));
         };
 
+        const followOrder = async (subscription) => {
+            const response = await fetch(subscribeUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify({ token, ...subscription.toJSON() }),
+            });
+            if (response.ok) {
+                isNotified = true;
+                try { localStorage.setItem(notifyKey, token); } catch {}
+            }
+        };
+
         const startNotifying = async () => {
             subscribing = true;
             render();
@@ -155,15 +167,26 @@
                 await navigator.serviceWorker.ready;
                 const subscription = await registration.pushManager.getSubscription()
                     || await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(vapidKey) });
-                const response = await fetch(subscribeUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                    body: JSON.stringify({ token, ...subscription.toJSON() }),
-                });
-                if (response.ok) {
-                    isNotified = true;
-                    try { localStorage.setItem(notifyKey, token); } catch {}
-                }
+                await followOrder(subscription);
+            } catch {
+            } finally {
+                subscribing = false;
+                render();
+            }
+        };
+
+        /**
+         * A phone that already allowed notifications for an earlier order follows this one
+         * without a tap; only the very first permission needs the customer's own tap.
+         */
+        const followAutomatically = async () => {
+            if (! pushSupported || Notification.permission !== 'granted' || status !== 'preparing' || isNotified) return;
+            subscribing = true;
+            render();
+            try {
+                const registration = await navigator.serviceWorker.getRegistration('/');
+                const subscription = registration && await registration.pushManager.getSubscription();
+                if (subscription) await followOrder(subscription);
             } catch {
             } finally {
                 subscribing = false;
@@ -240,6 +263,7 @@
         }
 
         render();
+        followAutomatically();
     })();
 </script>
 </body>
