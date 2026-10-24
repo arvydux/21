@@ -120,6 +120,7 @@
         const subscribeUrl = @js(route('online-orders.subscribe', absolute: false));
         const vapidKey = @js(config('online-orders.vapid.public_key'));
         const notifyKey = 'notified-order-token';
+        const readySound = new Audio('/12.mp3');
         const pushSupported = Boolean(vapidKey) && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
         const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
@@ -199,6 +200,20 @@
 
         const isFinished = () => status === 'taken' || status === 'missing';
 
+        // Phones play sound only after the visitor has touched the page, so the first touch unlocks it.
+        let isSoundUnlocked = false;
+        const unlockSound = () => {
+            if (isSoundUnlocked) return;
+            isSoundUnlocked = true;
+            readySound.muted = true;
+            readySound.play().then(() => {
+                readySound.pause();
+                readySound.currentTime = 0;
+                readySound.muted = false;
+            }).catch(() => { readySound.muted = false; });
+        };
+        ['touchend', 'click'].forEach((type) => document.addEventListener(type, unlockSound));
+
         const refresh = async () => {
             try {
                 const response = await fetch(dataUrl, { cache: 'no-store', headers: { Accept: 'application/json' } });
@@ -212,7 +227,10 @@
                     try { localStorage.removeItem(notifyKey); } catch {}
                 }
                 render();
-                if (becameReady && navigator.vibrate) navigator.vibrate([300, 150, 300]);
+                if (becameReady) {
+                    readySound.play().catch(() => {});
+                    if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
+                }
                 failures = 0;
                 footer.classList.remove('is-offline');
                 main.classList.remove('is-unavailable');

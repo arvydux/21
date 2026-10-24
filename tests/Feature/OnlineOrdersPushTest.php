@@ -173,3 +173,10 @@ it('offers the push button and home screen hint on the board', function () {
         ->assertSee('data-notify', false)
         ->assertSee(config('online-orders.vapid.public_key'), false);
 });
+
+it('makes the phone ring again when a notification for the same order is shown twice', function () {
+    $serviceWorker = file_get_contents(public_path('online-sw.js'));
+
+    expect($serviceWorker)->toContain('renotify: true')
+        ->and($serviceWorker)->toContain('silent: false');
+});

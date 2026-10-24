@@ -5,6 +5,8 @@ self.addEventListener('push', (event) => {
     event.waitUntil(self.registration.showNotification(data.title || 'Prusakovų užeiga', {
         body: data.body || 'Jūsų užsakymas paruoštas!',
         tag: `order-${data.number}`,
+        renotify: true,
+        silent: false,
         icon: '/online-icon-192.png',
         badge: '/online-icon-192.png',
         vibrate: [300, 150, 300],
