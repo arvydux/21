@@ -170,5 +170,35 @@ it('makes the phone ring again when a notification for the same order is shown t
     $serviceWorker = file_get_contents(public_path('online-sw.js'));
 
     expect($serviceWorker)->toContain('renotify: true')
-        ->and($serviceWorker)->toContain('silent: false');
+        ->and($serviceWorker)->toContain('silent: false')
+        ->and($serviceWorker)->toContain('getNotifications({ tag })')
+        ->and($serviceWorker)->toContain('notification.close()');
+});
+
+it('puts a new service worker to work as soon as the phone downloads it', function (string $page) {
+    $serviceWorker = file_get_contents(public_path('online-sw.js'));
+
+    expect($serviceWorker)->toContain('self.skipWaiting()')
+        ->and($serviceWorker)->toContain('self.clients.claim()');
+
+    $this->get($page === 'board' ? route('online-orders') : route('online-orders.order', pushOrder(47)->token))
+        ->assertSee('registration?.update()', false);
+})->with(['board', 'personal page']);
+
+it('asks the push service to wake a sleeping phone right away', function () {
+    $ready = pushOrder(47, isReady: true);
+    PushSubscription::factory()->for($ready, 'orderNumber')->create();
+
+    $options = null;
+    mock(WebPush::class)
+        ->shouldReceive('queueNotification')->once()
+        ->andReturnUsing(function (Subscription $subscription, string $payload, array $sentOptions) use (&$options): void {
+            $options = $sentOptions;
+        })
+        ->shouldReceive('flush')->once()
+        ->andReturnUsing(fn () => yield from []);
+
+    (new SendOrderReadyPush(47))->handle(app(WebPush::class));
+
+    expect($options)->toBe(['urgency' => 'high', 'TTL' => 1800]);
 });

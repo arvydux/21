@@ -16,6 +16,14 @@ class SendOrderReadyPush
 {
     use Dispatchable;
 
+    /**
+     * High urgency wakes a sleeping phone at once instead of waiting until it is unlocked;
+     * a notice older than half an hour is no longer useful.
+     *
+     * @var array{urgency: string, TTL: int}
+     */
+    private const DELIVERY = ['urgency' => 'high', 'TTL' => 1800];
+
     public function __construct(public int $number) {}
 
     public function handle(WebPush $webPush): void
@@ -42,7 +50,7 @@ class SendOrderReadyPush
                 'body' => "Užsakymas Nr. {$this->number} paruoštas! Atsiimkite prie prekystalio.",
                 'number' => $this->number,
                 'url' => $token === null ? '/online' : route('online-orders.order', $token, absolute: false),
-            ]));
+            ]), self::DELIVERY);
         }
 
         foreach ($webPush->flush() as $report) {

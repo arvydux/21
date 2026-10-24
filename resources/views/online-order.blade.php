@@ -235,6 +235,10 @@
             if (document.visibilityState === 'visible' && ! isFinished()) refresh();
         }, 5000);
 
+        if (pushSupported) {
+            navigator.serviceWorker.getRegistration('/').then((registration) => registration?.update()).catch(() => {});
+        }
+
         render();
     })();
 </script>
