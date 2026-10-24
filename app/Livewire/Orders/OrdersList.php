@@ -424,24 +424,32 @@ class OrdersList extends Component
     /**
      * @param  ?string  $statusUrl  Personal page of the order for the QR code; the general board when the order has no number.
      */
-    public function fullClientReceipt(?int $orderNumber, bool $byPhone, ?string $statusUrl = null): ReceiptCanvas
+    /**
+     * The client receipt; the unbranded second copy starts after a 2 cm margin and leaves out the kibinas,
+     * the name, the thank-you line and the QR code.
+     */
+    public function fullClientReceipt(?int $orderNumber, bool $byPhone, ?string $statusUrl = null, bool $branded = true): ReceiptCanvas
     {
         $font = fn (string $name): string => resource_path("fonts/{$name}.ttf");
         $text = fn (string $text, string $fontName, float $size, string $align, int $baseline): array => ['text' => $text, 'font' => $font($fontName), 'size' => $size, 'align' => $align, 'baseline' => $baseline];
         $now = now('Europe/Vilnius');
         $statusUrl ??= 'https://'.config('online-orders.public_host').'/online';
 
-        $receipt = (new ReceiptCanvas($font('Inter-Regular')))
-            ->space(4)
-            ->image(resource_path('images/receipt-kibinas.png'))
-            ->group($orderNumber === null ? 134 : 150, [
-                $text('UŽEIGA', 'Montserrat-Bold', 42.7, 'center', 53),
-                $text('Prusakovų', 'Montserrat-Regular', 17.2, 'center', 77),
-                $text($orderNumber === null ? '' : 'UŽSAKYMAS Nr.', 'Montserrat-Bold', 12, 'left', 98),
-                $text($orderNumber === null ? '' : (string) $orderNumber, 'Montserrat-Bold', 40, 'left', 140),
-                $text($now->format('Y-m-d  H:i'), 'Inter-Medium', 16, 'right', $orderNumber === null ? 106 : 112),
-                $text('Nefiskalinis kvitas', 'Inter-Medium', 15, 'right', $orderNumber === null ? 129 : 139),
-            ])
+        $brandHeight = $branded ? 80 : 0;
+        $receipt = new ReceiptCanvas($font('Inter-Regular'));
+
+        $branded
+            ? $receipt->space(4)->image(resource_path('images/receipt-kibinas.png'))
+            : $receipt->space(160);
+
+        $receipt->group(($orderNumber === null ? 54 : 70) + $brandHeight, array_values(array_filter([
+            $branded ? $text('UŽEIGA', 'Montserrat-Bold', 42.7, 'center', 53) : null,
+            $branded ? $text('Prusakovų', 'Montserrat-Regular', 17.2, 'center', 77) : null,
+            $text($orderNumber === null ? '' : 'UŽSAKYMAS Nr.', 'Montserrat-Bold', 12, 'left', 18 + $brandHeight),
+            $text($orderNumber === null ? '' : (string) $orderNumber, 'Montserrat-Bold', 40, 'left', 60 + $brandHeight),
+            $text($now->format('Y-m-d  H:i'), 'Inter-Medium', 16, 'right', ($orderNumber === null ? 26 : 32) + $brandHeight),
+            $text('Nefiskalinis kvitas', 'Inter-Medium', 15, 'right', ($orderNumber === null ? 49 : 59) + $brandHeight),
+        ])))
             ->separator(dashed: true, thickness: 2, dash: 6, gap: 3)
             ->space(1);
 
@@ -459,7 +467,7 @@ class OrdersList extends Component
             $receipt->line('', '•  '.$line['text'], $line['price'] ?? '', 18, 60, ['amount' => $font('Inter-Medium'), 'name' => $font('Inter-Medium'), 'price' => $font('Montserrat-Regular')]);
         }
 
-        return $receipt->space(8)
+        $receipt->space(8)
             ->separator(thickness: 3)
             ->space(-9)
             ->separator(thickness: 2)
@@ -472,14 +480,19 @@ class OrdersList extends Component
                 $text($this->itemCountLabel((int) Order::sum('amount')), 'Inter-Medium', 16, 'left', 22),
                 $text($byPhone ? 'Užsakyta: TELEFONU' : '', 'Inter-Medium', 16, 'right', 22),
             ])
-            ->separator(dashed: true, thickness: 2, dash: 6, gap: 3)
-            ->group(50, [
+            ->separator(dashed: true, thickness: 2, dash: 6, gap: 3);
+
+        if ($branded) {
+            $receipt->group(50, [
                 $text('Ačiū ir skanaus!', 'Montserrat-Regular', 21, 'center', 37),
             ])
-            ->qrCode($statusUrl)
-            ->group(32, [
-                $text(Str::after($statusUrl, '://'), 'Inter-Medium', 11.5, 'center', 16),
-            ]);
+                ->qrCode($statusUrl)
+                ->group(32, [
+                    $text(Str::after($statusUrl, '://'), 'Inter-Medium', 11.5, 'center', 16),
+                ]);
+        }
+
+        return $receipt;
     }
 
     /**
@@ -544,10 +557,8 @@ class OrdersList extends Component
 
     private function printOrderForClient(?int $freeOrder, bool $byPhone, ?string $statusUrl): void
     {
-        $receipt = $this->fullClientReceipt($freeOrder, $byPhone, $statusUrl);
-
         for ($copy = 0; $copy < self::CLIENT_RECEIPT_COPIES; $copy++) {
-            $this->printReceipt(self::CLIENT_PRINTER_IP, fn () => $receipt);
+            $this->printReceipt(self::CLIENT_PRINTER_IP, fn () => $this->fullClientReceipt($freeOrder, $byPhone, $statusUrl, branded: $copy === 0));
         }
     }
 

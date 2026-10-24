@@ -164,3 +164,18 @@ it('links receipts without an order number to the general board', function () {
 
     expect(receiptQrLink($receipt))->toBe('https://status.prusakovuuzeiga.lt/online');
 });
+
+it('prints the second client copy without the kibinas, the name, the thank-you line and the QR code', function () {
+    Order::create([
+        'name' => json_encode([['Kava Cappuccino' => 2.5]]),
+        'amount' => 1,
+        'category' => 3,
+    ]);
+    $component = Livewire::test(OrdersList::class)->instance();
+
+    $branded = $component->fullClientReceipt(42, false, 'https://status.example.test/o/abc')->toImage();
+    $plain = $component->fullClientReceipt(42, false, 'https://status.example.test/o/abc', branded: false)->toImage();
+
+    expect(imagesy($plain))->toBeLessThan(imagesy($branded))
+        ->and(darkPixels($plain))->toBeLessThan(darkPixels($branded) / 2);
+});
