@@ -437,48 +437,48 @@ class OrdersList extends Component
             ->group($orderNumber === null ? 112 : 150, [
                 $text('UŽEIGA', 'Montserrat-Bold', 42.7, 'center', 53),
                 $text('Prusakovų', 'Montserrat-Regular', 17.2, 'center', 77),
-                $text($orderNumber === null ? '' : 'UŽSAKYMAS Nr.', 'Montserrat-Regular', 11, 'left', 98),
+                $text($orderNumber === null ? '' : 'UŽSAKYMAS Nr.', 'Montserrat-Bold', 12, 'left', 98),
                 $text($orderNumber === null ? '' : (string) $orderNumber, 'Montserrat-Bold', 40, 'left', 140),
-                $text($now->format('Y-m-d  H:i'), 'Inter-Medium', 9.5, 'right', $orderNumber === null ? 87 : 120),
-                $text('Nefiskalinis kvitas', 'Inter-Regular', 9.7, 'right', $orderNumber === null ? 106 : 139),
+                $text($now->format('Y-m-d  H:i'), 'Inter-Medium', 12, 'right', $orderNumber === null ? 87 : 118),
+                $text('Nefiskalinis kvitas', 'Inter-Medium', 11, 'right', $orderNumber === null ? 106 : 139),
             ])
             ->separator(dashed: true, thickness: 2, dash: 6, gap: 3)
             ->space(1);
 
         $lines = $this->fullReceiptLines();
         $total = array_pop($lines);
-        $itemFonts = ['amount' => $font('Montserrat-Light'), 'name' => $font('Inter-Regular'), 'price' => $font('Montserrat-Light')];
+        $itemFonts = ['amount' => $font('Montserrat-Regular'), 'name' => $font('Inter-Medium'), 'price' => $font('Montserrat-Regular')];
 
         foreach ($lines as $index => $line) {
             if (preg_match('/^(\d+) x (.+)$/su', $line['text'], $item)) {
-                $receipt->space($index === 0 ? 0 : 5)->line($item[1].'×', $item[2], $line['price'] ?? '', 12, 33, $itemFonts);
+                $receipt->space($index === 0 ? 0 : 8)->line($item[1].'×', $item[2], $line['price'] ?? '', 24, 58, $itemFonts);
 
                 continue;
             }
 
-            $receipt->line('', '•  '.$line['text'], $line['price'] ?? '', 10, 41, ['amount' => $font('Inter-Regular'), 'name' => $font('Inter-Regular'), 'price' => $font('Montserrat-Light')]);
+            $receipt->line('', '•  '.$line['text'], $line['price'] ?? '', 21, 69, ['amount' => $font('Inter-Medium'), 'name' => $font('Inter-Medium'), 'price' => $font('Montserrat-Regular')]);
         }
 
         return $receipt->space(8)
             ->separator(thickness: 3)
             ->space(-9)
             ->separator(thickness: 2)
-            ->group(42, [
-                $text('VISO', 'Montserrat-ExtraLight', 18.3, 'left', 35),
-                $text(str_replace(' EUR', ' €', $total['price']), 'Montserrat-ExtraLight', 23.6, 'right', 35),
+            ->group(48, [
+                $text('VISO', 'Montserrat-Bold', 20, 'left', 38),
+                $text(str_replace(' EUR', ' €', $total['price']), 'Montserrat-Bold', 26, 'right', 39),
             ])
             ->separator(thickness: 2)
-            ->group(17, [
-                $text($this->itemCountLabel((int) Order::sum('amount')), 'Inter-Regular', 9.7, 'left', 13),
-                $text($byPhone ? 'Užsakyta: TELEFONU' : '', 'Inter-Regular', 9.7, 'right', 13),
+            ->group(22, [
+                $text($this->itemCountLabel((int) Order::sum('amount')), 'Inter-Medium', 12, 'left', 17),
+                $text($byPhone ? 'Užsakyta: TELEFONU' : '', 'Inter-Medium', 12, 'right', 17),
             ])
             ->separator(dashed: true, thickness: 2, dash: 6, gap: 3)
             ->group(42, [
-                $text('Ačiū ir skanaus!', 'Montserrat-Light', 14.4, 'center', 29),
+                $text('Ačiū ir skanaus!', 'Montserrat-Regular', 16, 'center', 30),
             ])
             ->qrCode($statusUrl)
-            ->group(30, [
-                $text(Str::after($statusUrl, '://'), 'Inter-Regular', 9.7, 'center', 14),
+            ->group(32, [
+                $text(Str::after($statusUrl, '://'), 'Inter-Medium', 11.5, 'center', 16),
             ]);
     }
 
