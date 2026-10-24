@@ -17,7 +17,7 @@ self.addEventListener('notificationclick', (event) => {
     event.notification.close();
 
     event.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windows) => {
-        const board = windows.find((client) => new URL(client.url).pathname === '/online');
+        const board = windows.find((client) => new URL(client.url).pathname === event.notification.data.url);
 
         return board ? board.focus() : self.clients.openWindow(event.notification.data.url);
     }));

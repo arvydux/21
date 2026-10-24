@@ -52,3 +52,26 @@ it('takes the next order number when something goes to the kitchen', function (a
     'Kiti' => [[4]],
     'Čeburekai with Gėrimai' => [[1, 3]],
 ]);
+
+it('remembers the taken order for the link in the receipt QR code', function () {
+    addOrderInCategory(1);
+    $component = Livewire::test(OrdersList::class)->instance();
+
+    $number = $component->takeOrderNumber();
+    $taken = (fn () => $this->takenOrder)->call($component);
+
+    expect($taken->is(OrderNumbers::sole()))->toBeTrue()
+        ->and($taken->number)->toBe($number)
+        ->and($taken->statusUrl())->toBe('https://status.prusakovuuzeiga.lt/online/'.$taken->token);
+});
+
+it('forgets the previous order when the next checkout gets no number', function () {
+    addOrderInCategory(1);
+    $component = Livewire::test(OrdersList::class)->instance();
+    $component->takeOrderNumber();
+    Order::truncate();
+    addOrderInCategory(3);
+
+    expect($component->takeOrderNumber())->toBeNull()
+        ->and((fn () => $this->takenOrder)->call($component))->toBeNull();
+});

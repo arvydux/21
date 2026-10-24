@@ -17,6 +17,7 @@ use App\Models\PotatoTopping;
 use App\Models\Topping;
 use App\Printing\ReceiptCanvas;
 use Exception;
+use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
@@ -33,6 +34,9 @@ class OrdersList extends Component
     public bool $byPhone;
 
     public bool $koreguoti;
+
+    /** The order number taken by the current checkout, for the link in its receipt QR code. */
+    private ?OrderNumbers $takenOrder = null;
 
     #[On('toggle-koreguoti')]
     public function toggleKoreguoti(): void
@@ -170,7 +174,7 @@ class OrdersList extends Component
         if ($orderNumber !== null) {
             $this->printOrderForKitchen($orderNumber, $this->byPhone);
         }
-        $this->printOrderForClient($orderNumber, $this->byPhone);
+        $this->printOrderForClient($orderNumber, $this->byPhone, $this->takenOrder?->statusUrl());
         $this->decrementCeburekLeft();
         $this->decrementKepiniaiLeft();
         $this->decrementDrinkLeft();
@@ -191,6 +195,8 @@ class OrdersList extends Component
      */
     public function takeOrderNumber(): ?int
     {
+        $this->takenOrder = null;
+
         if (! $this->shouldPrintForKitchen()) {
             return null;
         }
@@ -202,7 +208,7 @@ class OrdersList extends Component
                 ->delete();
         }
         $this->freeNumber = FreeNumbers::first()->number;
-        OrderNumbers::create([
+        $this->takenOrder = OrderNumbers::create([
             'number' => $this->freeNumber,
             'by_phone' => $this->byPhone,
             'created_at' => now(),
@@ -415,11 +421,15 @@ class OrdersList extends Component
         return $receipt;
     }
 
-    public function fullClientReceipt(?int $orderNumber, bool $byPhone): ReceiptCanvas
+    /**
+     * @param  ?string  $statusUrl  Personal page of the order for the QR code; the general board when the order has no number.
+     */
+    public function fullClientReceipt(?int $orderNumber, bool $byPhone, ?string $statusUrl = null): ReceiptCanvas
     {
         $font = fn (string $name): string => resource_path("fonts/{$name}.ttf");
         $text = fn (string $text, string $fontName, float $size, string $align, int $baseline): array => ['text' => $text, 'font' => $font($fontName), 'size' => $size, 'align' => $align, 'baseline' => $baseline];
         $now = now('Europe/Vilnius');
+        $statusUrl ??= 'https://'.config('online-orders.public_host').'/online';
 
         $receipt = (new ReceiptCanvas($font('Inter-Regular')))
             ->space(4)
@@ -466,9 +476,9 @@ class OrdersList extends Component
             ->group(42, [
                 $text('Ačiū ir skanaus!', 'Montserrat-Light', 14.4, 'center', 29),
             ])
-            ->image(resource_path('images/receipt-qr.png'))
+            ->qrCode($statusUrl)
             ->group(30, [
-                $text('status.prusakovuuzeiga.lt/online', 'Inter-Regular', 9.7, 'center', 14),
+                $text(Str::after($statusUrl, '://'), 'Inter-Regular', 9.7, 'center', 14),
             ]);
     }
 
@@ -532,9 +542,9 @@ class OrdersList extends Component
         $this->printReceipt(self::KITCHEN_PRINTER_IP, fn () => $this->kitchenReceipt($freeOrder, $byPhone));
     }
 
-    private function printOrderForClient(?int $freeOrder, bool $byPhone): void
+    private function printOrderForClient(?int $freeOrder, bool $byPhone, ?string $statusUrl): void
     {
-        $receipt = $this->fullClientReceipt($freeOrder, $byPhone);
+        $receipt = $this->fullClientReceipt($freeOrder, $byPhone, $statusUrl);
 
         for ($copy = 0; $copy < self::CLIENT_RECEIPT_COPIES; $copy++) {
             $this->printReceipt(self::CLIENT_PRINTER_IP, fn () => $receipt);

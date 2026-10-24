@@ -123,7 +123,7 @@ it('pushes to every follower of a ready order once and forgets them', function (
 
     expect($sent)->toHaveCount(2)
         ->and($sent[0]['body'])->toContain('Nr. 47 paruoštas')
-        ->and($sent[0]['url'])->toBe('/online')
+        ->and($sent[0]['url'])->toBe('/online/'.$ready->token)
         ->and(PushSubscription::count())->toBe(1)
         ->and(PushSubscription::sole()->order_number_id)->toBe($other->id);
 });

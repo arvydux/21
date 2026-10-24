@@ -15,6 +15,9 @@ class RestrictPublicTunnel
     /** @var list<string> */
     private const PUBLIC_PATHS = ['online', 'online/data'];
 
+    /** Personal order pages opened from the QR code on the receipt. */
+    private const PUBLIC_ORDER_PATH = '#^online/(data/)?[A-Za-z0-9]{10}(/manifest\.webmanifest)?$#';
+
     /** @var list<string> */
     private const PUBLIC_POST_PATHS = ['online/subscribe', 'online/unsubscribe'];
 
@@ -36,7 +39,7 @@ class RestrictPublicTunnel
             return response('', 302, ['Location' => '/online']);
         }
 
-        if (! in_array($request->path(), self::PUBLIC_PATHS, true)) {
+        if (! in_array($request->path(), self::PUBLIC_PATHS, true) && ! preg_match(self::PUBLIC_ORDER_PATH, $request->path())) {
             return response('Not Found', 404);
         }
 

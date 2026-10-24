@@ -2,6 +2,9 @@
 
 namespace App\Printing;
 
+use chillerlan\QRCode\Common\EccLevel;
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
 use GdImage;
 use Mike42\Escpos\GdEscposImage;
 use Mike42\Escpos\Printer;
@@ -46,6 +49,23 @@ class ReceiptCanvas
     public function image(string $path): static
     {
         $this->blocks[] = ['type' => 'image', 'path' => $path];
+
+        return $this;
+    }
+
+    /**
+     * A QR code centered on the receipt, drawn dot by dot so every receipt can carry its own link.
+     *
+     * @param  int  $moduleSize  Size of one QR dot in printer dots.
+     * @param  int  $quietZone  White border around the code, in QR dots.
+     */
+    public function qrCode(string $data, int $moduleSize = 5, int $quietZone = 3): static
+    {
+        $matrix = (new QRCode(new QROptions(['eccLevel' => EccLevel::M, 'addQuietzone' => false])))
+            ->addByteSegment($data)
+            ->getQRMatrix();
+
+        $this->blocks[] = ['type' => 'qr', 'matrix' => $matrix, 'moduleSize' => $moduleSize, 'quietZone' => $quietZone];
 
         return $this;
     }
@@ -125,6 +145,7 @@ class ReceiptCanvas
             $top += match ($block['type']) {
                 'space' => $block['height'],
                 'image' => $this->drawPicture($image, $block, $top),
+                'qr' => $this->drawQrCode($image, $block, $top),
                 'line' => $this->drawLine($image, $block, $top),
                 'group' => $this->drawGroup($image, $block, $top),
                 'separator' => $this->drawSeparator($image, $block, $top),
@@ -215,6 +236,31 @@ class ReceiptCanvas
         }
 
         return imagesy($picture);
+    }
+
+    /**
+     * @param  array{matrix: \chillerlan\QRCode\Data\QRMatrix, moduleSize: int, quietZone: int}  $block
+     * @return int The height of the code with its white border.
+     */
+    private function drawQrCode(?GdImage $image, array $block, int $top): int
+    {
+        $modules = $block['matrix']->getSize();
+        $dot = $block['moduleSize'];
+        $border = $block['quietZone'] * $dot;
+
+        if ($image) {
+            $black = imagecolorallocate($image, 0, 0, 0);
+            $left = (int) ((self::WIDTH - $modules * $dot) / 2);
+            for ($y = 0; $y < $modules; $y++) {
+                for ($x = 0; $x < $modules; $x++) {
+                    if ($block['matrix']->check($x, $y)) {
+                        imagefilledrectangle($image, $left + $x * $dot, $top + $border + $y * $dot, $left + ($x + 1) * $dot - 1, $top + $border + ($y + 1) * $dot - 1, $black);
+                    }
+                }
+            }
+        }
+
+        return $modules * $dot + 2 * $border;
     }
 
     /**

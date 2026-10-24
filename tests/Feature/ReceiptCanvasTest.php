@@ -110,3 +110,17 @@ it('draws a dashed separator with the given dash and gap', function () {
         ->and($dark(9))->toBeTrue()
         ->and(imagesy($image))->toBe(13);
 });
+
+it('draws a QR code in the middle with a white border', function () {
+    $image = (new ReceiptCanvas)->qrCode('https://status.prusakovuuzeiga.lt/online/AbCdE12345', moduleSize: 5, quietZone: 3)->toImage();
+    $size = imagesy($image) - 30;
+    $left = (int) ((ReceiptCanvas::WIDTH - $size) / 2);
+    $isDark = fn (int $x, int $y): bool => (imagecolorat($image, $x, $y) & 0xFF) < 128;
+
+    expect($size % 5)->toBe(0)
+        ->and($isDark($left, 15))->toBeTrue()
+        ->and($isDark($left - 1, 15))->toBeFalse()
+        ->and($isDark($left, 14))->toBeFalse()
+        ->and($isDark($left + $size - 1, 15))->toBeTrue()
+        ->and($isDark($left + $size, 15))->toBeFalse();
+});

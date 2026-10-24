@@ -17,7 +17,8 @@ class StorePushSubscriptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'number' => ['required', 'integer', 'min:1'],
+            'number' => ['required_without:token', 'integer', 'min:1'],
+            'token' => ['required_without:number', 'string', 'alpha_num', 'size:10'],
             'endpoint' => ['required', 'url:https', 'max:500'],
             'keys.p256dh' => ['required', 'string', 'max:255'],
             'keys.auth' => ['required', 'string', 'max:255'],
@@ -30,8 +31,10 @@ class StorePushSubscriptionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'number.required' => 'Nenurodytas užsakymo numeris.',
-            'number.integer' => 'Neteisingas užsakymo numeris.',
+            'number.required_without' => 'Nenurodytas užsakymo numeris.',
+            'number.*' => 'Neteisingas užsakymo numeris.',
+            'token.required_without' => 'Nenurodytas užsakymo numeris.',
+            'token.*' => 'Neteisinga užsakymo nuoroda.',
             'endpoint.*' => 'Naršyklė neatsiuntė pranešimų adreso.',
             'keys.p256dh.*' => 'Naršyklė neatsiuntė pranešimų rakto.',
             'keys.auth.*' => 'Naršyklė neatsiuntė pranešimų rakto.',

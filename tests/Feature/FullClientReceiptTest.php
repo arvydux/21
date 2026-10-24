@@ -2,6 +2,8 @@
 
 use App\Livewire\Orders\OrdersList;
 use App\Models\Order;
+use chillerlan\QRCode\Common\GDLuminanceSource;
+use chillerlan\QRCode\QRCode;
 use Livewire\Livewire;
 
 function fullReceiptLines(): array
@@ -128,17 +130,37 @@ it('prints two copies of the full receipt for the client', function () {
     expect(OrdersList::CLIENT_RECEIPT_COPIES)->toBe(2);
 });
 
-it('ends the client receipt with the QR code of the online order board', function () {
+/**
+ * Reads the QR code printed at the bottom of a receipt.
+ */
+function receiptQrLink(GdImage $receipt): string
+{
+    $bottom = imagecrop($receipt, ['x' => 0, 'y' => imagesy($receipt) - 300, 'width' => 576, 'height' => 300]);
+
+    return (new QRCode)->readFromSource(new GDLuminanceSource($bottom))->data;
+}
+
+it('ends the client receipt with the QR code of the personal order page', function () {
     Order::create([
         'name' => json_encode([['Kava Cappuccino' => 2.5]]),
         'amount' => 1,
         'category' => 3,
     ]);
-    $qr = imagecreatefrompng(resource_path('images/receipt-qr.png'));
-    imagepalettetotruecolor($qr);
-    $receipt = Livewire::test(OrdersList::class)->instance()->fullClientReceipt(42, false)->toImage();
-    $bottom = imagecrop($receipt, ['x' => 0, 'y' => imagesy($receipt) - 30 - imagesy($qr), 'width' => 576, 'height' => imagesy($qr)]);
+    $link = 'https://status.prusakovuuzeiga.lt/online/AbCdE12345';
 
-    expect(imagesx($qr))->toBe(imagesy($qr))
-        ->and(darkPixels($bottom))->toBe(darkPixels($qr));
+    $receipt = Livewire::test(OrdersList::class)->instance()->fullClientReceipt(42, false, $link)->toImage();
+
+    expect(receiptQrLink($receipt))->toBe($link);
+});
+
+it('links receipts without an order number to the general board', function () {
+    Order::create([
+        'name' => json_encode([['Kava Cappuccino' => 2.5]]),
+        'amount' => 1,
+        'category' => 3,
+    ]);
+
+    $receipt = Livewire::test(OrdersList::class)->instance()->fullClientReceipt(null, false)->toImage();
+
+    expect(receiptQrLink($receipt))->toBe('https://status.prusakovuuzeiga.lt/online');
 });
