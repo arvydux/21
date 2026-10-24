@@ -385,40 +385,57 @@ class OrdersList extends Component
 
     public const CLIENT_RECEIPT_COPIES = 2;
 
+    /** About 2 cm of blank paper above the kitchen receipt (203 dpi). */
+    public const KITCHEN_TOP_MARGIN = 160;
+
+    public const KITCHEN_ITEM_SIZE = 30;
+
+    /**
+     * The kitchen receipt: the order number and time on top, then every kitchen item in an amount column
+     * with its toppings, takeaway mark and wishes indented under the name.
+     */
     public function kitchenReceipt(int $orderNumber, bool $byPhone): ReceiptCanvas
     {
-        $receipt = (new ReceiptCanvas)
-            ->text((string) $orderNumber, 64, 'center')
-            ->text($this->printedAt(), 16, 'center')
-            ->separator();
+        $font = fn (string $name): string => resource_path("fonts/{$name}.ttf");
+        $text = fn (string $text, string $fontName, float $size, string $align, int $baseline): array => ['text' => $text, 'font' => $font($fontName), 'size' => $size, 'align' => $align, 'baseline' => $baseline];
+        $itemFonts = ['amount' => $font('Montserrat-Bold'), 'name' => $font('Montserrat-Bold'), 'price' => $font('Montserrat-Bold')];
+        $now = now('Europe/Vilnius');
 
-        foreach (Order::whereIn('category', $this->kitchenCategories())->orderBy('category')->get() as $order) {
+        $receipt = (new ReceiptCanvas($font('Inter-Medium')))
+            ->space(self::KITCHEN_TOP_MARGIN)
+            ->group(112, [
+                $text('UŽSAKYMAS Nr.', 'Montserrat-Bold', 14, 'left', 20),
+                $text((string) $orderNumber, 'Montserrat-Bold', 72, 'left', 102),
+                $text($now->format('H:i'), 'Montserrat-Bold', 34, 'right', 56),
+                $text($byPhone ? 'TELEFONU' : $now->format('Y-m-d'), 'Montserrat-Bold', 18, 'right', 92),
+            ])
+            ->separator(thickness: 3);
+
+        foreach (Order::whereIn('category', $this->kitchenCategories())->orderBy('category')->orderBy('id')->get() as $index => $order) {
+            if ($index > 0) {
+                $receipt->separator(dashed: true, thickness: 3, dash: 8, gap: 4);
+            }
+
             foreach (json_decode($order->name, true) ?? [] as $product) {
                 foreach ($product as $name => $price) {
-                    $receipt->text($order->amount.' - '.$name, 24);
+                    $receipt->line($order->amount.'×', $name, '', self::KITCHEN_ITEM_SIZE, 62, $itemFonts);
                 }
             }
 
             foreach (json_decode($order->toppings ?? '[]', true) ?? [] as $topping) {
                 foreach ($topping as $name => $price) {
-                    $receipt->text($name, 24, 'right');
+                    $receipt->line('', '+ '.$name, '', 26, 62, $itemFonts);
                 }
             }
 
-            $receipt->text($order->takeaway ? 'Išsinešimui' : 'Vietoje', 24);
+            $receipt->line('', $order->takeaway ? '» IŠSINEŠIMUI' : '» Vietoje', '', 24, 62, $itemFonts);
 
             if ($order->comments) {
-                $receipt->text('Pageidavimai:', 18, 'center')
-                    ->text($order->comments, 18, 'center');
+                $receipt->line('', '! '.$order->comments, '', 24, 62, $itemFonts);
             }
-            $receipt->separator();
         }
 
-        if ($byPhone) {
-            $receipt->text('Telefonu', 28, 'center');
-        }
-
-        return $receipt;
+        return $receipt->separator(thickness: 3);
     }
 
     /**
