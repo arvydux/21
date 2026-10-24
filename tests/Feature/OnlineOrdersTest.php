@@ -80,3 +80,12 @@ it('rejects anything but reads from tunnel visitors', function () {
 it('keeps the local network unrestricted', function () {
     $this->get('/kitchen')->assertSuccessful();
 });
+
+it('ships a friendly notice for when the board cannot reach the server', function () {
+    $this->get(route('online-orders'))
+        ->assertSuccessful()
+        ->assertSee('data-unavailable', false)
+        ->assertSee('Užsakymų būsena laikinai nepasiekiama')
+        ->assertSee('Puslapis atsinaujins automatiškai')
+        ->assertSee('is-unavailable', false);
+});

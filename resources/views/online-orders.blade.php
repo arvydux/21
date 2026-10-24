@@ -137,10 +137,20 @@
         footer { text-align: center; color: var(--muted); font-size: 13px; }
         footer .offline { display: none; color: #B3412F; font-weight: 700; }
         footer.is-offline .offline { display: block; }
+
+        .unavailable { display: none; padding: 32px 24px; border-radius: 20px; background: #fff; border: 1px solid var(--line); text-align: center; }
+        .unavailable .icon { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; margin-bottom: 16px; border-radius: 50%; background: var(--sand); color: var(--amber); }
+        .unavailable h2 { margin: 0 0 10px; font-family: 'Playfair Display', Georgia, serif; font-size: 24px; color: var(--green); }
+        .unavailable p { margin: 0 0 10px; color: var(--ink); font-size: 16px; line-height: 1.5; }
+        .unavailable .retry { display: inline-flex; align-items: center; gap: 8px; margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+        .unavailable .retry::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--amber); animation: pulse 1.6s ease-in-out infinite; }
+        @keyframes pulse { 50% { opacity: .25; } }
+        main.is-unavailable .unavailable { display: block; }
+        main.is-unavailable :is(.followed, section, footer) { display: none !important; }
     </style>
 </head>
 <body>
-<main>
+<main data-main>
     <header>
         <h1>Prusakovų užeiga</h1>
         <p>Užsakymų būsena realiu laiku</p>
@@ -178,6 +188,15 @@
         <p class="empty" data-empty @if ($preparing !== []) hidden @endif>Šiuo metu nieko negaminame</p>
     </section>
 
+    <div class="unavailable" data-unavailable role="status" aria-live="polite">
+        <span class="icon" aria-hidden="true">
+            <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></svg>
+        </span>
+        <h2>Užsakymų būsena laikinai nepasiekiama</h2>
+        <p>Jūsų užsakymas gaminamas kaip įprasta. Paruoštų užsakymų numerius matysite ekrane prie prekystalio.</p>
+        <p class="retry">Puslapis atsinaujins automatiškai</p>
+    </div>
+
     <footer data-footer>
         <p>Paspauskite savo numerį — parodysime, kai bus paruoštas.</p>
         <p class="offline">Nepavyksta atnaujinti, bandome dar kartą…</p>
@@ -201,6 +220,9 @@
         };
         const banner = document.querySelector('[data-followed]');
         const footer = document.querySelector('[data-footer]');
+        const main = document.querySelector('[data-main]');
+        const failuresBeforeUnavailable = 2;
+        let failures = 0;
         const numbersIn = (section) => [...section.querySelectorAll('[data-order-number]')].map((el) => Number(el.dataset.orderNumber));
 
         let state = { ready: numbersIn(sections.ready), preparing: numbersIn(sections.preparing) };
@@ -334,9 +356,13 @@
                 state = next;
                 render();
                 if (becameReady && navigator.vibrate) navigator.vibrate([300, 150, 300]);
+                failures = 0;
                 footer.classList.remove('is-offline');
+                main.classList.remove('is-unavailable');
             } catch {
+                failures++;
                 footer.classList.add('is-offline');
+                main.classList.toggle('is-unavailable', failures >= failuresBeforeUnavailable);
             }
         };
 
