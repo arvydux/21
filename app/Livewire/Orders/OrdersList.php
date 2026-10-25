@@ -17,6 +17,7 @@ use App\Models\PotatoTopping;
 use App\Models\Topping;
 use App\Printing\ReceiptCanvas;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -591,7 +592,7 @@ class OrdersList extends Component
             $printer->cut();
             $printer->close();
         } catch (Exception $e) {
-            echo "Couldn't print to printer {$printerIp}: ".$e->getMessage()."\n";
+            Log::warning("Couldn't print to printer {$printerIp}: ".$e->getMessage());
         }
     }
 

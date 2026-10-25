@@ -4,6 +4,7 @@ use App\Livewire\Orders\OrdersList;
 use App\Models\FreeNumbers;
 use App\Models\Order;
 use App\Models\OrderNumbers;
+use Illuminate\Support\Facades\Log;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -74,4 +75,24 @@ it('forgets the previous order when the next checkout gets no number', function 
 
     expect($component->takeOrderNumber())->toBeNull()
         ->and((fn () => $this->takenOrder)->call($component))->toBeNull();
+});
+
+it('finishes the checkout and logs a warning when a printer is unreachable', function () {
+    Log::spy();
+    Order::create([
+        'name' => json_encode([['Produktas' => 1.0]]),
+        'toppings' => json_encode([]),
+        'amount' => 1,
+        'category' => 1,
+    ]);
+
+    Livewire::test(OrdersList::class)
+        ->call('makeOrder')
+        ->assertDispatched('order-made')
+        ->assertNoRedirect();
+
+    expect(OrderNumbers::where('number', 7)->exists())->toBeTrue()
+        ->and(Order::count())->toBe(0);
+
+    Log::shouldHaveReceived('warning')->withArgs(fn (string $message) => str_starts_with($message, "Couldn't print to printer"));
 });
