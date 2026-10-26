@@ -35,6 +35,31 @@
     </div>
 
     @teleport('body')
+        <div class="pointer-events-none fixed inset-x-0 top-4 z-[60] flex justify-center px-4 font-nunito">
+            @if($printerWarning = $this->printerWarning())
+                <div data-printer-warning role="alert"
+                     class="pointer-events-auto flex max-w-xl items-center gap-3 rounded-2xl bg-red-600 py-3 pl-4 pr-3 text-white shadow-2xl shadow-black/40 ring-2 ring-red-300">
+                    <svg class="size-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                    </svg>
+                    <span class="flex-1 text-lg font-bold">{{ $printerWarning }}</span>
+                    <button wire:click="retryFailedReceipts" wire:loading.attr="disabled" wire:target="retryFailedReceipts"
+                            class="shrink-0 rounded-xl bg-white px-3 py-2 font-extrabold text-red-700 transition-all duration-200 hover:bg-red-50 active:scale-[0.97] disabled:opacity-60">
+                        <span wire:loading.remove wire:target="retryFailedReceipts">Spausdinti dar kartą</span>
+                        <span wire:loading wire:target="retryFailedReceipts">Spausdinama…</span>
+                    </button>
+                    <button wire:click="dismissPrinterWarning" title="Uždaryti"
+                            class="flex size-9 shrink-0 items-center justify-center rounded-xl text-white/80 transition-all duration-200 hover:bg-white/15 active:scale-[0.95]">
+                        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            @endif
+        </div>
+    @endteleport
+
+    @teleport('body')
         <div x-show="summaryOpen" x-cloak
              x-transition:enter="transition duration-200 ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
              x-transition:leave="transition duration-150 ease-in" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"

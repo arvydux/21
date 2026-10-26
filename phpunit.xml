@@ -23,6 +23,9 @@
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_STORE" value="array"/>
         <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="KITCHEN_PRINTER_IP" value="127.0.0.1"/>
+        <env name="CLIENT_PRINTER_IP" value="127.0.0.1"/>
+        <env name="PRINTER_PORT" value="1"/>
         <env name="DB_DATABASE" value=":memory:"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>

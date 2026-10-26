@@ -16,12 +16,14 @@ use App\Models\PotatoDish;
 use App\Models\PotatoTopping;
 use App\Models\Topping;
 use App\Printing\ReceiptCanvas;
+use App\Printing\TimedNetworkPrintConnector;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
+use Mike42\Escpos\PrintConnectors\DummyPrintConnector;
 use Mike42\Escpos\Printer;
 
 class OrdersList extends Component
@@ -35,6 +37,16 @@ class OrdersList extends Component
     public bool $byPhone;
 
     public bool $koreguoti;
+
+    /**
+     * Printers that didn't print the last checkout, shown to the cashier with a retry button.
+     *
+     * @var list<string>
+     */
+    public array $unreachablePrinters = [];
+
+    /** Cache key of the receipts that didn't print, kept for the retry button. */
+    public ?string $failedReceiptsKey = null;
 
     /** The order number taken by the current checkout, for the link in its receipt QR code. */
     private ?OrderNumbers $takenOrder = null;
@@ -172,10 +184,7 @@ class OrdersList extends Component
     {
         $orderNumber = $this->takeOrderNumber();
 
-        if ($orderNumber !== null) {
-            $this->printOrderForKitchen($orderNumber, $this->byPhone);
-        }
-        $this->printOrderForClient($orderNumber, $this->byPhone, $this->takenOrder?->statusUrl());
+        $this->printCheckoutReceipts($orderNumber, $this->byPhone, $this->takenOrder?->statusUrl());
         $this->decrementCeburekLeft();
         $this->decrementKepiniaiLeft();
         $this->decrementDrinkLeft();
@@ -372,9 +381,10 @@ class OrdersList extends Component
         return Order::where('for_kitchen', true)->exists();
     }
 
-    private const KITCHEN_PRINTER_IP = '192.168.32.100';
-
-    private const CLIENT_PRINTER_IP = '192.168.32.101';
+    private const PRINTER_NAMES = [
+        'kitchen' => 'virtuvės',
+        'client' => 'kliento',
+    ];
 
     /**
      * Which client receipt copies to print: a branded one for the customer and a plain one for the till,
@@ -569,31 +579,127 @@ class OrdersList extends Component
         return now('Europe/Vilnius')->format('Y-m-d H:i:s');
     }
 
-    private function printOrderForKitchen(int $freeOrder, bool $byPhone): void
+    /**
+     * Prints the kitchen receipt and the client copies after any receipts still waiting from earlier,
+     * skipping further copies on a printer that already failed, and keeps whatever didn't print for a retry.
+     */
+    private function printCheckoutReceipts(?int $orderNumber, bool $byPhone, ?string $statusUrl): void
     {
-        $this->printReceipt(self::KITCHEN_PRINTER_IP, fn () => $this->kitchenReceipt($freeOrder, $byPhone));
-    }
+        $receipts = $this->failedReceiptsKey !== null ? Cache::get($this->failedReceiptsKey, []) : [];
 
-    private function printOrderForClient(?int $freeOrder, bool $byPhone, ?string $statusUrl): void
-    {
-        foreach ($this->clientReceiptCopies($byPhone) as $branded) {
-            $this->printReceipt(self::CLIENT_PRINTER_IP, fn () => $this->fullClientReceipt($freeOrder, $byPhone, $statusUrl, branded: $branded));
+        if ($orderNumber !== null) {
+            $receipts[] = ['printer' => 'kitchen', 'data' => $this->receiptBytes($this->kitchenReceipt($orderNumber, $byPhone))];
         }
+        foreach ($this->clientReceiptCopies($byPhone) as $branded) {
+            $receipts[] = ['printer' => 'client', 'data' => $this->receiptBytes($this->fullClientReceipt($orderNumber, $byPhone, $statusUrl, branded: $branded))];
+        }
+
+        $this->forgetFailedReceipts();
+        $this->printReceipts($receipts);
     }
 
     /**
-     * @param  callable(): ReceiptCanvas  $receipt
+     * Sends the cashier's failed receipts to their printers again.
      */
-    private function printReceipt(string $printerIp, callable $receipt): void
+    public function retryFailedReceipts(): void
+    {
+        $receipts = $this->failedReceiptsKey !== null ? Cache::get($this->failedReceiptsKey, []) : [];
+
+        $this->forgetFailedReceipts();
+        $this->printReceipts($receipts);
+    }
+
+    public function dismissPrinterWarning(): void
+    {
+        $this->forgetFailedReceipts();
+    }
+
+    /**
+     * The warning shown to the cashier when a printer couldn't print.
+     */
+    public function printerWarning(): ?string
+    {
+        $names = array_map(fn (string $printer): string => self::PRINTER_NAMES[$printer], $this->unreachablePrinters);
+
+        return match (count($names)) {
+            0 => null,
+            1 => ucfirst($names[0]).' spausdintuvas nepasiekiamas',
+            default => ucfirst(implode(' ir ', $names)).' spausdintuvai nepasiekiami',
+        };
+    }
+
+    /**
+     * @param  list<array{printer: string, data: string}>  $receipts
+     */
+    private function printReceipts(array $receipts): void
+    {
+        $failed = [];
+        $unreachable = [];
+
+        foreach ($receipts as $receipt) {
+            $printer = $receipt['printer'];
+
+            if (isset($unreachable[$printer]) || ! $this->sendToPrinter(config("printers.{$printer}_ip"), $receipt['data'])) {
+                $unreachable[$printer] = true;
+                $failed[] = $receipt;
+            }
+        }
+
+        if ($failed === []) {
+            return;
+        }
+
+        $this->failedReceiptsKey = 'failed-receipts:'.Str::uuid();
+        Cache::put($this->failedReceiptsKey, $failed, now()->addHours(2));
+        $this->unreachablePrinters = array_keys($unreachable);
+    }
+
+    private function forgetFailedReceipts(): void
+    {
+        if ($this->failedReceiptsKey !== null) {
+            Cache::forget($this->failedReceiptsKey);
+        }
+        $this->failedReceiptsKey = null;
+        $this->unreachablePrinters = [];
+    }
+
+    /**
+     * The receipt as printer commands, ready to send or to keep for a retry.
+     * Base64 keeps the raw bytes safe in the database cache.
+     */
+    public function receiptBytes(ReceiptCanvas $receipt): string
+    {
+        $connector = new DummyPrintConnector;
+        $printer = new Printer($connector);
+        $receipt->print($printer);
+        $printer->feed(2);
+        $printer->cut();
+        $data = $connector->getData();
+        $printer->close();
+
+        return base64_encode($data);
+    }
+
+    private function sendToPrinter(string $printerIp, string $data): bool
     {
         try {
-            $printer = new Printer(new NetworkPrintConnector($printerIp, 9100, 2));
-            $receipt()->print($printer);
-            $printer->feed(2);
-            $printer->cut();
-            $printer->close();
+            $connector = new TimedNetworkPrintConnector($printerIp, config('printers.port'), config('printers.timeout'));
         } catch (Exception $e) {
             Log::warning("Couldn't print to printer {$printerIp}: ".$e->getMessage());
+
+            return false;
+        }
+
+        try {
+            $connector->write(base64_decode($data));
+
+            return true;
+        } catch (Exception $e) {
+            Log::warning("Couldn't print to printer {$printerIp}: ".$e->getMessage());
+
+            return false;
+        } finally {
+            $connector->finalize();
         }
     }
 
