@@ -21,6 +21,11 @@ class OrderNumbers extends Model
         });
     }
 
+    public function kitchenItems(): HasMany
+    {
+        return $this->hasMany(KitchenOrderItem::class, 'order_number_id');
+    }
+
     public function pushSubscriptions(): HasMany
     {
         return $this->hasMany(PushSubscription::class, 'order_number_id');

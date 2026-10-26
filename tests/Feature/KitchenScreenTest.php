@@ -65,3 +65,42 @@ it('shows empty states', function () {
         ->assertSee('Visi užsakymai paruošti')
         ->assertSee('Paruoštų užsakymų nėra');
 });
+
+it('sums up what the preparing orders still need in the summary layout', function () {
+    cache()->forever(Kitchen::LAYOUT_CACHE_KEY, Kitchen::LAYOUT_SUMMARY);
+    $first = kitchenOrder(80);
+    $first->kitchenItems()->createMany([
+        ['name' => 'Kibinas su mėsa', 'amount' => 2, 'toppings' => ['Grietinė'], 'category' => 1],
+        ['name' => 'Cepelinai', 'amount' => 1, 'category' => 5, 'comments' => 'Be spirgų'],
+    ]);
+    kitchenOrder(81)->kitchenItems()->create(['name' => 'Kibinas su mėsa', 'amount' => 3, 'toppings' => ['Grietinė', 'Česnakai'], 'category' => 1]);
+    kitchenOrder(82, ready: true)->kitchenItems()->create(['name' => 'Čeburekas', 'amount' => 4, 'category' => 1]);
+
+    $component = Livewire::test(Kitchen::class)
+        ->assertSee('Gaminti')
+        ->assertSee('Pastabos')
+        ->assertSee('Cepelinai: Be spirgų')
+        ->assertDontSee('Čeburekas')
+        ->assertSeeHtml("makeOrderNotReady('82')");
+
+    $preparing = OrderNumbers::where('is_ready', false)->with('kitchenItems')->orderBy('created_at')->get();
+
+    expect($component->instance()->summary($preparing))->toBe([
+        ['name' => 'Kibinas su mėsa', 'amount' => 5, 'toppings' => ['Grietinė' => 5, 'Česnakai' => 3]],
+        ['name' => 'Cepelinai', 'amount' => 1, 'toppings' => []],
+    ]);
+});
+
+it('keeps the ready column in the numbers layout', function () {
+    kitchenOrder(83)->kitchenItems()->create(['name' => 'Cepelinai', 'amount' => 1]);
+
+    Livewire::test(Kitchen::class)
+        ->assertSee('Paruoštų užsakymų nėra')
+        ->assertDontSeeHtml('data-kitchen-summary');
+});
+
+it('shows an empty summary when nothing is being made', function () {
+    cache()->forever(Kitchen::LAYOUT_CACHE_KEY, Kitchen::LAYOUT_SUMMARY);
+
+    Livewire::test(Kitchen::class)->assertSee('Nėra ką gaminti');
+});

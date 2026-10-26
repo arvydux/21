@@ -4,6 +4,8 @@
      * (customers hear it and see it on the pickup screen); tapping a ready number moves
      * it back. Waiting time turns orange, then red, so late orders stand out. Each grid
      * picks the smallest column count at which all of its tiles fit on the screen.
+     * The summary layout (chosen in the settings) puts the ready numbers in a strip under
+     * the preparing ones and sums up on the right what all preparing orders still need.
      */
     $panel = 'flex min-w-0 flex-col overflow-hidden rounded-[1.75rem] bg-white shadow-[0_10px_30px_-12px_rgba(0,0,0,0.25)]';
     $header = 'flex shrink-0 items-center gap-4 bg-[#17191b] px-6 py-5';
@@ -19,7 +21,8 @@
             const gap = parseFloat(style.rowGap) || 16;
             const panel = grid.parentElement;
             const width = grid.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-            const height = panel.clientHeight - panel.querySelector('header').offsetHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+            const siblings = [...panel.children].filter((child) => child !== grid).reduce((sum, child) => sum + child.offsetHeight, 0);
+            const height = panel.clientHeight - siblings - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
             const tiles = grid.querySelectorAll('[data-kitchen-tile]').length;
             let columns = Number(grid.dataset.minColumns);
             for (; columns < 12; columns++) {
@@ -97,8 +100,100 @@
                 @endforeach
             </div>
         @endif
+
+        @if($layout === \App\Livewire\Kitchen::LAYOUT_SUMMARY)
+            <footer data-kitchen-ready class="mt-auto flex shrink-0 items-center gap-4 border-t border-stone-200 bg-[#f7f7f5] px-6 py-4">
+                <div class="flex shrink-0 items-center gap-3">
+                    <span class="flex size-[clamp(2.25rem,2.8vw,3rem)] items-center justify-center rounded-xl bg-[#169147] text-white">
+                        <svg class="size-[55%]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </span>
+                    <div class="leading-tight">
+                        <p class="text-[clamp(1rem,1.3vw,1.4rem)] font-black uppercase tracking-wide text-[#17191b]">Paruošti <span class="tabular-nums text-[#169147]">{{ $readyOrders->count() }}</span></p>
+                        <p class="text-[clamp(0.7rem,0.8vw,0.85rem)] font-semibold text-stone-500">Bakstelėkite, jei per klaidą</p>
+                    </div>
+                </div>
+
+                @if($readyOrders->isEmpty())
+                    <p class="text-[clamp(0.95rem,1.1vw,1.2rem)] font-bold text-stone-400">Paruoštų užsakymų nėra</p>
+                @else
+                    <div class="flex min-w-0 flex-1 gap-2.5 overflow-x-auto py-1">
+                        @foreach($readyOrders as $order)
+                            <button type="button" wire:key="ready-{{ $order->id }}"
+                                    wire:click="makeOrderNotReady('{{ $order->number }}')" title="Grąžinti į gaminamus"
+                                    class="flex h-[clamp(3rem,4.2vw,4.25rem)] shrink-0 touch-manipulation select-none items-center gap-2 rounded-2xl bg-[#169147] px-[clamp(0.9rem,1.2vw,1.25rem)] text-white transition-transform duration-100 active:scale-95">
+                                @if($order->by_phone)
+                                    <svg class="size-[clamp(1rem,1.2vw,1.25rem)] text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">{!! $phoneIcon !!}</svg>
+                                @endif
+                                <span class="text-[clamp(1.5rem,2.1vw,2.25rem)] font-black leading-none tabular-nums">{{ $order->number }}</span>
+                                <svg class="size-[clamp(1rem,1.2vw,1.25rem)] text-white/60" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+                            </button>
+                        @endforeach
+                    </div>
+                @endif
+            </footer>
+        @endif
     </section>
 
+    @if($layout === \App\Livewire\Kitchen::LAYOUT_SUMMARY)
+    {{-- Gaminti: sum-up of every preparing order --}}
+    <section data-kitchen-summary class="{{ $panel }} flex-[2]">
+        <header class="{{ $header }}">
+            <span class="{{ $chip }} bg-white text-[#17191b]">
+                <svg class="size-[50%]" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+            </span>
+            <div class="min-w-0 flex-1">
+                <h2 class="{{ $title }}">Gaminti</h2>
+                <p class="{{ $subtitle }}">Iš visų gaminamų užsakymų</p>
+            </div>
+            <span class="{{ $count }} bg-[#fdbf2d] text-[#17191b]">{{ collect($summary)->sum('amount') }}</span>
+        </header>
+
+        @if($summary === [])
+            <div class="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center text-[clamp(1.25rem,1.8vw,2rem)] font-bold text-stone-400">
+                <svg class="size-[clamp(3rem,4vw,4.5rem)] text-stone-300" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></svg>
+                Nėra ką gaminti
+            </div>
+        @else
+            <div class="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto p-4">
+                @foreach($summary as $row)
+                    <article wire:key="summary-{{ md5($row['name']) }}" data-kitchen-summary-row
+                             class="flex items-center gap-4 rounded-2xl bg-[#f6f5f1] p-2.5 pr-5">
+                        <span class="flex h-[clamp(2.75rem,3.8vw,4.25rem)] min-w-[clamp(2.75rem,3.8vw,4.25rem)] shrink-0 items-center justify-center rounded-xl bg-[#fdbf2d] px-2 text-[clamp(1.75rem,2.6vw,2.75rem)] font-black leading-none tabular-nums text-[#17191b]">{{ $row['amount'] }}</span>
+                        <div class="flex min-w-0 flex-1 flex-col gap-1.5">
+                            <p class="text-[clamp(1.15rem,1.6vw,1.75rem)] font-extrabold leading-tight text-[#17191b]">{{ $row['name'] }}</p>
+                            @if($row['toppings'] !== [])
+                                <div class="flex flex-wrap gap-1.5">
+                                    @foreach($row['toppings'] as $topping => $amount)
+                                        <span class="flex items-center gap-1.5 rounded-full bg-white py-1 pl-3 pr-1 text-[clamp(0.85rem,1vw,1.1rem)] font-bold text-stone-700 ring-1 ring-black/10">
+                                            {{ $topping }}
+                                            <span class="rounded-full bg-[#17191b] px-2 py-0.5 text-[0.85em] font-black tabular-nums text-white">×{{ $amount }}</span>
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </article>
+                @endforeach
+
+            </div>
+
+            @if($wishes !== [])
+                <div data-kitchen-wishes class="flex max-h-[40%] shrink-0 flex-col gap-2 overflow-y-auto border-t-2 border-red-200 bg-red-50 px-5 py-4">
+                    <p class="flex items-center gap-2 text-[clamp(0.9rem,1.1vw,1.2rem)] font-black uppercase tracking-wider text-red-700">
+                        <svg class="size-[1.2em]" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                        Pastabos
+                    </p>
+                    @foreach($wishes as $wish)
+                        <p class="flex items-start gap-2.5 text-[clamp(0.95rem,1.15vw,1.25rem)] font-bold text-red-950">
+                            <span class="shrink-0 rounded-lg bg-red-600 px-2 py-0.5 font-black tabular-nums text-white">{{ $wish['number'] }}</span>
+                            <span class="min-w-0">{{ $wish['comments'] }}</span>
+                        </p>
+                    @endforeach
+                </div>
+            @endif
+        @endif
+    </section>
+    @else
     {{-- Paruošti --}}
     <section data-kitchen-ready class="{{ $panel }} flex-[2]">
         <header class="{{ $header }}">
@@ -142,4 +237,5 @@
             </div>
         @endif
     </section>
+    @endif
 </div>

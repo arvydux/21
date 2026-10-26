@@ -93,3 +93,39 @@ it('finishes the checkout and logs a warning when a printer is unreachable', fun
 
     Log::shouldHaveReceived('warning')->withArgs(fn (string $message) => str_starts_with($message, "Couldn't print to printer"));
 });
+
+it('keeps the kitchen lines of the order for the kitchen screen', function () {
+    Order::create([
+        'name' => json_encode([['Kibinas su mėsa' => 3.5]]),
+        'toppings' => json_encode([['Grietinė' => 0.5], ['Česnakų padažas' => 0.5]]),
+        'amount' => 2,
+        'category' => 1,
+        'takeaway' => true,
+        'comments' => 'Be svogūnų',
+        'for_kitchen' => true,
+    ]);
+    Order::create(['name' => json_encode([['Kava' => 2.0]]), 'amount' => 1, 'for_kitchen' => false]);
+
+    takeOrderNumber();
+
+    $item = OrderNumbers::sole()->kitchenItems()->sole();
+
+    expect($item->name)->toBe('Kibinas su mėsa')
+        ->and($item->amount)->toBe(2)
+        ->and($item->toppings)->toBe(['Grietinė', 'Česnakų padažas'])
+        ->and($item->category)->toBe(1)
+        ->and($item->takeaway)->toBeTrue()
+        ->and($item->comments)->toBe('Be svogūnų');
+});
+
+it('drops the kitchen lines with the order number when numbers start over', function () {
+    $old = OrderNumbers::create(['number' => 3, 'is_taken' => true]);
+    $old->kitchenItems()->create(['name' => 'Kibinas', 'amount' => 1]);
+    FreeNumbers::first()->update(['number' => 1000]);
+    addOrderLine(true);
+
+    takeOrderNumber();
+
+    expect(OrderNumbers::find($old->id))->toBeNull()
+        ->and(\App\Models\KitchenOrderItem::where('order_number_id', $old->id)->exists())->toBeFalse();
+});

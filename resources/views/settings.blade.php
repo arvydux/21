@@ -43,6 +43,11 @@
                 <flux:subheading class="mb-4 text-white/70">{{ __('Pasirinkite dizaino šabloną savo POS sąsajai') }}</flux:subheading>
 
                 <livewire:template-picker />
+
+                <flux:heading class="mb-1 mt-10">{{ __('Virtuvės ekranas') }}</flux:heading>
+                <flux:subheading class="mb-4 text-white/70">{{ __('Ką virtuvė mato šalia gaminamų užsakymų') }}</flux:subheading>
+
+                <livewire:kitchen-layout-picker />
             </div>
 
             {{-- Mygtukai tab --}}

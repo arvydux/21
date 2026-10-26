@@ -224,8 +224,34 @@ class OrdersList extends Component
             'created_at' => now(),
         ]);
         FreeNumbers::first()->update(['number' => $this->freeNumber + 1]);
+        $this->saveKitchenItems($this->takenOrder);
 
         return $this->freeNumber;
+    }
+
+    /**
+     * Copies the kitchen lines of the cart onto the order number, so the kitchen screen still knows
+     * what to make after the cart is cleared.
+     */
+    private function saveKitchenItems(OrderNumbers $orderNumber): void
+    {
+        $productNames = fn (?string $json): array => collect(json_decode($json ?? '[]', true) ?? [])
+            ->flatMap(fn (array $product): array => array_keys($product))
+            ->map(fn ($name): string => (string) $name)
+            ->all();
+
+        foreach (Order::where('for_kitchen', true)->orderBy('category')->orderBy('id')->get() as $order) {
+            foreach ($productNames($order->name) as $name) {
+                $orderNumber->kitchenItems()->create([
+                    'name' => $name,
+                    'amount' => $order->amount,
+                    'toppings' => $productNames($order->toppings),
+                    'category' => $order->category,
+                    'takeaway' => (bool) $order->takeaway,
+                    'comments' => $order->comments,
+                ]);
+            }
+        }
     }
 
     private function decrementCeburekLeft(): void
