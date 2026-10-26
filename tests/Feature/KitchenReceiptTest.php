@@ -22,6 +22,7 @@ it('leaves about 2 cm of blank paper above the kitchen receipt', function () {
         'name' => json_encode([['Čeburekas su kiauliena' => 5.5]]),
         'amount' => 2,
         'category' => 1,
+        'for_kitchen' => true,
     ]);
 
     $image = Livewire::test(OrdersList::class)->instance()->kitchenReceipt(42, false)->toImage();

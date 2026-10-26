@@ -20,7 +20,7 @@ class PotatoDish extends Model
 
     public const FULL_PORTION_SUFFIX = ' (pilna)';
 
-    protected $fillable = ['number', 'name', 'price', 'half_price', 'sign', 'show', 'package', 'position', 'attention', 'left', 'subcategory_id'];
+    protected $fillable = ['number', 'name', 'price', 'half_price', 'sign', 'show', 'package', 'position', 'attention', 'left', 'subcategory_id', 'for_kitchen'];
 
     public function subcategory(): BelongsTo
     {

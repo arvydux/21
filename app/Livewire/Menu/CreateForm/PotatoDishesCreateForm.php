@@ -23,6 +23,8 @@ class PotatoDishesCreateForm extends Component
 
     public $subcategory_id;
 
+    public bool $for_kitchen = true;
+
     public function save()
     {
         $this->normalizeMoney('price', 'half_price');
@@ -44,6 +46,7 @@ class PotatoDishesCreateForm extends Component
             'sign' => 'A',
             'position' => \App\Models\PotatoDish::max('position') + 1,
             'subcategory_id' => $this->subcategory_id,
+            'for_kitchen' => $this->for_kitchen,
         ]);
 
         // Reset form
@@ -53,6 +56,7 @@ class PotatoDishesCreateForm extends Component
         $this->half_price = '';
         $this->sign = '';
         $this->subcategory_id = null;
+        $this->reset('for_kitchen');
 
         $this->dispatch('productAdded');
     }

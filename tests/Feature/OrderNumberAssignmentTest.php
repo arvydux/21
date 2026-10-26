@@ -11,12 +11,12 @@ beforeEach(function () {
     FreeNumbers::create(['number' => 7]);
 });
 
-function addOrderInCategory(int $category): void
+function addOrderLine(bool $forKitchen): void
 {
     Order::create([
         'name' => json_encode([['Produktas' => 1.0]]),
         'amount' => 1,
-        'category' => $category,
+        'for_kitchen' => $forKitchen,
     ]);
 }
 
@@ -25,37 +25,34 @@ function takeOrderNumber(): ?int
     return Livewire::test(OrdersList::class)->instance()->takeOrderNumber();
 }
 
-it('gives no order number when nothing goes to the kitchen', function (array $categories) {
-    foreach ($categories as $category) {
-        addOrderInCategory($category);
+it('gives no order number when nothing goes to the kitchen', function (array $lines) {
+    foreach ($lines as $forKitchen) {
+        addOrderLine($forKitchen);
     }
 
     expect(takeOrderNumber())->toBeNull()
         ->and(OrderNumbers::count())->toBe(0)
         ->and(FreeNumbers::first()->number)->toBe(7);
 })->with([
-    'Kepiniai' => [[2]],
-    'Gėrimai' => [[3]],
-    'Alkoholis' => [[7]],
-    'Kepiniai, Gėrimai and Alkoholis' => [[2, 3, 7]],
+    'one line not for the kitchen' => [[false]],
+    'several lines not for the kitchen' => [[false, false, false]],
 ]);
 
-it('takes the next order number when something goes to the kitchen', function (array $categories) {
-    foreach ($categories as $category) {
-        addOrderInCategory($category);
+it('takes the next order number when something goes to the kitchen', function (array $lines) {
+    foreach ($lines as $forKitchen) {
+        addOrderLine($forKitchen);
     }
 
     expect(takeOrderNumber())->toBe(7)
         ->and(OrderNumbers::where('number', 7)->exists())->toBeTrue()
         ->and(FreeNumbers::first()->number)->toBe(8);
 })->with([
-    'Čeburekai' => [[1]],
-    'Kiti' => [[4]],
-    'Čeburekai with Gėrimai' => [[1, 3]],
+    'one kitchen line' => [[true]],
+    'a kitchen line with a line not for the kitchen' => [[false, true]],
 ]);
 
 it('remembers the taken order for the link in the receipt QR code', function () {
-    addOrderInCategory(1);
+    addOrderLine(true);
     $component = Livewire::test(OrdersList::class)->instance();
 
     $number = $component->takeOrderNumber();
@@ -67,11 +64,11 @@ it('remembers the taken order for the link in the receipt QR code', function () 
 });
 
 it('forgets the previous order when the next checkout gets no number', function () {
-    addOrderInCategory(1);
+    addOrderLine(true);
     $component = Livewire::test(OrdersList::class)->instance();
     $component->takeOrderNumber();
     Order::truncate();
-    addOrderInCategory(3);
+    addOrderLine(false);
 
     expect($component->takeOrderNumber())->toBeNull()
         ->and((fn () => $this->takenOrder)->call($component))->toBeNull();
@@ -83,7 +80,7 @@ it('finishes the checkout and logs a warning when a printer is unreachable', fun
         'name' => json_encode([['Produktas' => 1.0]]),
         'toppings' => json_encode([]),
         'amount' => 1,
-        'category' => 1,
+        'for_kitchen' => true,
     ]);
 
     Livewire::test(OrdersList::class)

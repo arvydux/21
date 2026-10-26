@@ -16,7 +16,7 @@ class KoldunaiDish extends Model
      */
     public const ORDER_CATEGORY = 6;
 
-    protected $fillable = ['number', 'name', 'price', 'sign', 'show', 'package', 'position', 'attention', 'left', 'subcategory_id'];
+    protected $fillable = ['number', 'name', 'price', 'sign', 'show', 'package', 'position', 'attention', 'left', 'subcategory_id', 'for_kitchen'];
 
     public function subcategory(): BelongsTo
     {

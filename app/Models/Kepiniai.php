@@ -9,7 +9,7 @@ class Kepiniai extends Model
 {
     protected $table = 'kepiniai';
 
-    protected $fillable = ['number', 'name', 'price', 'show', 'takeaway', 'package', 'position', 'attention', 'left', 'subcategory_id'];
+    protected $fillable = ['number', 'name', 'price', 'show', 'takeaway', 'package', 'position', 'attention', 'left', 'subcategory_id', 'for_kitchen'];
 
     public function subcategory(): BelongsTo
     {

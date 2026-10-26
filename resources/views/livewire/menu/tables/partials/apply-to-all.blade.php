@@ -19,5 +19,24 @@
             class="whitespace-nowrap rounded-lg bg-emerald-700 px-6 py-2 font-semibold text-white transition-colors hover:bg-emerald-600">
         Taikyti visiems
     </button>
+    @if(method_exists($this, 'setKitchenForAll'))
+        <div data-kitchen-for-all class="flex items-end gap-3 sm:ms-6 sm:border-s sm:border-gray-200 sm:ps-6">
+            <div>
+                <span class="mb-1 block text-sm font-medium text-gray-600">Spausdinti virtuvei</span>
+                <div class="flex gap-2">
+                    <button type="button" wire:click="setKitchenForAll(true)"
+                            wire:confirm="Spausdinti virtuvei visus šios kategorijos produktus?"
+                            class="whitespace-nowrap rounded-lg bg-emerald-700 px-4 py-2 font-semibold text-white transition-colors hover:bg-emerald-600">
+                        Taip visiems
+                    </button>
+                    <button type="button" wire:click="setKitchenForAll(false)"
+                            wire:confirm="Nespausdinti virtuvei nė vieno šios kategorijos produkto?"
+                            class="whitespace-nowrap rounded-lg bg-gray-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-gray-500">
+                        Ne visiems
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
     @error('bulkValue') <span class="w-full text-sm text-red-500">{{ $message }}</span> @enderror
 </div>

@@ -367,24 +367,25 @@ class OrdersList extends Component
         }
     }
 
-    /**
-     * @return list<int>
-     */
-    private function kitchenCategories(): array
-    {
-        return [1, 4, PotatoDish::ORDER_CATEGORY, KoldunaiDish::ORDER_CATEGORY];
-    }
-
     public function shouldPrintForKitchen(): bool
     {
-        return Order::whereIn('category', $this->kitchenCategories())->exists();
+        return Order::where('for_kitchen', true)->exists();
     }
 
     private const KITCHEN_PRINTER_IP = '192.168.32.100';
 
     private const CLIENT_PRINTER_IP = '192.168.32.101';
 
-    public const CLIENT_RECEIPT_COPIES = 2;
+    /**
+     * Which client receipt copies to print: a branded one for the customer and a plain one for the till,
+     * or only the plain one when the order came by phone and nobody takes a receipt at the counter.
+     *
+     * @return list<bool> The `branded` flag of every copy, in print order.
+     */
+    public function clientReceiptCopies(bool $byPhone): array
+    {
+        return $byPhone ? [false] : [true, false];
+    }
 
     /** About 2 cm of blank paper above the kitchen receipt (203 dpi). */
     public const KITCHEN_TOP_MARGIN = 160;
@@ -412,7 +413,7 @@ class OrdersList extends Component
             ])
             ->separator(thickness: 3);
 
-        foreach (Order::whereIn('category', $this->kitchenCategories())->orderBy('category')->orderBy('id')->get() as $index => $order) {
+        foreach (Order::where('for_kitchen', true)->orderBy('category')->orderBy('id')->get() as $index => $order) {
             if ($index > 0) {
                 $receipt->separator(dashed: true, thickness: 3, dash: 8, gap: 4);
             }
@@ -575,8 +576,8 @@ class OrdersList extends Component
 
     private function printOrderForClient(?int $freeOrder, bool $byPhone, ?string $statusUrl): void
     {
-        for ($copy = 0; $copy < self::CLIENT_RECEIPT_COPIES; $copy++) {
-            $this->printReceipt(self::CLIENT_PRINTER_IP, fn () => $this->fullClientReceipt($freeOrder, $byPhone, $statusUrl, branded: $copy === 0));
+        foreach ($this->clientReceiptCopies($byPhone) as $branded) {
+            $this->printReceipt(self::CLIENT_PRINTER_IP, fn () => $this->fullClientReceipt($freeOrder, $byPhone, $statusUrl, branded: $branded));
         }
     }
 

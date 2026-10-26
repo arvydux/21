@@ -19,6 +19,8 @@ class OtherProductsCreateForm extends Component
 
     public $subcategory_id;
 
+    public bool $for_kitchen = true;
+
     public function save()
     {
         $this->normalizeMoney('price');
@@ -36,6 +38,7 @@ class OtherProductsCreateForm extends Component
             'name' => $this->name,
             'price' => $this->price,
             'subcategory_id' => $this->subcategory_id,
+            'for_kitchen' => $this->for_kitchen,
         ]);
 
         // Reset form
@@ -43,6 +46,7 @@ class OtherProductsCreateForm extends Component
         $this->name = '';
         $this->price = '';
         $this->subcategory_id = null;
+        $this->reset('for_kitchen');
 
         $this->dispatch('productAdded');
     }

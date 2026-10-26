@@ -21,6 +21,8 @@ class KoldunaiDishesCreateForm extends Component
 
     public $subcategory_id;
 
+    public bool $for_kitchen = true;
+
     public function save()
     {
         $this->normalizeMoney('price');
@@ -40,6 +42,7 @@ class KoldunaiDishesCreateForm extends Component
             'sign' => 'A',
             'position' => \App\Models\KoldunaiDish::max('position') + 1,
             'subcategory_id' => $this->subcategory_id,
+            'for_kitchen' => $this->for_kitchen,
         ]);
 
         // Reset form
@@ -48,6 +51,7 @@ class KoldunaiDishesCreateForm extends Component
         $this->price = '';
         $this->sign = '';
         $this->subcategory_id = null;
+        $this->reset('for_kitchen');
 
         $this->dispatch('productAdded');
     }

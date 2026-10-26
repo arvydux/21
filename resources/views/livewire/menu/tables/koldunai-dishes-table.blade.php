@@ -11,6 +11,7 @@
                     <th scope="col" class="px-6 py-3">Pavadinimas</th>
                     <th scope="col" class="px-6 py-3 w-32">Kaina</th>
                     <th scope="col" class="px-6 py-3 w-28">Rodyti</th>
+                    <th scope="col" class="px-6 py-3 w-28">Virtuvei</th>
                     <th scope="col" class="px-6 py-3 w-36">Pakuotės kaina</th>
                     <th scope="col" class="px-6 py-3 w-44">Subkategorija</th>
                     <th scope="col" class="px-6 py-3 w-44">Veiksmai</th>
@@ -29,6 +30,7 @@
                             <div class="flex items-center"><div class="h-2.5 w-2.5 rounded-full bg-gray-300 me-2"></div> Ne</div>
                         @endif
                     </td>
+                    @include('livewire.menu.tables.partials.kitchen-cell')
                     <td class="px-6 py-4">{{ number_format($productName->package ?? 0, 2) }} €</td>
                     <td class="px-6 py-4">{{ $productName->subcategory?->name ?? '—' }}</td>
                     <td class="px-4 py-4">
@@ -39,7 +41,7 @@
                     </td>
                 </tr>
                 <tr class="@if($editedProductNameId !== $productName->id) hidden @endif border-b-2 border-emerald-400/50 bg-emerald-900/30">
-                    <td colspan="7" class="px-4 py-4">
+                    <td colspan="8" class="px-4 py-4">
                         <div class="flex gap-4 items-end flex-wrap">
                             <div class="w-20">
                                 <label class="block mb-1 text-xs font-medium text-white/70">Nr.</label>
@@ -63,6 +65,7 @@
                                     <div class="w-[53px] h-7 flex items-center bg-gray-300 rounded-full text-[9px] peer-checked:text-emerald-700 text-gray-300 font-extrabold after:flex after:items-center after:justify-center peer after:content-['Ne'] peer-checked:after:content-['Taip'] peer-checked:after:translate-x-full after:absolute after:left-[2px] peer-checked:after:border-white after:bg-white after:border after:border-gray-300 after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-600"></div>
                                 </label>
                             </div>
+                            @include('livewire.menu.tables.partials.kitchen-toggle')
                             <div class="w-32">
                                 <label class="block mb-1 text-xs font-medium text-white/70">Pakuotės kaina</label>
                                 <input type="text" inputmode="decimal" placeholder="0,00" wire:model="package" id="package-price" class="w-full bg-white/90 px-3 py-2 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />

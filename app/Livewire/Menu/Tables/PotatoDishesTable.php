@@ -3,12 +3,13 @@
 namespace App\Livewire\Menu\Tables;
 
 use App\Livewire\Concerns\AppliesValueToAllProducts;
+use App\Livewire\Concerns\SetsKitchenForAllProducts;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class PotatoDishesTable extends Component
 {
-    use AppliesValueToAllProducts;
+    use AppliesValueToAllProducts, SetsKitchenForAllProducts;
 
     public int $editedProductNameId = 0;
 
@@ -42,6 +43,7 @@ class PotatoDishesTable extends Component
         $this->half_price = $this->product->half_price;
         $this->sign = $this->product->sign;
         $this->show = $this->product->show;
+        $this->for_kitchen = (bool) $this->product->for_kitchen;
         $this->package = $this->product->package;
         $this->subcategory_id = $this->product->subcategory_id;
     }
@@ -61,9 +63,9 @@ class PotatoDishesTable extends Component
 
         if (is_null($this->product)) {
             $position = \App\Models\PotatoDish::max('position') + 1;
-            \App\Models\PotatoDish::create(array_merge($this->only('number', 'name', 'price', 'half_price', 'show', 'sign', 'package', 'subcategory_id'), ['position' => $position]));
+            \App\Models\PotatoDish::create(array_merge($this->only('number', 'name', 'price', 'half_price', 'show', 'for_kitchen', 'sign', 'package', 'subcategory_id'), ['position' => $position]));
         } else {
-            $this->product->update($this->only('number', 'name', 'price', 'half_price', 'show', 'sign', 'package', 'subcategory_id'));
+            $this->product->update($this->only('number', 'name', 'price', 'half_price', 'show', 'for_kitchen', 'sign', 'package', 'subcategory_id'));
         }
 
         $this->editedProductNameId = 0;

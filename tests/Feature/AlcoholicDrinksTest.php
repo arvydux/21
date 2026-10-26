@@ -59,7 +59,7 @@ it('does not merge with a soft drink of the same name and price', function () {
 });
 
 it('does not print alcohol on the kitchen ticket', function () {
-    Order::create(['name' => json_encode([['Švyturys' => 3.5]]), 'amount' => 1, 'category' => AlcoholicDrink::ORDER_CATEGORY]);
+    Livewire::test(AlcoholicDrinks::class)->call('addProduct', 'Švyturys', '3.50');
 
     expect(Livewire::test(OrdersList::class)->instance()->shouldPrintForKitchen())->toBeFalse();
 });

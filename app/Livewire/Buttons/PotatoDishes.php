@@ -79,6 +79,7 @@ class PotatoDishes extends Component
                 'toppings' => json_encode($toppingsWithPrices),
                 'takeaway' => $this->takeaway,
                 'package' => $product->package,
+                'for_kitchen' => (bool) $product->for_kitchen,
                 'order_price' => $orderPrice,
                 'category' => PotatoDish::ORDER_CATEGORY,
             ]);

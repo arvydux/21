@@ -16,7 +16,7 @@ class AlcoholicDrink extends Model
      */
     public const ORDER_CATEGORY = 7;
 
-    protected $fillable = ['number', 'name', 'price', 'show', 'package', 'position', 'attention', 'left', 'subcategory_id'];
+    protected $fillable = ['number', 'name', 'price', 'show', 'package', 'position', 'attention', 'left', 'subcategory_id', 'for_kitchen'];
 
     public function subcategory(): BelongsTo
     {

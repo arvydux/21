@@ -77,6 +77,7 @@ class KoldunaiDishes extends Component
                 'toppings' => json_encode($toppingsWithPrices),
                 'takeaway' => $this->takeaway,
                 'package' => $product->package,
+                'for_kitchen' => (bool) $product->for_kitchen,
                 'order_price' => $orderPrice,
                 'category' => KoldunaiDish::ORDER_CATEGORY,
             ]);

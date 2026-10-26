@@ -67,6 +67,7 @@ class Ceburekai extends Component
         $this->orderPrice += $productPrices[$this->productName];
         $productWithPrice[] = [$this->productName => $productPrices[$this->productName]];
         sort($this->toppings);
+        $ceburek = Ceburek::where('name', $this->productName)->first();
         foreach ($this->toppings as $topping) {
             $this->orderPrice += $toppingPrices[$topping];
             $toppingsWithPrices[] = [$topping => $toppingPrices[$topping]];
@@ -86,7 +87,8 @@ class Ceburekai extends Component
                     'name' => json_encode($productWithPrice),
                     'toppings' => json_encode($toppingsWithPrices),
                     'takeaway' => $this->takeaway,
-                    'package' => Ceburek::where('name', $this->productName)->first()->package,
+                    'package' => $ceburek->package,
+                    'for_kitchen' => (bool) $ceburek->for_kitchen,
                     'order_price' => $this->orderPrice,
                     'category' => 1,
                 ]);
@@ -108,7 +110,8 @@ class Ceburekai extends Component
                     'name' => json_encode($productWithPrice),
                     'toppings' => json_encode($toppingsWithPrices),
                     'takeaway' => $this->takeaway,
-                    'package' => Ceburek::where('name', $this->productName)->first()->package,
+                    'package' => $ceburek->package,
+                    'for_kitchen' => (bool) $ceburek->for_kitchen,
                     'order_price' => $this->orderPrice,
                     'category' => 1,
                 ]);

@@ -126,8 +126,12 @@ it('keeps Lithuanian letters and quotes as they are', function () {
     expect(fullReceiptLines()[0]['text'])->toBe('1 x Viskis JACK DANIEL’S (500 ml)');
 });
 
-it('prints two copies of the full receipt for the client', function () {
-    expect(OrdersList::CLIENT_RECEIPT_COPIES)->toBe(2);
+it('prints a branded and a plain copy of the full receipt for the client', function () {
+    expect(Livewire::test(OrdersList::class)->instance()->clientReceiptCopies(false))->toBe([true, false]);
+});
+
+it('prints only the plain copy of the full receipt for phone orders', function () {
+    expect(Livewire::test(OrdersList::class)->instance()->clientReceiptCopies(true))->toBe([false]);
 });
 
 /**

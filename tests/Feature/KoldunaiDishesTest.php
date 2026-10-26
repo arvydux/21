@@ -123,7 +123,9 @@ it('does nothing when no dish was chosen', function () {
 });
 
 it('prints the dishes on the kitchen ticket', function () {
-    Order::create(['name' => json_encode([['Koldūnai' => 7.5]]), 'amount' => 1, 'category' => KoldunaiDish::ORDER_CATEGORY]);
+    Livewire::test(KoldunaiDishes::class)
+        ->call('chooseProduct', $this->dish->id)
+        ->call('addOrder');
 
     expect(Livewire::test(OrdersList::class)->instance()->shouldPrintForKitchen())->toBeTrue();
 });

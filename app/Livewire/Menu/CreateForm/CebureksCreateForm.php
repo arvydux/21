@@ -21,6 +21,8 @@ class CebureksCreateForm extends Component
 
     public $subcategory_id;
 
+    public bool $for_kitchen = true;
+
     public function save()
     {
         $this->normalizeMoney('price');
@@ -39,6 +41,7 @@ class CebureksCreateForm extends Component
             'price' => $this->price,
             'sign' => 'A',
             'subcategory_id' => $this->subcategory_id,
+            'for_kitchen' => $this->for_kitchen,
         ]);
 
         // Reset form
@@ -47,6 +50,7 @@ class CebureksCreateForm extends Component
         $this->price = '';
         $this->sign = '';
         $this->subcategory_id = null;
+        $this->reset('for_kitchen');
 
         $this->dispatch('productAdded');
     }

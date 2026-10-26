@@ -31,6 +31,7 @@
             </select>
             @error('subcategory_id') <span class="text-sm text-red-500">Pasirinkite subkategoriją</span> @enderror
         </div>
+        @include('livewire.menu.create-form.partials.kitchen-toggle')
         <button wire:click="save" class="px-6 py-2 bg-emerald-700 hover:bg-emerald-600 rounded-lg text-white font-semibold whitespace-nowrap transition-colors">
             Sukurti produktą
         </button>

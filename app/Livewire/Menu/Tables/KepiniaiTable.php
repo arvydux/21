@@ -3,12 +3,13 @@
 namespace App\Livewire\Menu\Tables;
 
 use App\Livewire\Concerns\AppliesValueToAllProducts;
+use App\Livewire\Concerns\SetsKitchenForAllProducts;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class KepiniaiTable extends Component
 {
-    use AppliesValueToAllProducts;
+    use AppliesValueToAllProducts, SetsKitchenForAllProducts;
 
     public int $editedProductNameId = 0;
 
@@ -36,6 +37,7 @@ class KepiniaiTable extends Component
         $this->name = $this->simpleProduct->name;
         $this->price = $this->simpleProduct->price;
         $this->show = $this->simpleProduct->show;
+        $this->for_kitchen = (bool) $this->simpleProduct->for_kitchen;
         $this->package = $this->simpleProduct->package;
         $this->subcategory_id = $this->simpleProduct->subcategory_id;
     }
@@ -54,9 +56,9 @@ class KepiniaiTable extends Component
 
         if (is_null($this->simpleProduct)) {
             $position = \App\Models\Kepiniai::max('position') + 1;
-            \App\Models\Kepiniai::create(array_merge($this->only('number', 'name', 'price', 'show', 'package', 'subcategory_id'), ['position' => $position]));
+            \App\Models\Kepiniai::create(array_merge($this->only('number', 'name', 'price', 'show', 'for_kitchen', 'package', 'subcategory_id'), ['position' => $position]));
         } else {
-            $this->simpleProduct->update($this->only('number', 'name', 'price', 'show', 'package', 'subcategory_id'));
+            $this->simpleProduct->update($this->only('number', 'name', 'price', 'show', 'for_kitchen', 'package', 'subcategory_id'));
         }
 
         $this->editedProductNameId = 0;

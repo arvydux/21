@@ -36,10 +36,12 @@ class AlcoholicDrinks extends Component
                 'amount' => $sameOrder->amount + 1,
             ]);
         } else {
+            $product = AlcoholicDrink::where('name', $productName)->first();
             Order::create([
                 'name' => json_encode([[$productName => $productPrice]]),
                 'order_price' => $productPrice,
-                'package' => AlcoholicDrink::where('name', $productName)->first()->package,
+                'package' => $product->package,
+                'for_kitchen' => (bool) $product->for_kitchen,
                 'category' => AlcoholicDrink::ORDER_CATEGORY,
             ]);
         }

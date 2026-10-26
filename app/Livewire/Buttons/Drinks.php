@@ -34,11 +34,12 @@ class Drinks extends Component
                 'amount' => $sameOrder->amount + 1,
             ]);
         } else {
+            $product = Drink::where('name', $productName)->first();
             Order::create([
                 'name' => json_encode([[$productName => $productPrice]]),
                 'order_price' => $productPrice,
-                'package' => Drink::where('name', $productName)->first()->package,
-
+                'package' => $product->package,
+                'for_kitchen' => (bool) $product->for_kitchen,
                 'category' => 3,
             ]);
         }
