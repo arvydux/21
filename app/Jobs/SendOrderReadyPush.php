@@ -3,16 +3,17 @@
 namespace App\Jobs;
 
 use App\Models\PushSubscription;
-use ErrorException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Log;
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;
+use Throwable;
 
 /**
  * Tells every browser following an order on the online board that it is ready.
- * Each subscription is used once and then removed. Missing push keys only leave a warning
- * in the log, so marking an order ready never fails because of them.
+ * Each subscription is used once and then removed. Any failure to send (missing push keys,
+ * a server that cannot encrypt) only leaves a warning in the log, so marking an order ready never fails.
  */
 class SendOrderReadyPush
 {
@@ -40,12 +41,22 @@ class SendOrderReadyPush
         }
 
         try {
-            $webPush = app(WebPush::class);
-        } catch (ErrorException $e) {
+            $this->send($subscriptions);
+        } catch (Throwable $e) {
             Log::warning("Couldn't send the order ready push for order {$this->number}: ".$e->getMessage());
 
             return;
         }
+
+        PushSubscription::query()->whereKey($subscriptions->modelKeys())->delete();
+    }
+
+    /**
+     * @param  Collection<int, PushSubscription>  $subscriptions
+     */
+    private function send(Collection $subscriptions): void
+    {
+        $webPush = app(WebPush::class);
 
         foreach ($subscriptions as $subscription) {
             $token = $subscription->orderNumber->token;
@@ -68,7 +79,5 @@ class SendOrderReadyPush
                 Log::info('Order ready push failed', ['number' => $this->number, 'reason' => $report->getReason()]);
             }
         }
-
-        PushSubscription::query()->whereKey($subscriptions->modelKeys())->delete();
     }
 }

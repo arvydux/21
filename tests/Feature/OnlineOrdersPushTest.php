@@ -222,3 +222,17 @@ it('logs a warning instead of failing when the push keys are missing', function 
     Log::shouldHaveReceived('warning')->withArgs(fn (string $message) => str_contains($message, "Couldn't send the order ready push for order 47"));
     expect(PushSubscription::count())->toBe(1);
 });
+
+it('logs a warning instead of failing when the server cannot encrypt the push', function () {
+    Log::spy();
+    $order = pushOrder(47, isReady: true);
+    PushSubscription::factory()->for($order, 'orderNumber')->create();
+    mock(WebPush::class)
+        ->shouldReceive('queueNotification')
+        ->andThrow(new RuntimeException('Unable to create the local key.'));
+
+    (new SendOrderReadyPush(47))->handle();
+
+    Log::shouldHaveReceived('warning')->withArgs(fn (string $message) => str_contains($message, 'Unable to create the local key.'));
+    expect(PushSubscription::count())->toBe(1);
+});
