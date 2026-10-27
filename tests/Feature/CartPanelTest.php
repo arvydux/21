@@ -22,13 +22,14 @@ it('shows each cart line with its unit price and line total', function () {
         ->assertSee('Vietoje');
 });
 
-it('includes toppings and the package in the unit price', function () {
+it('includes toppings and the package in the unit price of a takeaway line', function () {
     $order = Order::create([
         'name' => json_encode([['Čeburekas' => '3.00']]),
         'toppings' => json_encode([['Sūris' => '0.50']]),
         'order_price' => 3.50,
         'package' => 0.20,
         'amount' => 3,
+        'takeaway' => true,
         'category' => 1,
     ]);
 
@@ -36,6 +37,61 @@ it('includes toppings and the package in the unit price', function () {
 
     expect($component->instance()->unitPrice($order))->toEqualWithDelta(3.70, 0.001);
     $component->assertSee('11,10 €');
+});
+
+it('does not charge or show the package for a line eaten on the spot', function () {
+    $order = Order::create([
+        'name' => json_encode([['Čeburekas' => '3.00']]),
+        'order_price' => 3.00,
+        'package' => 0.20,
+        'amount' => 2,
+        'category' => 1,
+    ]);
+
+    $component = Livewire::test(OrdersList::class);
+
+    expect($component->instance()->unitPrice($order))->toEqualWithDelta(3.00, 0.001)
+        ->and($component->instance()->categorySums())->not->toHaveKey('Pakuotės');
+    $component->assertDontSee('Pakuotė')->assertSee('6,00 €');
+});
+
+it('adds and removes the package when the line is switched between takeaway and on the spot', function () {
+    $order = Order::create([
+        'name' => json_encode([['Čeburekas' => '3.00']]),
+        'order_price' => 3.00,
+        'package' => 0.20,
+        'amount' => 1,
+        'category' => 1,
+    ]);
+
+    $component = Livewire::test(OrdersList::class)
+        ->call('changeTakeaway', $order->id)
+        ->dispatch('change-order')
+        ->assertSee('+ Pakuotė')
+        ->assertSee('3,20 €');
+
+    expect($component->instance()->categorySums()['Pakuotės'])->toEqualWithDelta(0.20, 0.001);
+
+    $component->call('changeTakeaway', $order->id)
+        ->dispatch('change-order')
+        ->assertDontSee('Pakuotė')
+        ->assertSee('3,00 €');
+});
+
+it('adds new products on the spot and keeps takeaway lines of the same drink separate', function () {
+    $drink = Drink::create(['name' => 'Kava juoda', 'price' => 2.00, 'package' => 0.10, 'show' => true, 'position' => 1]);
+
+    Livewire::test(Drinks::class)->call('addProduct', $drink->name, '2.00');
+    $first = Order::sole();
+    expect($first->takeaway)->toBeFalsy();
+
+    $first->update(['takeaway' => true]);
+    Livewire::test(Drinks::class)->call('addProduct', $drink->name, '2.00');
+    Livewire::test(Drinks::class)->call('addProduct', $drink->name, '2.00');
+
+    expect(Order::count())->toBe(2)
+        ->and($first->fresh()->amount)->toBe(1)
+        ->and(Order::where('takeaway', false)->sole()->amount)->toBe(2);
 });
 
 it('shows an empty cart message and a zero total without orders', function () {
@@ -83,7 +139,7 @@ it('does not poll for ready orders from the cart', function () {
 });
 
 it('splits the cart sum into food, drinks and packages', function () {
-    Order::create(['name' => json_encode([['Kibinas' => '3.50']]), 'order_price' => 3.50, 'amount' => 2, 'package' => 0.20, 'category' => 2]);
+    Order::create(['name' => json_encode([['Kibinas' => '3.50']]), 'order_price' => 3.50, 'amount' => 2, 'package' => 0.20, 'takeaway' => true, 'category' => 2]);
     Order::create(['name' => json_encode([['Kava juoda' => '2.00']]), 'order_price' => 2.00, 'amount' => 1, 'category' => 3]);
 
     $component = Livewire::test(OrdersList::class);

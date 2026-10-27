@@ -101,7 +101,7 @@ class OrdersList extends Component
             }
         }
 
-        return $price + (float) $order->package;
+        return $price + $order->chargedPackage();
     }
 
     public function itemCountLabel(int $count): string
@@ -603,8 +603,8 @@ class OrdersList extends Component
                 }
             }
 
-            if ($order->package) {
-                $addLine('+ Pakuotė', $order->amount * (float) $order->package, 30);
+            if ($order->chargedPackage() > 0) {
+                $addLine('+ Pakuotė', $order->amount * $order->chargedPackage(), 30);
             }
 
             if ($order->takeaway) {
@@ -786,7 +786,7 @@ class OrdersList extends Component
         return array_filter([
             'Kepiniai' => (float) $orders->where('category', '!=', 3)->sum(fn (Order $order): float => $order->order_price * $order->amount),
             'Gėrimai' => (float) $orders->where('category', 3)->sum(fn (Order $order): float => $order->order_price * $order->amount),
-            'Pakuotės' => (float) $orders->sum(fn (Order $order): float => (float) $order->package * $order->amount),
+            'Pakuotės' => (float) $orders->sum(fn (Order $order): float => $order->chargedPackage() * $order->amount),
         ], fn (float $sum): bool => $sum > 0);
     }
 }

@@ -23,7 +23,7 @@ class Ceburekai extends Component
 
     public $productName;
 
-    public $takeaway = true;
+    public $takeaway = false;
 
     public ?int $subcategoryId = null;
 

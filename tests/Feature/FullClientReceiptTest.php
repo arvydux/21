@@ -116,6 +116,20 @@ it('adds packaging, takeaway and comments and counts packaging in the total', fu
     ]);
 });
 
+it('leaves the package out of the receipt for a line eaten on the spot', function () {
+    Order::create([
+        'name' => json_encode([['Kibinas' => 3.0]]),
+        'amount' => 2,
+        'category' => 2,
+        'package' => 0.2,
+    ]);
+
+    expect(fullReceiptLines())->toBe([
+        receiptLine('2 x Kibinas', '6.00'),
+        receiptLine('Viso', '6.00 EUR'),
+    ]);
+});
+
 it('keeps Lithuanian letters and quotes as they are', function () {
     Order::create([
         'name' => json_encode([['Viskis JACK DANIEL’S (500 ml)' => 40.0]]),

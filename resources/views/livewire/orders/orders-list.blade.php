@@ -115,8 +115,8 @@
                                         @endforeach
                                     @endforeach
                                 @endif
-                                @if($order->package)
-                                    <p class="text-sm font-semibold text-stone-600">+ Pakuotė <span class="text-stone-400">{{ $money((float) $order->package) }}</span></p>
+                                @if($order->chargedPackage() > 0)
+                                    <p class="text-sm font-semibold text-stone-600">+ Pakuotė <span class="text-stone-400">{{ $money($order->chargedPackage()) }}</span></p>
                                 @endif
                                 @if($order->takeaway || $order->comments)
                                     <div class="mt-1.5 flex flex-wrap items-center gap-2">
@@ -180,8 +180,8 @@
                             @endforeach
                         @endif
 
-                        @if($order->package)
-                            <p class="kasa-meta text-white/75">+ Pakuotė <span class="text-white/55">{{ $money((float) $order->package) }}</span></p>
+                        @if($order->chargedPackage() > 0)
+                            <p class="kasa-meta text-white/75">+ Pakuotė <span class="text-white/55">{{ $money($order->chargedPackage()) }}</span></p>
                         @endif
 
                         <p class="kasa-meta mt-0.5">{{ $money($unitPrice) }} / vnt.</p>

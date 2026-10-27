@@ -29,6 +29,7 @@ class AlcoholicDrinks extends Component
         $this->selectedProductName = $productName;
         $productWithPrice[] = [$productName => $productPrice];
         $sameOrder = Order::where('category', AlcoholicDrink::ORDER_CATEGORY)
+            ->where('takeaway', false)
             ->get()
             ->first(fn (Order $order) => json_decode($order->name, true) == $productWithPrice);
         if ($sameOrder) {

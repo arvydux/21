@@ -15,4 +15,12 @@ class Order extends Model
     {
         return (int) $this->category === AlcoholicDrink::ORDER_CATEGORY;
     }
+
+    /**
+     * Package price of one unit, charged only when the line is taken away.
+     */
+    public function chargedPackage(): float
+    {
+        return $this->takeaway ? (float) $this->package : 0.0;
+    }
 }

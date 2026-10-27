@@ -100,7 +100,7 @@ it('keeps lines with different toppings or takeaway choice separate', function (
         ->call('addOrder')
         ->set('toppings', ['Jelapenai'])
         ->call('addOrder')
-        ->set('takeaway', false)
+        ->set('takeaway', true)
         ->call('addOrder');
 
     expect(Order::count())->toBe(3);

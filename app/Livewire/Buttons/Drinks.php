@@ -28,7 +28,10 @@ class Drinks extends Component
     {
         $this->selectedProductName = $productName;
         $productWithPrice[] = [$productName => $productPrice];
-        $sameOrder = Order::whereJsonContains('name', $productWithPrice)->first() ?? null;
+        $sameOrder = Order::where('category', 3)
+            ->where('takeaway', false)
+            ->get()
+            ->first(fn (Order $order) => json_decode($order->name, true) == $productWithPrice);
         if ($sameOrder) {
             Order::where('id', $sameOrder->id)->update([
                 'amount' => $sameOrder->amount + 1,

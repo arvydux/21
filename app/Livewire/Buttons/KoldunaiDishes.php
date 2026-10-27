@@ -19,7 +19,7 @@ class KoldunaiDishes extends Component
      */
     public array $toppings = [];
 
-    public $takeaway = true;
+    public $takeaway = false;
 
     public ?int $subcategoryId = null;
 

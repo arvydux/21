@@ -21,7 +21,7 @@ class PotatoDishes extends Component
 
     public bool $isHalfPortion = false;
 
-    public $takeaway = true;
+    public $takeaway = false;
 
     public ?int $subcategoryId = null;
 
