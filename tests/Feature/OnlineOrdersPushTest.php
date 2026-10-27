@@ -5,6 +5,7 @@ use App\Livewire\Kitchen;
 use App\Models\OrderNumbers;
 use App\Models\PushSubscription;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
 use Livewire\Livewire;
 use Minishlink\WebPush\MessageSentReport;
 use Minishlink\WebPush\Subscription;
@@ -111,7 +112,7 @@ it('pushes to every follower of a ready order once and forgets them', function (
         ->shouldReceive('flush')->once()
         ->andReturnUsing(fn () => yield from []);
 
-    (new SendOrderReadyPush(47))->handle(app(WebPush::class));
+    (new SendOrderReadyPush(47))->handle();
 
     expect($sent)->toHaveCount(2)
         ->and($sent[0]['body'])->toContain('Nr. 47 paruoštas')
@@ -133,7 +134,7 @@ it('forgets followers even when the push service rejects them', function () {
         ->shouldReceive('flush')->once()
         ->andReturnUsing(fn () => yield $report);
 
-    (new SendOrderReadyPush(47))->handle(app(WebPush::class));
+    (new SendOrderReadyPush(47))->handle();
 
     expect(PushSubscription::count())->toBe(0);
 });
@@ -144,7 +145,7 @@ it('does not push for an order that is not ready', function () {
 
     mock(WebPush::class)->shouldNotReceive('queueNotification', 'flush');
 
-    (new SendOrderReadyPush(47))->handle(app(WebPush::class));
+    (new SendOrderReadyPush(47))->handle();
 
     expect(PushSubscription::count())->toBe(1);
 });
@@ -198,7 +199,26 @@ it('asks the push service to wake a sleeping phone right away', function () {
         ->shouldReceive('flush')->once()
         ->andReturnUsing(fn () => yield from []);
 
-    (new SendOrderReadyPush(47))->handle(app(WebPush::class));
+    (new SendOrderReadyPush(47))->handle();
 
     expect($options)->toBe(['urgency' => 'high', 'TTL' => 1800]);
+});
+
+it('does not need the push keys when nobody follows the order', function () {
+    config(['online-orders.vapid.public_key' => null, 'online-orders.vapid.private_key' => null]);
+    pushOrder(47, isReady: true);
+
+    (new SendOrderReadyPush(47))->handle();
+})->throwsNoExceptions();
+
+it('logs a warning instead of failing when the push keys are missing', function () {
+    config(['online-orders.vapid.public_key' => null, 'online-orders.vapid.private_key' => null]);
+    Log::spy();
+    $order = pushOrder(47, isReady: true);
+    PushSubscription::factory()->for($order, 'orderNumber')->create();
+
+    (new SendOrderReadyPush(47))->handle();
+
+    Log::shouldHaveReceived('warning')->withArgs(fn (string $message) => str_contains($message, "Couldn't send the order ready push for order 47"));
+    expect(PushSubscription::count())->toBe(1);
 });

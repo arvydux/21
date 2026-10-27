@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\PushSubscription;
+use ErrorException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Log;
 use Minishlink\WebPush\Subscription;
@@ -10,7 +11,8 @@ use Minishlink\WebPush\WebPush;
 
 /**
  * Tells every browser following an order on the online board that it is ready.
- * Each subscription is used once and then removed.
+ * Each subscription is used once and then removed. Missing push keys only leave a warning
+ * in the log, so marking an order ready never fails because of them.
  */
 class SendOrderReadyPush
 {
@@ -26,7 +28,7 @@ class SendOrderReadyPush
 
     public function __construct(public int $number) {}
 
-    public function handle(WebPush $webPush): void
+    public function handle(): void
     {
         $subscriptions = PushSubscription::query()
             ->with('orderNumber')
@@ -34,6 +36,14 @@ class SendOrderReadyPush
             ->get();
 
         if ($subscriptions->isEmpty()) {
+            return;
+        }
+
+        try {
+            $webPush = app(WebPush::class);
+        } catch (ErrorException $e) {
+            Log::warning("Couldn't send the order ready push for order {$this->number}: ".$e->getMessage());
+
             return;
         }
 
