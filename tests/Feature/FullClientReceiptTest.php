@@ -169,6 +169,26 @@ it('links receipts without an order number to the general board', function () {
     expect(receiptQrLink($receipt))->toBe('https://status.prusakovuuzeiga.lt/online');
 });
 
+it('explains the QR code above it only when the order can be followed', function () {
+    Order::create([
+        'name' => json_encode([['Kibinas su mėsa' => 3.5]]),
+        'amount' => 1,
+        'category' => 1,
+    ]);
+    $component = Livewire::test(OrdersList::class)->instance();
+    $link = 'https://status.prusakovuuzeiga.lt/online/AbCdE12345';
+
+    $withNumber = $component->fullClientReceipt(42, false, $link)->toImage();
+    $withoutNumber = $component->fullClientReceipt(null, false, $link)->toImage();
+
+    $headerDifference = 70 - 54;
+    $caption = 6 + 56;
+
+    expect(imagesy($withNumber) - imagesy($withoutNumber))->toBe($headerDifference + $caption)
+        ->and(receiptQrLink($withNumber))->toBe($link)
+        ->and(OrdersList::QR_CAPTION[0])->toBe('Sekite užsakymą telefonu');
+});
+
 it('prints the second client copy without the kibinas, the name, the thank-you line and the QR code', function () {
     Order::create([
         'name' => json_encode([['Kava Cappuccino' => 2.5]]),

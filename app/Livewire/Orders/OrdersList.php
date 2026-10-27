@@ -487,6 +487,13 @@ class OrdersList extends Component
     }
 
     /**
+     * What the QR code on a numbered client receipt is for, printed right above it.
+     *
+     * @var array{0: string, 1: string}
+     */
+    public const QR_CAPTION = ['Sekite užsakymą telefonu', 'Nuskenuokite – pranešime, kai bus paruoštas'];
+
+    /**
      * @param  ?string  $statusUrl  Personal page of the order for the QR code; the general board when the order has no number.
      */
     /**
@@ -550,8 +557,17 @@ class OrdersList extends Component
         if ($branded) {
             $receipt->group(50, [
                 $text('Ačiū ir skanaus!', 'Montserrat-Regular', 21, 'center', 37),
-            ])
-                ->qrCode($statusUrl)
+            ]);
+
+            if ($orderNumber !== null) {
+                [$title, $hint] = self::QR_CAPTION;
+                $receipt->space(6)->group(56, [
+                    $text($title, 'Montserrat-Bold', 18, 'center', 22),
+                    $text($hint, 'Inter-Medium', 15, 'center', 48),
+                ]);
+            }
+
+            $receipt->qrCode($statusUrl)
                 ->group(32, [
                     $text(Str::after($statusUrl, '://'), 'Inter-Medium', 11.5, 'center', 16),
                 ]);
