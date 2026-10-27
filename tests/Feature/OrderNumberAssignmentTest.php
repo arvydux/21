@@ -129,3 +129,14 @@ it('drops the kitchen lines with the order number when numbers start over', func
     expect(OrderNumbers::find($old->id))->toBeNull()
         ->and(\App\Models\KitchenOrderItem::where('order_number_id', $old->id)->exists())->toBeFalse();
 });
+
+it('still gives the order number when the kitchen items cannot be saved', function () {
+    Log::spy();
+    \Illuminate\Support\Facades\Schema::drop('kitchen_order_items');
+    addOrderLine(true);
+
+    expect(takeOrderNumber())->toBe(7)
+        ->and(OrderNumbers::where('number', 7)->exists())->toBeTrue();
+
+    Log::shouldHaveReceived('warning')->withArgs(fn (string $message) => str_contains($message, "Couldn't save the kitchen items of order 7"));
+});

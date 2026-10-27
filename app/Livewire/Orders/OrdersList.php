@@ -18,6 +18,7 @@ use App\Models\Topping;
 use App\Printing\ReceiptCanvas;
 use App\Printing\TimedNetworkPrintConnector;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -231,9 +232,18 @@ class OrdersList extends Component
 
     /**
      * Copies the kitchen lines of the cart onto the order number, so the kitchen screen still knows
-     * what to make after the cart is cleared.
+     * what to make after the cart is cleared. A failure here never stops the checkout.
      */
     private function saveKitchenItems(OrderNumbers $orderNumber): void
+    {
+        try {
+            $this->copyKitchenItems($orderNumber);
+        } catch (QueryException $e) {
+            Log::warning("Couldn't save the kitchen items of order {$orderNumber->number}: ".$e->getMessage());
+        }
+    }
+
+    private function copyKitchenItems(OrderNumbers $orderNumber): void
     {
         $productNames = fn (?string $json): array => collect(json_decode($json ?? '[]', true) ?? [])
             ->flatMap(fn (array $product): array => array_keys($product))
