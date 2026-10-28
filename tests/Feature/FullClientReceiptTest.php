@@ -217,3 +217,9 @@ it('prints the second client copy without the kibinas, the name, the thank-you l
     expect(imagesy($plain))->toBeLessThan(imagesy($branded))
         ->and(darkPixels($plain))->toBeLessThan(darkPixels($branded) / 2);
 });
+
+it('prints no client copy when the client printer is turned off', function (bool $byPhone) {
+    cache()->forever(OrdersList::CLIENT_PRINTER_CACHE_KEY, false);
+
+    expect(Livewire::test(OrdersList::class)->instance()->clientReceiptCopies($byPhone))->toBe([]);
+})->with([false, true]);

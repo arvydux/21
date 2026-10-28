@@ -91,9 +91,7 @@
             <div x-show="tab === 'spausdintuvai'" x-transition class="flex flex-col gap-6">
                 <div>
                     <flux:heading class="mb-1">{{ __('Virtuvės spausdintuvas') }}</flux:heading>
-                    <flux:subheading class="mb-4 text-white/70">{{ __('Konfigūruokite virtuvės spausdintuvo elgesį') }}</flux:subheading>
-
-                    <livewire:kitchen-printer-settings />
+                    <flux:subheading class="text-white/70">{{ __('Ar produktas spausdinamas virtuvei, nustatoma meniu stulpelyje „Virtuvei“') }}</flux:subheading>
                 </div>
 
                 <flux:separator variant="subtle" />

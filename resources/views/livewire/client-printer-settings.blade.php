@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Orders\OrdersList;
 use Livewire\Volt\Component;
 
 new class extends Component {
@@ -7,12 +8,12 @@ new class extends Component {
 
     public function mount(): void
     {
-        $this->enabled = (bool) cache('client_printer_enabled', true);
+        $this->enabled = (bool) cache(OrdersList::CLIENT_PRINTER_CACHE_KEY, true);
     }
 
     public function updatedEnabled(): void
     {
-        cache()->forever('client_printer_enabled', $this->enabled);
+        cache()->forever(OrdersList::CLIENT_PRINTER_CACHE_KEY, $this->enabled);
     }
 }; ?>
 

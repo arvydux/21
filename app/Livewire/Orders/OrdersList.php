@@ -417,6 +417,8 @@ class OrdersList extends Component
         return Order::where('for_kitchen', true)->exists();
     }
 
+    public const CLIENT_PRINTER_CACHE_KEY = 'client_printer_enabled';
+
     private const PRINTER_NAMES = [
         'kitchen' => 'virtuvės',
         'client' => 'kliento',
@@ -424,12 +426,17 @@ class OrdersList extends Component
 
     /**
      * Which client receipt copies to print: a branded one for the customer and a plain one for the till,
-     * or only the plain one when the order came by phone and nobody takes a receipt at the counter.
+     * only the plain one when the order came by phone and nobody takes a receipt at the counter,
+     * or none when the client printer is turned off in the settings.
      *
      * @return list<bool> The `branded` flag of every copy, in print order.
      */
     public function clientReceiptCopies(bool $byPhone): array
     {
+        if (! cache(self::CLIENT_PRINTER_CACHE_KEY, true)) {
+            return [];
+        }
+
         return $byPhone ? [false] : [true, false];
     }
 

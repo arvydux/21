@@ -70,3 +70,7 @@ it('draws the panel dividers as a seam with a dotted grip', function () {
     expect(substr_count($html, 'data-panel-grip'))->toBe(2)
         ->and($html)->not->toContain('border: 1px solid rgba(255, 255, 255, 0.2);');
 });
+
+it('loads the Livewire styles so loading labels stay hidden until a request runs', function () {
+    expect($this->get(route('kasa'))->assertOk()->getContent())->toContain('[wire\:loading][wire\:loading]');
+});

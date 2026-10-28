@@ -7,4 +7,5 @@
 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600|manrope:800|dm-sans:900|nunito:400,600,700,800,900" rel="stylesheet" />
 
 @vite(['resources/css/app.css', 'resources/js/app.js'])
+@livewireStyles
 @fluxAppearance

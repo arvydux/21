@@ -155,3 +155,15 @@ it('gives up quickly when a connected printer stops taking data', function () {
 
     fclose($server);
 });
+
+it('prints only the kitchen receipt when the client printer is turned off', function () {
+    cache()->forever(OrdersList::CLIENT_PRINTER_CACHE_KEY, false);
+    addCartLine(true);
+
+    $component = Livewire::test(OrdersList::class)
+        ->call('makeOrder')
+        ->assertSet('unreachablePrinters', ['kitchen'])
+        ->assertSee('Virtuvės spausdintuvas nepasiekiamas');
+
+    expect(Cache::get($component->get('failedReceiptsKey')))->toHaveCount(1);
+});
