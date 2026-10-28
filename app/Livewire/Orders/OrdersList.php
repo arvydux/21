@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Orders;
 
+use App\Http\Middleware\EnsureOnlineOrdersEnabled;
 use App\Models\AlcoholicDrink;
 use App\Models\Ceburek;
 use App\Models\Drink;
@@ -505,7 +506,7 @@ class OrdersList extends Component
      */
     /**
      * The client receipt; the unbranded second copy starts after a 2 cm margin and leaves out the kibinas,
-     * the name, the thank-you line and the QR code.
+     * the name, the thank-you line and the QR code. The QR code is also left out while order tracking is off.
      */
     public function fullClientReceipt(?int $orderNumber, bool $byPhone, ?string $statusUrl = null, bool $branded = true): ReceiptCanvas
     {
@@ -565,6 +566,10 @@ class OrdersList extends Component
             $receipt->group(50, [
                 $text('Ačiū ir skanaus!', 'Montserrat-Regular', 21, 'center', 37),
             ]);
+
+            if (! EnsureOnlineOrdersEnabled::isEnabled()) {
+                return $receipt;
+            }
 
             if ($orderNumber !== null) {
                 [$title, $hint] = self::QR_CAPTION;

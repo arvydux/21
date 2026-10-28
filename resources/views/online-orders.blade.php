@@ -173,6 +173,7 @@
         const main = document.querySelector('[data-main]');
         const failuresBeforeUnavailable = 2;
         let failures = 0;
+        let isClosed = false;
         const numbersIn = (section) => [...section.querySelectorAll('[data-order-number]')].map((el) => Number(el.dataset.orderNumber));
 
         let state = { ready: numbersIn(sections.ready), preparing: numbersIn(sections.preparing) };
@@ -291,8 +292,14 @@
         };
 
         const refresh = async () => {
+            if (isClosed) return;
             try {
                 const response = await fetch(dataUrl, { cache: 'no-store', headers: { Accept: 'application/json' } });
+                if (response.status === 503) {
+                    isClosed = true;
+                    main.classList.add('is-unavailable');
+                    return;
+                }
                 if (! response.ok) throw new Error(response.status);
                 const next = await response.json();
                 const becameReady = followed !== null && ! state.ready.includes(followed) && next.ready.includes(followed);

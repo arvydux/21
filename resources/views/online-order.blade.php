@@ -167,6 +167,7 @@
         const footer = document.querySelector('[data-footer]');
         const failuresBeforeUnavailable = 2;
         let failures = 0;
+        let isClosed = false;
         let status = card.dataset.status;
         let number = Number(card.querySelector('[data-order-number]').textContent) || null;
         let subscribing = false;
@@ -257,8 +258,14 @@
         const isFinished = () => status === 'taken' || status === 'missing';
 
         const refresh = async () => {
+            if (isClosed) return;
             try {
                 const response = await fetch(dataUrl, { cache: 'no-store', headers: { Accept: 'application/json' } });
+                if (response.status === 503) {
+                    isClosed = true;
+                    main.classList.add('is-unavailable');
+                    return;
+                }
                 if (! response.ok && response.status !== 404) throw new Error(response.status);
                 const next = await response.json();
                 const becameReady = status !== 'ready' && next.status === 'ready';

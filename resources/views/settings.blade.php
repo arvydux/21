@@ -102,6 +102,15 @@
 
                     <livewire:client-printer-settings />
                 </div>
+
+                <flux:separator variant="subtle" />
+
+                <div>
+                    <flux:heading class="mb-1">{{ __('Užsakymų sekimas') }}</flux:heading>
+                    <flux:subheading class="mb-4 text-white/70">{{ __('Jei kasa lėtėja, išjunkite ir pažiūrėkite, ar padeda') }}</flux:subheading>
+
+                    <livewire:online-orders-settings />
+                </div>
             </div>
 
             {{-- Subkategorijos tab --}}
