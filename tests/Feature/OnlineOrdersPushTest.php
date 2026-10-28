@@ -4,8 +4,8 @@ use App\Jobs\SendOrderReadyPush;
 use App\Livewire\Kitchen;
 use App\Models\OrderNumbers;
 use App\Models\PushSubscription;
-use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 use Livewire\Livewire;
 use Minishlink\WebPush\MessageSentReport;
 use Minishlink\WebPush\Subscription;
@@ -88,13 +88,13 @@ it('lets tunnel visitors subscribe and unsubscribe', function () {
     $this->postJson('/online/unsubscribe', ['endpoint' => 'https://fcm.googleapis.com/fcm/send/abc'], $tunnel)->assertSuccessful();
 });
 
-it('sends the push after the kitchen marks the order ready', function () {
-    Bus::fake();
+it('queues the push when the kitchen marks the order ready', function () {
+    Queue::fake();
     pushOrder(47);
 
     Livewire::test(Kitchen::class)->call('makeOrderReady', 47);
 
-    Bus::assertDispatchedAfterResponse(SendOrderReadyPush::class, fn (SendOrderReadyPush $job): bool => $job->number === 47);
+    Queue::assertPushed(SendOrderReadyPush::class, fn (SendOrderReadyPush $job): bool => $job->number === 47);
 });
 
 it('pushes to every follower of a ready order once and forgets them', function () {

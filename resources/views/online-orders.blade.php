@@ -338,7 +338,7 @@
 
         setInterval(() => {
             if (document.visibilityState === 'visible') refresh();
-        }, 5000);
+        }, 15000);
 
         if (pushSupported) {
             navigator.serviceWorker.getRegistration('/').then((registration) => registration?.update()).catch(() => {});

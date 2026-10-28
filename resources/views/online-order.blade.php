@@ -289,8 +289,8 @@
         });
 
         setInterval(() => {
-            if (document.visibilityState === 'visible' && ! isFinished()) refresh();
-        }, 5000);
+            if (document.visibilityState === 'visible' && status === 'preparing') refresh();
+        }, 15000);
 
         if (pushSupported) {
             navigator.serviceWorker.getRegistration('/').then((registration) => registration?.update()).catch(() => {});

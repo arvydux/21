@@ -3,8 +3,9 @@
 namespace App\Jobs;
 
 use App\Models\PushSubscription;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;
@@ -14,10 +15,14 @@ use Throwable;
  * Tells every browser following an order on the online board that it is ready.
  * Each subscription is used once and then removed. Any failure to send (missing push keys,
  * a server that cannot encrypt) only leaves a warning in the log, so marking an order ready never fails.
+ * It runs on the queue worker, so a slow push service never holds up the single-process till server.
  */
-class SendOrderReadyPush
+class SendOrderReadyPush implements ShouldQueue
 {
-    use Dispatchable;
+    use Queueable;
+
+    /** A failed push is only logged, so it is never tried again. */
+    public int $tries = 1;
 
     /**
      * High urgency wakes a sleeping phone at once instead of waiting until it is unlocked;

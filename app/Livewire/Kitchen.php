@@ -82,7 +82,7 @@ class Kitchen extends Component
     public function makeOrderReady($number): void
     {
         OrderNumbers::where('number', $number)->update(['is_ready' => true]);
-        SendOrderReadyPush::dispatchAfterResponse((int) $number);
+        SendOrderReadyPush::dispatch((int) $number);
         $pending = Cache::get('pendingSounds', []);
         $pending[] = (int) $number;
         Cache::put('pendingSounds', $pending, 60 * 60 * 24);
