@@ -447,8 +447,8 @@ class OrdersList extends Component
     public const KITCHEN_ITEM_SIZE = 30;
 
     /**
-     * The kitchen receipt: the order number and time on top, then every kitchen item in an amount column
-     * with its toppings, takeaway mark and wishes indented under the name.
+     * The kitchen receipt: the order number and time on top, with a framed TELEFONU between them when the order
+     * came by phone, then every kitchen item in an amount column with its toppings, takeaway mark and wishes indented under the name.
      */
     public function kitchenReceipt(int $orderNumber, bool $byPhone): ReceiptCanvas
     {
@@ -463,7 +463,8 @@ class OrdersList extends Component
                 $text('UŽSAKYMAS Nr.', 'Montserrat-Bold', 14, 'left', 20),
                 $text((string) $orderNumber, 'Montserrat-Bold', 72, 'left', 102),
                 $text($now->format('H:i'), 'Montserrat-Bold', 34, 'right', 56),
-                $text($byPhone ? 'TELEFONU' : $now->format('Y-m-d'), 'Montserrat-Bold', 18, 'right', 92),
+                $text($now->format('Y-m-d'), 'Montserrat-Bold', 18, 'right', 92),
+                ...($byPhone ? [[...$text('TELEFONU', 'Montserrat-Bold', 30, 'center', 72), 'framed' => true]] : []),
             ])
             ->separator(thickness: 3);
 

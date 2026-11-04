@@ -24,6 +24,13 @@ class ReceiptCanvas
     /** Height of one image strip sent to the printer, keeps each command small. */
     private const STRIP_HEIGHT = 240;
 
+    /** Thickness of the frame around a framed group text in dots. */
+    private const FRAME_BORDER = 5;
+
+    private const FRAME_PADDING_X = 12;
+
+    private const FRAME_PADDING_Y = 14;
+
     /**
      * @var list<array<string, mixed>>
      */
@@ -85,7 +92,7 @@ class ReceiptCanvas
     /**
      * A band of the given height with texts placed on exact baselines, for layouts where lines overlap or share a row.
      *
-     * @param  list<array{text: string, font: string, size: float, align: string, baseline: int}>  $texts
+     * @param  list<array{text: string, font: string, size: float, align: string, baseline: int, framed?: bool}>  $texts
      */
     public function group(int $height, array $texts): static
     {
@@ -215,11 +222,34 @@ class ReceiptCanvas
                     'right' => self::WIDTH - self::RIGHT_MARGIN - $width,
                     default => 0,
                 };
+
+                if ($text['framed'] ?? false) {
+                    $this->drawTextFrame($image, $x, $top + $text['baseline'], $width, $text);
+                }
+
                 imagettftext($image, $text['size'], 0, $x, $top + $text['baseline'], $black, $text['font'], $text['text']);
             }
         }
 
         return $block['height'];
+    }
+
+    /**
+     * Draws a thick frame around a text of a group.
+     *
+     * @param  array{text: string, font: string, size: float}  $text
+     */
+    private function drawTextFrame(GdImage $image, int $left, int $baseline, int $width, array $text): void
+    {
+        $box = imagettfbbox($text['size'], 0, $text['font'], $text['text']);
+        $black = imagecolorallocate($image, 0, 0, 0);
+        $x1 = $left - self::FRAME_PADDING_X - self::FRAME_BORDER;
+        $x2 = $left + $width + self::FRAME_PADDING_X + self::FRAME_BORDER - 1;
+        $y1 = $baseline + $box[7] - self::FRAME_PADDING_Y - self::FRAME_BORDER;
+        $y2 = $baseline + $box[1] + self::FRAME_PADDING_Y + self::FRAME_BORDER - 1;
+
+        imagefilledrectangle($image, $x1, $y1, $x2, $y2, $black);
+        imagefilledrectangle($image, $x1 + self::FRAME_BORDER, $y1 + self::FRAME_BORDER, $x2 - self::FRAME_BORDER, $y2 - self::FRAME_BORDER, imagecolorallocate($image, 255, 255, 255));
     }
 
     /**
