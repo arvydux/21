@@ -28,6 +28,7 @@ class DessertSubcategorySeeder extends NumberedDrinkSeeder
             ['number' => 2, 'name' => 'Ledai su vyšnių užpilu', 'price' => 3.90],
             ['number' => 3, 'name' => 'Ledai su šokolado užpilu', 'price' => 3.90],
             ['number' => 4, 'name' => 'Ledai su karamelės užpilu', 'price' => 3.90],
+            ['number' => 5, 'name' => 'Žagarėliai su šokolado ir karamelės padažu', 'price' => 4.90],
         ];
     }
 }

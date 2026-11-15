@@ -34,6 +34,7 @@ it('adds the cheese Čeburekai to a "Su sūriu" subcategory', function () {
             [1, 'Sūris + grybai', 5.5, 'SG'],
             [2, '2-jų rūšių sūris', 5.5, '2S'],
             [3, 'Saliamis + sūris', 5.5, 'SS'],
+            [4, 'Sūrio MIX\'as su grybais', 6.9, 'SM'],
         ]);
 });
 
@@ -46,7 +47,7 @@ it('moves the existing cheese Čeburekai at the new price instead of duplicating
     $subcategory = Subcategory::where('name', 'Su sūriu')->sole();
     expect(Ceburek::where('name', 'Sūris + grybai')->sole()->subcategory_id)->toBe($subcategory->id)
         ->and((float) Ceburek::where('name', 'Sūris + grybai')->value('price'))->toBe(5.5)
-        ->and(Ceburek::count())->toBe(4)
+        ->and(Ceburek::count())->toBe(5)
         ->and($meat->fresh()->subcategory_id)->toBe($this->visi->id)
         ->and((float) $meat->fresh()->price)->toBe(4.5);
 });
@@ -58,7 +59,7 @@ it('keeps admin edits to the cheese Čeburekai when run again', function () {
     (new CheeseCeburekSeeder)->run();
 
     expect((float) Ceburek::where('name', 'Saliamis + sūris')->value('price'))->toBe(5.8)
-        ->and(Ceburek::count())->toBe(3);
+        ->and(Ceburek::count())->toBe(4);
 });
 
 it('shows the cheese Čeburekai on the cashier screen', function () {
@@ -123,7 +124,7 @@ it('adds the signature Čeburekai to a "Firminis" subcategory after "Su mėsa"',
             [2, 'Gurmaniškas', 7.2, 'G'],
             [3, 'Pachmo', 7.5, 'P'],
         ])
-        ->and(Ceburek::count())->toBe(12);
+        ->and(Ceburek::count())->toBe(13);
 });
 
 it('moves the signature Čeburekai out of "Su mėsa" and renumbers them', function () {

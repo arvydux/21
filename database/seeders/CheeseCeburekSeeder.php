@@ -27,6 +27,7 @@ class CheeseCeburekSeeder extends NumberedDrinkSeeder
             ['number' => 1, 'name' => 'Sūris + grybai', 'price' => 5.50, 'sign' => 'SG'],
             ['number' => 2, 'name' => '2-jų rūšių sūris', 'price' => 5.50, 'sign' => '2S'],
             ['number' => 3, 'name' => 'Saliamis + sūris', 'price' => 5.50, 'sign' => 'SS'],
+            ['number' => 4, 'name' => 'Sūrio MIX\'as su grybais', 'price' => 6.90, 'sign' => 'SM'],
         ];
     }
 }
