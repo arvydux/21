@@ -13,8 +13,8 @@ class KoldunaiDishSeeder extends Seeder
     public function run(): void
     {
         $products = [
-            ['number' => 1, 'name' => 'Užkeptos bulvytės „FRI“ su pikantišku padažu ir sūriu', 'price' => 6.50, 'sign' => 'FS'],
-            ['number' => 2, 'name' => 'Užkeptos bulvytės „FRI“ su pikantišku padažu, kepta šonine ir sūriu', 'price' => 7.50, 'sign' => 'FŠ'],
+            ['number' => 1, 'name' => 'Užkeptos bulvytės „FRI“ su pikantišku padažu ir sūriu', 'price' => 4.90, 'sign' => 'FS'],
+            ['number' => 2, 'name' => 'Užkeptos bulvytės „FRI“ su pikantišku padažu, kepta šonine ir sūriu', 'price' => 5.90, 'sign' => 'FŠ'],
             ['number' => 3, 'name' => 'Užkepti gruzdinti koldūnai su padažu ir sūriu', 'price' => 7.50, 'sign' => 'KS'],
             ['number' => 4, 'name' => 'Užkepti gruzdinti koldūnai su kepta šonine, padažu ir sūriu', 'price' => 8.50, 'sign' => 'KŠ'],
         ];

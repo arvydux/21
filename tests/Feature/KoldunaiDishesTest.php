@@ -225,8 +225,8 @@ it('adds the category, dishes and toppings to an existing deployment', function 
     expect($category->name)->toBe('Koldūnai bei bulvytės')
         ->and($category->position)->toBe(5)
         ->and(KoldunaiDish::orderBy('number')->get()->map(fn (KoldunaiDish $dish) => [$dish->number, $dish->name, (float) $dish->price])->all())->toBe([
-            [1, 'Užkeptos bulvytės „FRI“ su pikantišku padažu ir sūriu', 6.5],
-            [2, 'Užkeptos bulvytės „FRI“ su pikantišku padažu, kepta šonine ir sūriu', 7.5],
+            [1, 'Užkeptos bulvytės „FRI“ su pikantišku padažu ir sūriu', 4.9],
+            [2, 'Užkeptos bulvytės „FRI“ su pikantišku padažu, kepta šonine ir sūriu', 5.9],
             [3, 'Užkepti gruzdinti koldūnai su padažu ir sūriu', 7.5],
             [4, 'Užkepti gruzdinti koldūnai su kepta šonine, padažu ir sūriu', 8.5],
         ])

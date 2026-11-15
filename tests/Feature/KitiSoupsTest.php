@@ -140,8 +140,8 @@ it('adds the snacks to a "Užkandžiai" subcategory, keeping the kids menu fries
             [5, 'Kepta duona sūrio padaže', 5.5],
             [6, 'Kepta duona su sūrio padažu (atskirai)', 5.5],
             [7, 'Gruzdinti naminiai koldūnai su mėsa ir pikantišku padažu', 6.5],
-            [8, 'Virti naminiai cepelinai su grietine', 6.5],
-            [9, 'Virti naminiai cepelinai su spirgučiais', 6.9],
+            [8, 'Virti naminiai koldūnai su grietine', 6.5],
+            [9, 'Virti naminiai koldūnai su spirgučiais', 6.9],
             [10, 'Užkandžių rinkinys', 18.5],
         ])
         ->and(OtherProduct::where('name', 'Gruzdintos bulvytės „FRI“ su pomidorų padažu')->pluck('subcategory_id')->sort()->values()->all())

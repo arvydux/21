@@ -31,8 +31,8 @@ class SnackSubcategorySeeder extends NumberedDrinkSeeder
             ['number' => 5, 'name' => 'Kepta duona sūrio padaže', 'price' => 5.50],
             ['number' => 6, 'name' => 'Kepta duona su sūrio padažu (atskirai)', 'price' => 5.50],
             ['number' => 7, 'name' => 'Gruzdinti naminiai koldūnai su mėsa ir pikantišku padažu', 'price' => 6.50],
-            ['number' => 8, 'name' => 'Virti naminiai cepelinai su grietine', 'price' => 6.50],
-            ['number' => 9, 'name' => 'Virti naminiai cepelinai su spirgučiais', 'price' => 6.90],
+            ['number' => 8, 'name' => 'Virti naminiai koldūnai su grietine', 'price' => 6.50],
+            ['number' => 9, 'name' => 'Virti naminiai koldūnai su spirgučiais', 'price' => 6.90],
             ['number' => 10, 'name' => 'Užkandžių rinkinys', 'price' => 18.50],
         ];
     }

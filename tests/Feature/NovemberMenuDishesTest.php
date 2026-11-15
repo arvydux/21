@@ -4,6 +4,7 @@ use App\Livewire\Buttons\Ceburekai;
 use App\Livewire\Buttons\OtherProducts;
 use App\Models\Category;
 use App\Models\Ceburek;
+use App\Models\KoldunaiDish;
 use App\Models\OtherProduct;
 use App\Models\Subcategory;
 use Livewire\Livewire;
@@ -66,7 +67,7 @@ it('leaves the till\'s own edits to the existing dishes alone', function () {
         ->and((bool) OtherProduct::where('name', 'Ledai su vyšnių užpilu')->value('show'))->toBeFalse();
 });
 
-it('adds the boiled cepelinai as snacks 8 and 9 and moves the snack platter to 10', function () {
+it('adds the boiled koldūnai as snacks 8 and 9 and moves the snack platter to 10', function () {
     $snacks = Subcategory::create(['name' => 'Užkandžiai', 'category_id' => $this->desserts->category_id, 'position' => 3]);
     $koldunai = OtherProduct::create(['number' => 7, 'name' => 'Gruzdinti naminiai koldūnai su mėsa ir pikantišku padažu', 'price' => 6.50, 'show' => true, 'position' => 20, 'subcategory_id' => $snacks->id]);
     $platter = OtherProduct::create(['number' => 8, 'name' => 'Užkandžių rinkinys', 'price' => 19.00, 'show' => true, 'position' => 21, 'subcategory_id' => $snacks->id]);
@@ -76,8 +77,8 @@ it('adds the boiled cepelinai as snacks 8 and 9 and moves the snack platter to 1
     $migration->up();
 
     expect(OtherProduct::where('subcategory_id', $snacks->id)->whereIn('number', [7, 8, 9, 10])->orderBy('position')->get()->map(fn (OtherProduct $product) => [$product->number, $product->name, (float) $product->price])->all())
-        ->toContain([8, 'Virti naminiai cepelinai su grietine', 6.5])
-        ->toContain([9, 'Virti naminiai cepelinai su spirgučiais', 6.9])
+        ->toContain([8, 'Virti naminiai koldūnai su grietine', 6.5])
+        ->toContain([9, 'Virti naminiai koldūnai su spirgučiais', 6.9])
         ->and(OtherProduct::where('subcategory_id', $snacks->id)->orderBy('position')->get()->map(fn (OtherProduct $product) => $product->number)->filter(fn (?int $number) => in_array($number, [7, 8, 9, 10]))->values()->all())
         ->toBe([7, 8, 9, 10])
         ->and($platter->fresh()->number)->toBe(10)
@@ -134,6 +135,29 @@ it('sets the new Vištiena and Gurmaniškas prices', function () {
     expect((float) $chicken->fresh()->price)->toBe(6.5)
         ->and((float) $gourmet->fresh()->price)->toBe(7.5)
         ->and((float) $otherChicken->fresh()->price)->toBe(4.0);
+});
+
+it('sets the new baked fries prices', function () {
+    $cheese = KoldunaiDish::create(['number' => 1, 'name' => 'Užkeptos bulvytės „FRI“ su pikantišku padažu ir sūriu', 'price' => 6.50, 'sign' => 'FS', 'show' => true, 'position' => 0]);
+    $bacon = KoldunaiDish::create(['number' => 2, 'name' => 'Užkeptos bulvytės „FRI“ su pikantišku padažu, kepta šonine ir sūriu', 'price' => 7.50, 'sign' => 'FŠ', 'show' => true, 'position' => 1]);
+    $dumplings = KoldunaiDish::create(['number' => 3, 'name' => 'Užkepti gruzdinti koldūnai su padažu ir sūriu', 'price' => 7.50, 'sign' => 'KS', 'show' => true, 'position' => 2]);
+
+    (require database_path('migrations/2026_11_15_170409_update_baked_fries_prices.php'))->up();
+
+    expect((float) $cheese->fresh()->price)->toBe(4.9)
+        ->and((float) $bacon->fresh()->price)->toBe(5.9)
+        ->and((float) $dumplings->fresh()->price)->toBe(7.5);
+});
+
+it('renames the boiled cepelinai to koldūnai', function () {
+    $sourCream = OtherProduct::create(['number' => 8, 'name' => 'Virti naminiai cepelinai su grietine', 'price' => 6.50, 'show' => true, 'position' => 30, 'subcategory_id' => $this->desserts->id]);
+    $cracklings = OtherProduct::create(['number' => 9, 'name' => 'Virti naminiai cepelinai su spirgučiais', 'price' => 6.90, 'show' => true, 'position' => 31, 'subcategory_id' => $this->desserts->id]);
+
+    (require database_path('migrations/2026_11_15_171953_rename_boiled_cepelinai_to_koldunai.php'))->up();
+
+    expect($sourCream->fresh()->name)->toBe('Virti naminiai koldūnai su grietine')
+        ->and($cracklings->fresh()->name)->toBe('Virti naminiai koldūnai su spirgučiais')
+        ->and((float) $cracklings->fresh()->price)->toBe(6.9);
 });
 
 it('shows the new dishes on the cashier screen', function () {

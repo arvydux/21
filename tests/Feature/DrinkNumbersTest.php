@@ -39,11 +39,11 @@ it('adds the numbered hot drinks to a "Karšti gėrimai" subcategory', function 
         ->and($this->drink->fresh()->number)->toBeNull();
 });
 
-it('adds the numbered cold drinks to a "Šalti gėrimai" subcategory after the hot drinks', function () {
+it('adds the numbered cold drinks to a "Gaivieji gėrimai" subcategory after the hot drinks', function () {
     (new HotDrinkSeeder)->run();
     (new ColdDrinkSeeder)->run();
 
-    $subcategory = Subcategory::where('name', 'Šalti gėrimai')->sole();
+    $subcategory = Subcategory::where('name', 'Gaivieji gėrimai')->sole();
 
     expect($subcategory->category_id)->toBe($this->category->id)
         ->and($subcategory->position)->toBe(2)
@@ -63,7 +63,7 @@ it('keeps admin edits to a numbered drink when run again', function () {
         ->and($pepsi->number)->toBe(20);
 });
 
-it('replaces every drink in "Šalti gėrimai" and leaves other subcategories alone', function () {
+it('replaces every drink in "Šalti gėrimai", renaming it to "Gaivieji gėrimai", and leaves other subcategories alone', function () {
     $coldDrinks = Subcategory::create(['name' => 'Šalti gėrimai', 'category_id' => $this->category->id, 'position' => 1]);
     Drink::create(['name' => 'Pepsi, Mirinda, 7UP', 'number' => 1, 'price' => 1.8, 'show' => true, 'position' => 1, 'subcategory_id' => $coldDrinks->id]);
     Drink::create(['name' => 'Tauras gira', 'number' => 2, 'price' => 2.2, 'show' => true, 'position' => 2, 'subcategory_id' => $coldDrinks->id]);
@@ -72,7 +72,8 @@ it('replaces every drink in "Šalti gėrimai" and leaves other subcategories alo
     $migration->up();
     $migration->up();
 
-    expect(Subcategory::where('name', 'Šalti gėrimai')->count())->toBe(1)
+    expect(Subcategory::where('name', 'Gaivieji gėrimai')->count())->toBe(1)
+        ->and(Subcategory::where('name', 'Šalti gėrimai')->exists())->toBeFalse()
         ->and(Drink::where('subcategory_id', $coldDrinks->id)->orderBy('number')->get()->map(fn (Drink $drink) => [$drink->number, $drink->name, (float) $drink->price])->all())
         ->toBe(coldDrinksMenu())
         ->and(Drink::whereIn('name', ['Pepsi, Mirinda, 7UP', 'Tauras gira'])->exists())->toBeFalse()
@@ -174,4 +175,17 @@ it('lists numbered drinks first in the menu admin', function () {
 
     Livewire::test(DrinksTable::class)
         ->assertSeeInOrder(['Arbata', 'Kava', 'Pepsi']);
+});
+
+it('renames "Šalti gėrimai" to "Gaivieji gėrimai" keeping its drinks', function () {
+    $coldDrinks = Subcategory::create(['name' => 'Šalti gėrimai', 'category_id' => $this->category->id, 'position' => 2]);
+    $juice = Drink::create(['name' => 'Apelsinų sultys', 'number' => 1, 'price' => 2.5, 'show' => true, 'position' => 1, 'subcategory_id' => $coldDrinks->id]);
+
+    $migration = require database_path('migrations/2026_11_15_172916_rename_cold_drinks_to_gaivieji_gerimai.php');
+    $migration->up();
+    $migration->up();
+
+    expect($coldDrinks->fresh()->name)->toBe('Gaivieji gėrimai')
+        ->and($juice->fresh()->subcategory_id)->toBe($coldDrinks->id)
+        ->and(Subcategory::where('name', 'Šalti gėrimai')->exists())->toBeFalse();
 });

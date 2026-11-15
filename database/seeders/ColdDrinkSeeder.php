@@ -2,11 +2,40 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
+use App\Models\Subcategory;
+
 class ColdDrinkSeeder extends NumberedDrinkSeeder
 {
+    public const OLD_SUBCATEGORY_NAME = 'Šalti gėrimai';
+
     protected function subcategoryName(): string
     {
-        return 'Šalti gėrimai';
+        return 'Gaivieji gėrimai';
+    }
+
+    /**
+     * Rename an existing "Šalti gėrimai" subcategory first, so its drinks
+     * are kept instead of a second subcategory being created next to it.
+     */
+    public function run(): void
+    {
+        self::renameOldSubcategory();
+
+        parent::run();
+    }
+
+    public static function renameOldSubcategory(): void
+    {
+        $category = Category::where('component_name', 'drinks')->first();
+
+        if ($category === null || Subcategory::where('category_id', $category->id)->where('name', 'Gaivieji gėrimai')->exists()) {
+            return;
+        }
+
+        Subcategory::where('category_id', $category->id)
+            ->where('name', self::OLD_SUBCATEGORY_NAME)
+            ->update(['name' => 'Gaivieji gėrimai']);
     }
 
     protected function products(): array
