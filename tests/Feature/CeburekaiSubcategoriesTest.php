@@ -81,7 +81,7 @@ it('adds the meat Čeburekai to a "Su mėsa" subcategory after "Su sūriu"', fun
     expect($subcategory->position)->toBe(2)
         ->and(ceburekaiIn($subcategory))->toBe([
             [1, 'Kiauliena', 5.5, 'K'],
-            [2, 'Vištiena', 6.5, 'V'],
+            [2, 'Vištiena', 6.2, 'V'],
             [3, 'Mix (kiaul. + jaut.)', 5.9, 'M'],
             [4, 'Jautiena', 6.5, 'J'],
             [5, 'Maišytas (jaut. + aviena)', 6.9, 'MA'],

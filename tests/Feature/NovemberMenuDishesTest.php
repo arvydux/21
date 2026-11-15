@@ -137,6 +137,17 @@ it('sets the new Vištiena and Gurmaniškas prices', function () {
         ->and((float) $otherChicken->fresh()->price)->toBe(4.0);
 });
 
+it('sets Vištiena to 6,20 €', function () {
+    $meat = Subcategory::create(['name' => 'Su mėsa', 'category_id' => $this->cheese->category_id, 'position' => 2]);
+    $chicken = Ceburek::create(['number' => 2, 'name' => 'Vištiena', 'price' => 6.50, 'sign' => 'V', 'show' => true, 'position' => 10, 'subcategory_id' => $meat->id]);
+    $otherChicken = Ceburek::create(['name' => 'Vištiena', 'price' => 4.00, 'sign' => 'V', 'show' => true, 'position' => 12, 'subcategory_id' => $this->cheese->id]);
+
+    (require database_path('migrations/2026_11_15_185013_update_vistiena_price_to_6_20.php'))->up();
+
+    expect((float) $chicken->fresh()->price)->toBe(6.2)
+        ->and((float) $otherChicken->fresh()->price)->toBe(4.0);
+});
+
 it('sets the new baked fries prices', function () {
     $cheese = KoldunaiDish::create(['number' => 1, 'name' => 'Užkeptos bulvytės „FRI“ su pikantišku padažu ir sūriu', 'price' => 6.50, 'sign' => 'FS', 'show' => true, 'position' => 0]);
     $bacon = KoldunaiDish::create(['number' => 2, 'name' => 'Užkeptos bulvytės „FRI“ su pikantišku padažu, kepta šonine ir sūriu', 'price' => 7.50, 'sign' => 'FŠ', 'show' => true, 'position' => 1]);
