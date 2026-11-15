@@ -83,10 +83,10 @@ it('adds the desserts to a "Desertai" subcategory after "Sriubos", one record pe
     expect($desserts->position)->toBe(2)
         ->and(OtherProduct::where('subcategory_id', $desserts->id)->orderBy('number')->get()->map(fn (OtherProduct $product) => [$product->number, $product->name, (float) $product->price])->all())
         ->toBe([
-            [1, 'Žagarėliai su ledais ir padažu', 5.5],
-            [2, 'Ledai su vyšnių užpilu', 3.9],
-            [3, 'Ledai su šokolado užpilu', 3.9],
-            [4, 'Ledai su karamelės užpilu', 3.9],
+            [1, 'Ledai su vyšnių užpilu', 3.9],
+            [2, 'Ledai su šokolado užpilu', 3.9],
+            [3, 'Ledai su karamelės užpilu', 3.9],
+            [4, 'Žagarėliai su ledais ir padažu', 5.5],
             [5, 'Žagarėliai su šokolado ir karamelės padažu', 4.9],
         ]);
 });

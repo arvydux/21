@@ -39,7 +39,7 @@ class MeatCeburekSeeder extends NumberedDrinkSeeder
     {
         return [
             ['number' => 1, 'name' => 'Kiauliena', 'price' => 5.50, 'sign' => 'K'],
-            ['number' => 2, 'name' => 'Vištiena', 'price' => 5.90, 'sign' => 'V'],
+            ['number' => 2, 'name' => 'Vištiena', 'price' => 6.50, 'sign' => 'V'],
             ['number' => 3, 'name' => 'Mix (kiaul. + jaut.)', 'price' => 5.90, 'sign' => 'M'],
             ['number' => 4, 'name' => 'Jautiena', 'price' => 6.50, 'sign' => 'J'],
             ['number' => 5, 'name' => 'Maišytas (jaut. + aviena)', 'price' => 6.90, 'sign' => 'MA'],

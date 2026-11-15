@@ -95,6 +95,47 @@ it('leaves a hand-renumbered snack platter alone', function () {
         ->and($platter->fresh()->position)->toBe(5);
 });
 
+it('puts the ice creams first in "Desertai" and moves the žagarėliai with ice cream to 4', function () {
+    runNovemberMenuMigration();
+
+    $migration = require database_path('migrations/2026_11_15_164722_renumber_desserts_ice_cream_first.php');
+    $migration->up();
+    $migration->up();
+
+    expect(OtherProduct::where('subcategory_id', $this->desserts->id)->orderBy('position')->get()->map(fn (OtherProduct $product) => [$product->number, $product->name])->all())
+        ->toBe([
+            [1, 'Ledai su vyšnių užpilu'],
+            [2, 'Ledai su šokolado užpilu'],
+            [3, 'Ledai su karamelės užpilu'],
+            [4, 'Žagarėliai su ledais ir padažu'],
+            [5, 'Žagarėliai su šokolado ir karamelės padažu'],
+        ]);
+});
+
+it('leaves a hand-renumbered dessert alone', function () {
+    OtherProduct::where('name', 'Ledai su vyšnių užpilu')->update(['number' => 9]);
+
+    (require database_path('migrations/2026_11_15_164722_renumber_desserts_ice_cream_first.php'))->up();
+
+    expect(OtherProduct::where('name', 'Ledai su vyšnių užpilu')->value('number'))->toBe(9)
+        ->and(OtherProduct::where('name', 'Žagarėliai su ledais ir padažu')->value('number'))->toBe(4);
+});
+
+it('sets the new Vištiena and Gurmaniškas prices', function () {
+    $category = $this->cheese->category_id;
+    $meat = Subcategory::create(['name' => 'Su mėsa', 'category_id' => $category, 'position' => 2]);
+    $signature = Subcategory::create(['name' => 'Firminis', 'category_id' => $category, 'position' => 3]);
+    $chicken = Ceburek::create(['number' => 2, 'name' => 'Vištiena', 'price' => 5.90, 'sign' => 'V', 'show' => true, 'position' => 10, 'subcategory_id' => $meat->id]);
+    $gourmet = Ceburek::create(['number' => 2, 'name' => 'Gurmaniškas', 'price' => 7.20, 'sign' => 'G', 'show' => true, 'position' => 11, 'subcategory_id' => $signature->id]);
+    $otherChicken = Ceburek::create(['name' => 'Vištiena', 'price' => 4.00, 'sign' => 'V', 'show' => true, 'position' => 12, 'subcategory_id' => $this->cheese->id]);
+
+    (require database_path('migrations/2026_11_15_165740_update_vistiena_and_gurmaniskas_prices.php'))->up();
+
+    expect((float) $chicken->fresh()->price)->toBe(6.5)
+        ->and((float) $gourmet->fresh()->price)->toBe(7.5)
+        ->and((float) $otherChicken->fresh()->price)->toBe(4.0);
+});
+
 it('shows the new dishes on the cashier screen', function () {
     runNovemberMenuMigration();
 

@@ -39,7 +39,7 @@ class SignatureCeburekSeeder extends NumberedDrinkSeeder
     {
         return [
             ['number' => 1, 'name' => 'Šefo', 'price' => 7.50, 'sign' => 'Š'],
-            ['number' => 2, 'name' => 'Gurmaniškas', 'price' => 7.20, 'sign' => 'G'],
+            ['number' => 2, 'name' => 'Gurmaniškas', 'price' => 7.50, 'sign' => 'G'],
             ['number' => 3, 'name' => 'Pachmo', 'price' => 7.50, 'sign' => 'P'],
         ];
     }
