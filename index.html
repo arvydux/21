@@ -139,6 +139,9 @@ html[lang="lt"] .track-tx [lang="lt"], html[lang="ru"] .track-tx [lang="ru"], ht
   }
   addEventListener('scroll', spy, { passive: true });
   setLang(pick());
+  if (matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine)').matches) {
+    document.querySelector('.hero-pdf').setAttribute('href', 'menus/menu-prusakovu-a4.pdf');
+  }
 })();
 </script>
 </body>
