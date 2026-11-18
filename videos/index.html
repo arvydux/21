@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vaizdo įrašai · Prusakovų užeiga</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#14664A">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#FBF7F0;--ink:#1D2A23;--green:#14664A;--green-dark:#0E4A36;--muted:#5f6b64;--card:#fff;--line:#e6dfd2}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Manrope',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5}
+  .hdr{background:var(--green);color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.12)}
+  .hdr-top{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1200px;margin:0 auto;padding:12px 16px}
+  .brand{color:#fff;text-decoration:none;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase}
+  .brand small{display:block;margin-top:2px;font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:500;font-size:15px;letter-spacing:0;text-transform:none;opacity:.85}
+  .menu-link{display:inline-flex;align-items:center;padding:9px 15px;border-radius:99px;background:rgba(255,255,255,.14);color:#fff;font:800 13.5px 'Manrope',sans-serif;text-decoration:none;white-space:nowrap}
+  .intro{max-width:1100px;margin:0 auto;padding:28px 16px 0}
+  h1{margin:0 0 4px;font-family:'Playfair Display',Georgia,serif;font-size:30px;font-weight:700;color:var(--green-dark)}
+  .intro p{margin:0;color:var(--muted)}
+  main{max-width:1100px;margin:0 auto;padding:8px 16px 60px}
+  h2{font-size:18px;margin:32px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--line);color:var(--green-dark)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:18px;align-items:start}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+  .card video{width:100%;background:#000;display:block}
+  .v916 video{aspect-ratio:9/16;max-height:520px;object-fit:contain}
+  .v45 video{aspect-ratio:4/5;max-height:520px;object-fit:contain}
+  .v169 video{aspect-ratio:16/9}
+  .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .title{font-weight:800}
+  .meta{font-size:13px;color:var(--muted)}
+  .desc{font-size:14px}
+  .link{margin-top:auto;font-size:13px;word-break:break-all}
+  .link a{color:var(--green)}
+  @media (max-width:560px){.hdr-top{padding:10px 12px}h1{font-size:25px}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-top">
+    <a class="brand" href="/">Prusakovų užeiga<small>Vaizdo įrašai</small></a>
+    <a class="menu-link" href="/meniu/">Meniu</a>
+  </div>
+</header>
+<div class="intro">
+  <h1>Vaizdo įrašai</h1>
+  <p>Visi reklaminiai vaizdo įrašai vienoje vietoje</p>
+</div>
+<main id="list"></main>
+
+<script>
+const VIDEOS = [
+ {group:"Pagrindinis vaizdo įrašas · 30 s", items:[
+  {f:"prusakovu-30s-16x9-muzika.mp4", r:"v169", t:"YouTube / Facebook", m:"16:9 · 1920×1080 · su muzika · 30 s · 8,2 MB",
+   d:"24 „gyvos“ scenos iš meniu: čeburekai su tąsiu sūriu, koldūnai, blynai, užkandžiai, desertai ir arbata. Pabaigoje – logotipas."},
+  {f:"prusakovu-30s-16x9-svetainei.mp4", r:"v169", t:"Svetainei (kompiuteriui)", m:"16:9 · 1280×720 · be garso · 30 s · 3,2 MB",
+   d:"Tas pats vaizdo įrašas be garso, lengvesnis – fonui pagrindiniame puslapyje, kartojasi ratu."},
+  {f:"prusakovu-30s-9x16-reels-tiktok.mp4", r:"v916", t:"Instagram Reels / TikTok", m:"9:16 · 1080×1920 · su muzika · 30 s · 7,6 MB",
+   d:"Vertikali versija telefonui: 15 scenų po 2 sekundes ir logotipas pabaigoje."},
+  {f:"prusakovu-30s-mobili-svetaine.mp4", r:"v916", t:"Svetainei (telefonui)", m:"9:16 · 720×1280 · be garso · 30 s · 2,6 MB",
+   d:"Vertikali lengva versija mobiliajai svetainei, be garso."}
+ ]},
+ {group:"Papildomi variantai · 30 s", items:[
+  {f:"prusakovu-30s-su-kainomis.mp4", r:"v169", t:"Variantas A – su pavadinimais ir kainomis", m:"16:9 · su muzika (džiazas) · 30 s · 8,4 MB",
+   d:"15 patiekalų, ant kiekvieno – pavadinimas ir kaina iš meniu."},
+  {f:"prusakovu-30s-kinematografinis.mp4", r:"v169", t:"Variantas B – kinematografinis", m:"16:9 · su muzika (akustinė) · 30 s · 7,9 MB",
+   d:"10 ilgesnių scenų po 3 sekundes su švelniais perėjimais, ramus tempas."},
+  {f:"prusakovu-30s-greitas.mp4", r:"v169", t:"Variantas C – greitas", m:"16:9 · su muzika · 30 s · 7,4 MB",
+   d:"30 greitų kadrų su baltais blyksniais tarp scenų – energingas montažas."}
+ ]},
+ {group:"Trumpos versijos · 15 s", items:[
+  {f:"prusakovu-15s-16x9-muzika.mp4", r:"v169", t:"YouTube / Facebook (15 s)", m:"16:9 · 1920×1080 · su muzika · 15 s · 10,7 MB",
+   d:"12 „gyvų“ scenų ir logotipas – trumpa versija."},
+  {f:"prusakovu-15s-16x9-svetainei.mp4", r:"v169", t:"Svetainei (15 s)", m:"16:9 · be garso · 15 s · 3,8 MB",
+   d:"Trumpa versija be garso svetainės fonui."},
+  {f:"prusakovu-15s-9x16-reels-tiktok.mp4", r:"v916", t:"Reels / TikTok (15 s)", m:"9:16 · 1080×1920 · su muzika · 15 s · 10,0 MB",
+   d:"Vertikali trumpa versija su muzika."},
+  {f:"prusakovu-15s-mobili-svetaine.mp4", r:"v916", t:"Svetainei telefonui (15 s)", m:"9:16 · 720×1280 · be garso · 15 s · 1,3 MB",
+   d:"Lengviausia vertikali versija mobiliajai svetainei."},
+  {f:"prusakovu-15s-4x5-mobili-svetaine.mp4", r:"v45", t:"Svetainei telefonui 4:5 (15 s)", m:"4:5 · be garso · 15 s · 2,8 MB",
+   d:"Žemesnis kadras, jei 9:16 telefone užima per daug vietos."}
+ ]}
+];
+const base = location.origin + "/videos/";
+const main = document.getElementById("list");
+for (const g of VIDEOS){
+  const h = document.createElement("h2"); h.textContent = g.group; main.appendChild(h);
+  const grid = document.createElement("div"); grid.className = "grid";
+  for (const v of g.items){
+    const url = base + v.f;
+    const c = document.createElement("div"); c.className = "card " + v.r;
+    c.innerHTML = `<video controls preload="metadata" playsinline src="${v.f}#t=1"></video>
+      <div class="body"><div class="title"></div><div class="meta"></div><div class="desc"></div>
+      <div class="link"><a href="${v.f}" target="_blank" rel="noopener">${url}</a></div></div>`;
+    c.querySelector(".title").textContent = v.t;
+    c.querySelector(".meta").textContent = v.m;
+    c.querySelector(".desc").textContent = v.d;
+    grid.appendChild(c);
+  }
+  main.appendChild(grid);
+}
+</script>
+</body>
+</html>
