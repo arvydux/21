@@ -29,19 +29,30 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #E9E4DA; col
 .embed .bar { display: none; }
 .embed #book { filter: drop-shadow(0 10px 16px rgba(40, 30, 15, .18)) drop-shadow(0 1px 2px rgba(40, 30, 15, .12)); }
 .stage { position: relative; height: calc(100dvh - var(--bar-h) - var(--nav-h)); padding: 10px 8px 0; }
-.embed .stage { padding: 6px 60px 20px; }
 .stage { overflow: hidden; }
 #book .stf__wrapper { height: 100%; padding-bottom: 0 !important; }
-.side { position: absolute; top: 50%; z-index: 3; display: grid; place-items: center; width: 48px; height: 72px; padding: 0; border: 0; border-radius: 24px; background: rgba(251, 247, 240, .8); color: var(--ink); opacity: .6; cursor: pointer; translate: 0 -50%; transition: opacity .2s; }
-.side:hover { opacity: 1; }
+.embed .stage { padding: 6px 104px 20px; }
+.side { position: absolute; top: 50%; z-index: 3; display: grid; place-items: center; width: 68px; height: 68px; padding: 0; border: 0; border-radius: 50%; background: var(--green); color: #fff; box-shadow: 0 8px 20px rgba(20, 102, 74, .32), 0 2px 4px rgba(0, 0, 0, .12); cursor: pointer; translate: 0 -50%; transition: background .2s, scale .2s, box-shadow .2s, opacity .2s; }
+.side:hover { background: var(--green-dark, #0E4A36); scale: 1.08; box-shadow: 0 12px 26px rgba(20, 102, 74, .4), 0 2px 4px rgba(0, 0, 0, .12); }
+.side:active { scale: .96; }
+.side:focus-visible { outline: 3px solid var(--green-soft); outline-offset: 3px; }
 .side:disabled { opacity: 0; pointer-events: none; }
-.side svg { width: 30px; height: 30px; }
-#prev { left: 4px; }
-#next { right: 4px; }
-.embed .side { background: none; }
+.side svg { width: 34px; height: 34px; }
+#prev svg { margin-right: 3px; }
+#next svg { margin-left: 3px; }
+#prev { left: 16px; }
+#next { right: 16px; }
+.side.hint::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--green); animation: hint 1.8s ease-out infinite; z-index: -1; }
+.side.hint svg { animation: nudge 1.8s ease-in-out infinite; }
+@keyframes hint { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(1.7); opacity: 0; } }
+@keyframes nudge { 0%, 100% { translate: 0; } 50% { translate: 4px; } }
+@media (prefers-reduced-motion: reduce) { .side.hint::before, .side.hint svg { animation: none; } }
 @media (max-width: 700px) {
   .embed .stage { padding: 8px 8px 4px; }
-  .embed .side { background: rgba(251, 247, 240, .8); }
+  .side { width: 48px; height: 48px; }
+  .side svg { width: 26px; height: 26px; }
+  #prev { left: 6px; }
+  #next { right: 6px; }
 }
 
 #book { height: 100%; transition: transform .6s ease; }
@@ -77,8 +88,8 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #E9E4DA; col
 <div class="stage">
   <div id="status"><div><div class="spin"></div>Meniu kraunamas…</div></div>
   <div id="book"></div>
-  <button id="prev" class="side" type="button" aria-label="Atgal" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-  <button id="next" class="side" type="button" aria-label="Pirmyn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  <button id="prev" class="side" type="button" aria-label="Atgal" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button id="next" class="side" type="button" aria-label="Pirmyn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
 </div>
 <div class="nav">
   <span id="counter"></span>
@@ -229,6 +240,7 @@ function update(index) {
   counter.textContent = (last > index + 1 ? (index + 1) + '–' + last : last) + ' / ' + total;
   prev.disabled = index === 0;
   next.disabled = last >= total;
+  next.classList.toggle('hint', index === 0);
   history.replaceState(null, '', '#p' + (index + 1));
   renderAround(index);
   centerCover(index);
