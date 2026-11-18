@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kaip gaminamas čeburekas · Prusakovų užeiga</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#14664A">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#FBF7F0;--ink:#1D2A23;--green:#14664A;--green-dark:#0E4A36;--muted:#5f6b64;--card:#fff;--line:#e6dfd2}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Manrope',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5}
+  .hdr{background:var(--green);color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.12)}
+  .hdr-top{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1200px;margin:0 auto;padding:12px 16px}
+  .brand{color:#fff;text-decoration:none;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase}
+  .brand small{display:block;margin-top:2px;font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:500;font-size:15px;letter-spacing:0;text-transform:none;opacity:.85}
+  .menu-link{display:inline-flex;align-items:center;padding:9px 15px;border-radius:99px;background:rgba(255,255,255,.14);color:#fff;font:800 13.5px 'Manrope',sans-serif;text-decoration:none;white-space:nowrap}
+  .intro{max-width:1100px;margin:0 auto;padding:28px 16px 0}
+  h1{margin:0 0 4px;font-family:'Playfair Display',Georgia,serif;font-size:30px;font-weight:700;color:var(--green-dark)}
+  .intro p{margin:0;color:var(--muted)}
+  main{max-width:1100px;margin:0 auto;padding:8px 16px 60px}
+  h2{font-size:18px;margin:32px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--line);color:var(--green-dark)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:18px;align-items:start}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+  .card video{width:100%;background:#000;display:block}
+  .v916 video{aspect-ratio:9/16;max-height:520px;object-fit:contain}
+  .v45 video{aspect-ratio:4/5;max-height:520px;object-fit:contain}
+  .v169 video{aspect-ratio:16/9}
+  .v21 video{aspect-ratio:1920/822}
+  .card img{width:100%;display:block;background:#000}
+  .v916 img{aspect-ratio:9/16;max-height:520px;object-fit:contain}
+  .v21 img{aspect-ratio:1920/822}
+  pre{margin:0;padding:14px 16px;background:#1D2A23;color:#e9f1ec;border-radius:12px;overflow-x:auto;font-size:13px;line-height:1.55}
+  main{padding-bottom:0}
+  .code{max-width:1100px;margin:0 auto;padding:0 16px 60px}
+  .note{font-size:14px;color:var(--muted);margin:0 0 10px}
+  .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .title{font-weight:800}
+  .meta{font-size:13px;color:var(--muted)}
+  .desc{font-size:14px}
+  .link{margin-top:auto;font-size:13px;word-break:break-all}
+  .link a{color:var(--green)}
+  @media (max-width:560px){.hdr-top{padding:10px 12px}h1{font-size:25px}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-top">
+    <a class="brand" href="/">Prusakovų užeiga<small>Kaip gaminamas čeburekas</small></a>
+    <a class="menu-link" href="/meniu/">Meniu</a>
+  </div>
+</header>
+<div class="intro">
+  <h1>Kaip gaminamas čeburekas</h1>
+  <p>Vaizdo įrašo versijos svetainei ir kuriai vietai kuri skirta</p>
+</div>
+<main id="list"></main>
+<section class="code">
+  <h2>Kodas svetainei</h2>
+  <p class="note">Plati versija kompiuteryje, vertikali – telefone.</p>
+  <pre id="code"></pre>
+</section>
+
+<script>
+const VIDEOS = [
+ {group:"Vaizdo įrašai svetainei", items:[
+  {f:"1_SAITAS_kompiuteris_1920x822.mp4", p:"1_2_SAITAS_kompiuteris_poster.jpg", r:"v21", t:"Svetainei kompiuteryje – pilna kokybė", m:"1920×822 · be garso · 29 s · 10,1 MB",
+   d:"Platus fono vaizdo įrašas puslapio viršuje."},
+  {f:"2_SAITAS_lengvas_1920x822.mp4", p:"1_2_SAITAS_kompiuteris_poster.jpg", r:"v21", t:"Svetainei – lengvas (rekomenduojamas)", m:"1920×822 · be garso · 29 s · 3,9 MB",
+   d:"Tas pats vaizdo įrašas svetainei, lengvesnis failas – greičiau įsikelia."},
+  {f:"3_SAITAS_telefonas_720x1280.mp4", p:"3_SAITAS_telefonas_poster.jpg", r:"v916", t:"Svetainei telefone", m:"9:16 · 720×1280 · be garso · 29 s · 2,1 MB",
+   d:"Mobilioji (vertikali) versija – rodoma telefonuose vietoj plačiosios."}
+ ]}
+];
+const POSTERS = [
+  {f:"1_2_SAITAS_kompiuteris_poster.jpg", r:"v21", t:"Užsklanda versijoms 1 ir 2", m:"1920×822 · JPG · 65 KB",
+   d:"Kadras, rodomas, kol įsikelia vaizdo įrašas."},
+  {f:"3_SAITAS_telefonas_poster.jpg", r:"v916", t:"Užsklanda versijai 3", m:"720×1280 · JPG · 45 KB",
+   d:"Kadras, rodomas, kol įsikelia telefono versija."}
+];
+const base = location.origin + "/videos2/";
+const main = document.getElementById("list");
+function card(v, media){
+  const url = base + v.f;
+  const c = document.createElement("div"); c.className = "card " + v.r;
+  c.innerHTML = media + `<div class="body"><div class="title"></div><div class="meta"></div><div class="desc"></div>
+    <div class="link"><a href="${v.f}" target="_blank" rel="noopener">${url}</a></div></div>`;
+  c.querySelector(".title").textContent = v.t;
+  c.querySelector(".meta").textContent = v.m;
+  c.querySelector(".desc").textContent = v.d;
+  return c;
+}
+function section(title, cards){
+  const h = document.createElement("h2"); h.textContent = title; main.appendChild(h);
+  const grid = document.createElement("div"); grid.className = "grid";
+  cards.forEach(c => grid.appendChild(c));
+  main.appendChild(grid);
+}
+for (const g of VIDEOS){
+  section(g.group, g.items.map(v => card(v, `<video controls preload="metadata" playsinline poster="${v.p}" src="${v.f}"></video>`)));
+}
+section("Užsklandos (poster)", POSTERS.map(v => card(v, `<img src="${v.f}" alt="" loading="lazy">`)));
+document.getElementById("code").textContent =
+`<video autoplay muted loop playsinline poster="${base}1_2_SAITAS_kompiuteris_poster.jpg">
+  <source src="${base}3_SAITAS_telefonas_720x1280.mp4" type="video/mp4" media="(max-width: 767px)">
+  <source src="${base}2_SAITAS_lengvas_1920x822.mp4" type="video/mp4">
+</video>`;
+</script>
+</body>
+</html>
