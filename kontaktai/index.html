@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14664A">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<title>Kontaktai — Prusakovų užeiga</title>
+<meta name="description" content="Prusakovų užeiga: Savanorių pr. 139C, Vilnius. Tel. +370 609 09488. Darbo laikas: III–IV 11–17, V 11–19, VI 12–19.">
+<link rel="canonical" href="https://prusakovuuzeiga.lt/kontaktai/">
+<link rel="preload" as="image" href="sale-900.jpg" imagesrcset="sale-900.jpg 900w, sale-1672.jpg 1672w" imagesizes="100vw">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --paper: #FBF7F0; --ink: #1D2A23; --green: #14664A; --green-dark: #0E4A36; --amber: #B5761B; --muted: #6E756F; --line: #E8E0D2;
+}
+body { font-family: 'Manrope', system-ui, sans-serif; color: var(--ink); background: var(--paper); line-height: 1.5; }
+a { color: inherit; }
+.hdr { background: var(--green); color: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.12); position: relative; z-index: 1; }
+.hdr-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; max-width: 1200px; margin: 0 auto; padding: 12px 16px; }
+.brand { color: #fff; text-decoration: none; font-weight: 800; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; }
+.brand small { display: block; margin-top: 2px; font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-weight: 500; font-size: 15px; letter-spacing: 0; text-transform: none; opacity: .85; }
+.menu-link { display: inline-flex; align-items: center; padding: 9px 15px; border-radius: 99px; background: rgba(255,255,255,.14); color: #fff; font: 800 13.5px 'Manrope', sans-serif; text-decoration: none; white-space: nowrap; }
+.hero { position: relative; height: clamp(240px, 46vh, 480px); display: flex; align-items: center; justify-content: center; text-align: center; color: #fff; overflow: hidden; }
+.hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 60%; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,74,54,.35) 0%, rgba(20,20,15,.55) 100%); }
+.hero-tx { position: relative; z-index: 1; padding: 0 16px; }
+.hero h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(36px, 6vw, 60px); font-weight: 700; line-height: 1.1; text-shadow: 0 2px 18px rgba(0,0,0,.35); }
+.crumbs { margin-top: 10px; font-size: 14px; font-weight: 600; opacity: .9; }
+.crumbs a { text-decoration: none; }
+.crumbs a:hover { text-decoration: underline; }
+.crumbs span { margin: 0 8px; opacity: .7; }
+main { max-width: 1200px; margin: 0 auto; padding: 40px 16px 56px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 28px; align-items: stretch; }
+.info { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 28px 26px; box-shadow: 0 1px 4px rgba(0,0,0,.04); display: flex; flex-direction: column; gap: 22px; }
+.row { display: flex; gap: 14px; align-items: flex-start; }
+.ic { flex: none; width: 42px; height: 42px; border-radius: 12px; background: #EAF3EE; color: var(--green); display: flex; align-items: center; justify-content: center; }
+.ic svg { width: 21px; height: 21px; }
+.lbl { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.val { font-size: 17px; font-weight: 700; }
+.val a { text-decoration: none; }
+.val a:hover { color: var(--green); }
+.hours { flex: 1; min-width: 0; }
+.status { display: inline-block; margin: 2px 0 8px; padding: 3px 10px; border-radius: 99px; font-size: 13px; font-weight: 800; }
+.status.open { background: #E3F4EA; color: #127A45; }
+.status.closed { background: #F6E9E4; color: #A2432A; }
+.status:empty { display: none; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+td { padding: 6px 0; border-bottom: 1px dashed var(--line); }
+tr:last-child td { border-bottom: 0; }
+td + td { text-align: right; font-weight: 700; white-space: nowrap; }
+td.off { color: var(--muted); font-weight: 500; }
+tr.today td { color: var(--green-dark); font-weight: 800; }
+tr.today td:first-child::after { content: " · šiandien"; font-weight: 600; color: var(--amber); }
+.btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; }
+.btn { flex: 1 1 140px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 13px 18px; border-radius: 99px; font: 800 15px 'Manrope', sans-serif; text-decoration: none; }
+.btn svg { width: 18px; height: 18px; }
+.btn.primary { background: var(--green); color: #fff; }
+.btn.primary:hover { background: var(--green-dark); }
+.btn.ghost { border: 2px solid var(--green); color: var(--green-dark); }
+.btn.ghost:hover { background: #EAF3EE; }
+.map { min-height: 450px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: #E9E4DA; }
+.map iframe { display: block; width: 100%; height: 100%; min-height: 450px; border: 0; }
+footer { border-top: 1px solid var(--line); padding: 20px 16px; text-align: center; font-size: 14px; color: var(--muted); }
+footer a { white-space: nowrap; }
+@media (max-width: 860px) {
+  main { grid-template-columns: 1fr; padding-top: 24px; gap: 20px; }
+  .map, .map iframe { min-height: 360px; }
+}
+@media (max-width: 560px) {
+  .hdr-top { padding: 10px 12px; }
+  .info { padding: 22px 18px; }
+}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Restaurant","name":"Prusakovų užeiga","url":"https://prusakovuuzeiga.lt/","logo":"https://prusakovuuzeiga.lt/icon-192.png","image":"https://prusakovuuzeiga.lt/kontaktai/sale-1672.jpg","telephone":"+37060909488","address":{"@type":"PostalAddress","streetAddress":"Savanorių pr. 139C","addressLocality":"Vilnius","postalCode":"03150","addressCountry":"LT"},"hasMap":"https://www.google.com/maps/search/?api=1&query=Prusakov%C5%B3+u%C5%BEeiga%2C+Savanori%C5%B3+pr.+139C%2C+Vilnius","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Wednesday","Thursday"],"opens":"11:00","closes":"17:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Friday","opens":"11:00","closes":"19:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"12:00","closes":"19:00"}],"servesCuisine":["Lietuvių","Čeburekai","Koldūnai","Bulviniai patiekalai"],"priceRange":"€"}</script>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-top">
+    <a class="brand" href="/">Prusakovų užeiga<small>Kontaktai</small></a>
+    <a class="menu-link" href="/">Meniu</a>
+  </div>
+</header>
+<section class="hero">
+  <img src="sale-900.jpg" srcset="sale-900.jpg 900w, sale-1672.jpg 1672w" sizes="100vw" alt="Prusakovų užeigos salė" fetchpriority="high">
+  <div class="hero-tx">
+    <h1>Kontaktai</h1>
+    <nav class="crumbs" aria-label="Kelias"><a href="/">Pagrindinis</a><span>/</span>Kontaktai</nav>
+  </div>
+</section>
+<main>
+  <div class="info">
+    <div class="row">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
+      <div><div class="lbl">Adresas</div><div class="val">Savanorių pr. 139C, Vilnius, 03150</div></div>
+    </div>
+    <div class="row">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span>
+      <div><div class="lbl">Telefonas</div><div class="val"><a href="tel:+37060909488">+370 609 09488</a></div></div>
+    </div>
+    <div class="row">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+      <div class="hours">
+        <div class="lbl">Darbo laikas</div>
+        <div class="status" id="status"></div>
+        <table id="hours">
+          <tr data-day="1"><td>Pirmadienis</td><td class="off">Nedirbame</td></tr>
+          <tr data-day="2"><td>Antradienis</td><td class="off">Nedirbame</td></tr>
+          <tr data-day="3" data-open="11:00" data-close="17:00"><td>Trečiadienis</td><td>11:00–17:00</td></tr>
+          <tr data-day="4" data-open="11:00" data-close="17:00"><td>Ketvirtadienis</td><td>11:00–17:00</td></tr>
+          <tr data-day="5" data-open="11:00" data-close="19:00"><td>Penktadienis</td><td>11:00–19:00</td></tr>
+          <tr data-day="6" data-open="12:00" data-close="19:00"><td>Šeštadienis</td><td>12:00–19:00</td></tr>
+          <tr data-day="0"><td>Sekmadienis</td><td class="off">Nedirbame</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="btns">
+      <a class="btn primary" href="tel:+37060909488"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Skambinti</a>
+      <a class="btn ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Prusakov%C5%B3+u%C5%BEeiga%2C+Savanori%C5%B3+pr.+139C%2C+Vilnius" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>Maršrutas</a>
+    </div>
+  </div>
+  <div class="map">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2963.020600705458!2d25.228558977396855!3d54.65839837269863!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46dd95007144de2d%3A0x75dcdb036912a007!2zUHJ1c2Frb3bFsyB1xb5laWdh!5e0!3m2!1slt!2slt!4v1795124529572!5m2!1slt!2slt" title="Prusakovų užeiga žemėlapyje" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+</main>
+<footer>Prusakovų užeiga · Savanorių pr. 139C, Vilnius · <a href="tel:+37060909488">+370 609 09488</a></footer>
+<script>
+(function () {
+  var parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Vilnius', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date());
+  var get = function (t) { return (parts.find(function (p) { return p.type === t; }) || {}).value; };
+  var day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(get('weekday'));
+  var now = get('hour') % 24 + ':' + get('minute');
+  var row = document.querySelector('#hours tr[data-day="' + day + '"]');
+  if (!row) { return; }
+  row.classList.add('today');
+  var pad = function (t) { return t.length < 5 ? '0' + t : t; };
+  var open = row.dataset.open, close = row.dataset.close, status = document.getElementById('status');
+  if (open && pad(now) >= open && pad(now) < close) {
+    status.textContent = 'Dabar atidaryta · iki ' + close;
+    status.className = 'status open';
+  } else {
+    status.textContent = 'Dabar uždaryta';
+    status.className = 'status closed';
+  }
+})();
+</script>
+</body>
+</html>
