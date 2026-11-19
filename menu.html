@@ -102,7 +102,9 @@ import * as pdfjsLib from './menus/pdfjs/pdf.min.js';
 pdfjsLib.GlobalWorkerOptions.workerSrc = './menus/pdfjs/pdf.worker.min.js';
 
 const FIRST_PAGE = 2;
-const SOURCE = new URLSearchParams(location.search).get('pdf') === 'a4' ? 'menus/menu-prusakovu-a4-web.pdf' : 'menus/menu-prusakovu.pdf';
+const A4 = new URLSearchParams(location.search).get('pdf') === 'a4';
+const SOURCE = A4 ? 'menus/menu-prusakovu-a4-web.pdf' : 'menus/menu-prusakovu.pdf';
+const LANGUAGE_STARTS = A4 ? [2, 11, 20, 29] : [];
 const KEEP_RENDERED = 6;
 const CURL_ANGLE = 1.25;
 const CURL_WIDTH = 0.07;
@@ -113,8 +115,26 @@ const counter = document.getElementById('counter');
 const prev = document.getElementById('prev');
 const next = document.getElementById('next');
 const pages = [];
+const sheets = [];
 const rendered = new Map();
-let pdf, flipbook, queue = Promise.resolve();
+let pdf, flipbook, pageSize, queue = Promise.resolve();
+
+/**
+ * Flipbook sheets as PDF page numbers, with a blank sheet (0) before every language
+ * that would otherwise start on a right-hand page, so each language opens as a spread.
+ */
+function buildSheets() {
+  for (let n = 1; n <= pdf.numPages; n++) {
+    if (LANGUAGE_STARTS.includes(n) && sheets.length % 2 === 0) {
+      sheets.push(0);
+    }
+    sheets.push(n);
+  }
+}
+
+function sheetOf(pageNumber) {
+  return Math.max(sheets.indexOf(pageNumber), 0);
+}
 
 function pageFromHash() {
   const n = parseInt(location.hash.replace('#p', ''), 10);
@@ -179,9 +199,27 @@ function curl(source, side) {
   return out;
 }
 
+function renderBlank(index) {
+  const width = flipbook.getBoundsRect().pageWidth || 400;
+  const ratio = Math.min(window.devicePixelRatio || 1, 2.5);
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.round(width * ratio);
+  canvas.height = Math.round(width * pageSize.height / pageSize.width * ratio);
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--paper');
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const side = spreadSide(index);
+  pages[index].replaceChildren(side ? curl(canvas, side) : canvas);
+  pages[index].classList.add('ready');
+}
+
 async function render(index) {
+  if (sheets[index] === 0) {
+    renderBlank(index);
+    return;
+  }
   const holder = pages[index];
-  const page = await pdf.getPage(index + 1);
+  const page = await pdf.getPage(sheets[index]);
   const base = page.getViewport({ scale: 1 });
   const width = flipbook.getBoundsRect().pageWidth || 400;
   const ratio = Math.min(window.devicePixelRatio || 1, 2.5);
@@ -235,13 +273,15 @@ function renderAround(index) {
 }
 
 function update(index) {
-  const total = pdf.numPages;
-  const last = flipbook.getOrientation() === 'landscape' && index > 0 ? Math.min(index + 2, total) : index + 1;
-  counter.textContent = (last > index + 1 ? (index + 1) + '–' + last : last) + ' / ' + total;
+  const lastSheet = flipbook.getOrientation() === 'landscape' && index > 0 ? Math.min(index + 1, sheets.length - 1) : index;
+  const shown = sheets.slice(index, lastSheet + 1).filter(Boolean);
+  const first = shown[0] || sheets[index + 1] || sheets[index - 1];
+  const last = shown[shown.length - 1] || first;
+  counter.textContent = (last > first ? first + '–' + last : last) + ' / ' + pdf.numPages;
   prev.disabled = index === 0;
-  next.disabled = last >= total;
+  next.disabled = lastSheet >= sheets.length - 1;
   next.classList.toggle('hint', index === 0);
-  history.replaceState(null, '', '#p' + (index + 1));
+  history.replaceState(null, '', '#p' + first);
   renderAround(index);
   centerCover(index);
 }
@@ -256,8 +296,10 @@ try {
   pdf = await pdfjsLib.getDocument({ url: SOURCE, isEvalSupported: false }).promise;
   const first = await pdf.getPage(1);
   const size = first.getViewport({ scale: 1 });
+  pageSize = size;
+  buildSheets();
 
-  for (let i = 0; i < pdf.numPages; i++) {
+  for (let i = 0; i < sheets.length; i++) {
     const holder = document.createElement('div');
     holder.className = 'page';
     pages.push(holder);
@@ -276,7 +318,7 @@ try {
     mobileScrollSupport: false,
     maxShadowOpacity: 0.4,
     flippingTime: 700,
-    startPage: pageFromHash() - 1,
+    startPage: sheetOf(pageFromHash()),
   });
   flipbook.loadFromHTML(pages);
   flipbook.on('flip', (event) => update(event.data));
@@ -297,7 +339,7 @@ try {
   });
 
   addEventListener('hashchange', () => {
-    const target = pageFromHash() - 1;
+    const target = sheetOf(pageFromHash());
     if (Math.abs(target - flipbook.getCurrentPageIndex()) > 1) {
       flipbook.turnToPage(target);
       update(target);
@@ -307,7 +349,7 @@ try {
     const link = event.target.closest('a[data-page]');
     if (link) {
       event.preventDefault();
-      flipbook.flip(Number(link.dataset.page) - 1);
+      flipbook.flip(sheetOf(Number(link.dataset.page)));
     }
   });
   const fullscreen = document.getElementById('fullscreen');
