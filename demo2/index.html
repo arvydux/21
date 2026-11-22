@@ -16,7 +16,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --cream: #F6F0E2; --cream-2: #EFE6CF; --green: #1F3D2E; --green-2: #2A4A39; --red: #B3141B; --red-dark: #8F0F15;
-  --gold: #C2A26A; --ink: #1F3D2E; --muted: #6B6A5E; --serif: 'Cormorant Garamond', Georgia, serif; --sans: 'Inter', system-ui, sans-serif;
+  --gold: #C2A26A; --ink: #1F3D2E; --muted: #6B6A5E; --serif: 'Cormorant Garamond', Georgia, serif; --sans: 'Inter', system-ui, sans-serif; --gutter: clamp(16px, 6vw, 110px); --wide: 1800px;
 }
 html { scroll-behavior: smooth; }
 body { font-family: var(--sans); color: var(--ink); background: var(--cream); -webkit-font-smoothing: antialiased; }
@@ -25,37 +25,37 @@ a { color: inherit; }
 .hero { position: relative; min-height: 640px; height: 92vh; height: 92svh; max-height: 900px; overflow: hidden; color: #F6F0E2; background: var(--green); }
 .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .hero::after { content: ""; position: absolute; inset: 0; background:
-  linear-gradient(90deg, rgba(10,20,14,.72) 0%, rgba(10,20,14,.35) 45%, rgba(10,20,14,0) 70%),
-  linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 65%, rgba(20,45,32,.85) 100%); }
-.hero > *:not(video) { position: relative; z-index: 1; }
+  linear-gradient(90deg, rgba(12,22,16,.7) 0%, rgba(12,22,16,.35) 45%, rgba(12,22,16,.05) 75%),
+  linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 50%, rgba(22,52,36,.95) 100%); }
+.hero > .nav, .hero > .hero-copy { position: relative; z-index: 1; }
 
-.nav { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; max-width: 1240px; margin: 0 auto; padding: 18px 40px 0; }
-.badge { display: block; width: 132px; padding: 18px 14px 12px; background: var(--cream); border-radius: 66px 66px 10px 10px; box-shadow: 0 6px 24px rgba(0,0,0,.25); }
+.nav { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; max-width: var(--wide); margin: 0 auto; padding: 26px var(--gutter) 0; }
+.badge { display: block; width: clamp(130px, 15.5vw, 240px); padding: 12% 9% 9%; background: var(--cream); border-radius: 999px 999px 12px 12px; box-shadow: 0 6px 24px rgba(0,0,0,.25); }
 .badge img { display: block; width: 100%; height: auto; }
-.links { display: flex; align-items: center; gap: 26px; padding-top: 24px; list-style: none; }
-.links a { text-decoration: none; font-size: 15px; font-weight: 300; letter-spacing: .01em; opacity: .92; transition: opacity .2s; }
+.links { display: flex; align-items: center; gap: clamp(20px, 2.2vw, 34px); padding-top: clamp(20px, 2.6vw, 44px); list-style: none; }
+.links a { text-decoration: none; font-size: clamp(15px, 1.35vw, 20px); font-weight: 400; letter-spacing: .01em; opacity: .92; transition: opacity .2s; }
 .links a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
-.links .cta { padding: 7px 14px; border: 1px solid rgba(246,240,226,.7); border-radius: 999px; }
+.links .cta { padding: .45em 1.1em; border: 1.5px solid rgba(246,240,226,.85); border-radius: 999px; }
 .links .cta:hover { background: rgba(246,240,226,.12); text-decoration: none; }
 .burger { display: none; margin-top: 18px; width: 44px; height: 44px; border: 1px solid rgba(246,240,226,.6); border-radius: 50%; background: rgba(0,0,0,.2); color: inherit; cursor: pointer; }
 .burger svg { width: 20px; height: 20px; }
 
-.hero-copy { max-width: 1240px; margin: 0 auto; padding: 9vh 40px 0; }
-.hero h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(52px, 7vw, 92px); line-height: 1; letter-spacing: -.01em; }
-.hero p { margin-top: 22px; font-size: clamp(16px, 1.6vw, 19px); font-weight: 300; opacity: .9; }
-.btn { display: inline-flex; align-items: center; gap: 12px; margin-top: 36px; padding: 13px 22px; background: var(--red); color: #fff; text-decoration: none; font-size: 16px; border-radius: 4px; box-shadow: 0 6px 18px rgba(0,0,0,.25); transition: background .2s, transform .2s; }
+.hero-copy { max-width: var(--wide); margin: 0 auto; padding: clamp(40px, 7vw, 120px) var(--gutter) 0; }
+.hero h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(54px, 8.4vw, 136px); line-height: 1; letter-spacing: -.01em; }
+.hero p { margin-top: .9em; font-size: clamp(17px, 2.1vw, 30px); font-weight: 400; opacity: .95; }
+.btn { display: inline-flex; align-items: center; gap: .7em; margin-top: 2em; padding: .75em 1.4em; background: var(--red); color: #fff; text-decoration: none; font-size: clamp(16px, 1.6vw, 22px); border-radius: 5px; box-shadow: 0 6px 18px rgba(0,0,0,.25); transition: background .2s, transform .2s; }
 .btn:hover { background: var(--red-dark); transform: translateY(-1px); }
-.btn svg { width: 18px; height: 18px; }
+.btn svg { width: 1.1em; height: 1.1em; }
 
-.hero-ctrl { position: absolute; right: 40px; bottom: 0; display: flex; align-items: flex-end; gap: 14px; }
-.pause { width: 40px; height: 40px; margin-bottom: 26px; border: 1px solid rgba(246,240,226,.75); border-radius: 50%; background: rgba(0,0,0,.25); color: #F6F0E2; cursor: pointer; display: grid; place-items: center; }
+.hero-ctrl { position: absolute; z-index: 2; right: var(--gutter); bottom: 0; display: flex; align-items: flex-end; gap: 14px; }
+.pause { width: 48px; height: 48px; margin-bottom: 30px; border: 1px solid rgba(246,240,226,.75); border-radius: 50%; background: rgba(0,0,0,.25); color: #F6F0E2; cursor: pointer; display: grid; place-items: center; }
 .pause svg { width: 14px; height: 14px; }
-.scroll { display: grid; place-items: end center; width: 28px; height: 72px; padding-bottom: 10px; margin-bottom: -20px; background: var(--cream-2); border: 1px solid rgba(31,61,46,.25); border-radius: 14px; color: var(--green); text-decoration: none; box-shadow: 0 4px 14px rgba(0,0,0,.2); }
-.scroll svg { width: 12px; height: 40px; animation: nudge 2.2s ease-in-out infinite; }
+.scroll { display: grid; place-items: end center; width: 40px; height: 120px; padding-bottom: 10px; margin-bottom: -20px; background: var(--cream-2); border: 1px solid rgba(31,61,46,.25); border-radius: 14px; color: var(--green); text-decoration: none; box-shadow: 0 4px 14px rgba(0,0,0,.2); }
+.scroll svg { width: 14px; height: 80px; animation: nudge 2.2s ease-in-out infinite; }
 @keyframes nudge { 50% { transform: translateY(5px); } }
 
 .status { background: var(--cream-2); border-bottom: 1px solid rgba(31,61,46,.08); }
-.status div { max-width: 1240px; margin: 0 auto; padding: 11px 40px; font-size: 14px; color: var(--green); }
+.status div { max-width: var(--wide); margin: 0 auto; padding: 14px var(--gutter); font-size: clamp(14px, 1.3vw, 19px); color: var(--green); }
 
 .lunch { padding: 110px 16px 120px; text-align: center; }
 .eyebrow { font-size: 15px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--red); }
@@ -98,16 +98,14 @@ footer dd { text-align: right; }
 .copy { padding: 18px 16px; text-align: center; font-size: 13px; opacity: .6; border-top: 1px solid rgba(237,229,210,.12); }
 
 @media (max-width: 860px) {
-  .nav { padding: 14px 16px 0; }
-  .badge { width: 104px; padding: 14px 11px 9px; }
+  .badge { width: 112px; }
   .burger { display: grid; place-items: center; }
-  .links { display: none; position: absolute; top: 72px; right: 16px; flex-direction: column; align-items: stretch; gap: 0; padding: 8px; min-width: 210px; background: rgba(20,40,30,.96); border-radius: 10px; box-shadow: 0 12px 30px rgba(0,0,0,.35); }
+  .links { display: none; position: absolute; top: 96px; right: 16px; flex-direction: column; align-items: stretch; gap: 0; padding: 8px; min-width: 210px; background: rgba(20,40,30,.96); border-radius: 10px; box-shadow: 0 12px 30px rgba(0,0,0,.35); }
   .links.open { display: flex; }
   .links a { display: block; padding: 12px 14px; font-size: 16px; }
   .links .cta { margin-top: 6px; text-align: center; }
-  .hero-copy { padding: 10vh 16px 0; }
-  .hero-ctrl { right: 16px; }
-  .status div { padding: 11px 16px; }
+  .scroll { height: 80px; width: 32px; } .scroll svg { height: 46px; }
+  .pause { width: 42px; height: 42px; }
   .about-in { grid-template-columns: 1fr; gap: 32px; padding: 72px 16px; }
   .foot-in { grid-template-columns: 1fr; padding: 48px 16px; }
 }
