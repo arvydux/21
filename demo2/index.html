@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F3D2E">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<title>Prusakovų užeiga — namų skonis</title>
+<meta name="description" content="Prusakovų užeiga Vilniuje: tradiciniai patiekalai, gaminami su meile. Dienos pietūs trečiadieniais–penktadieniais.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F6F0E2; --cream-2: #EFE6CF; --green: #1F3D2E; --green-2: #2A4A39; --red: #B3141B; --red-dark: #8F0F15;
+  --gold: #C2A26A; --ink: #1F3D2E; --muted: #6B6A5E; --serif: 'Cormorant Garamond', Georgia, serif; --sans: 'Inter', system-ui, sans-serif;
+}
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); color: var(--ink); background: var(--cream); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+
+.hero { position: relative; min-height: 640px; height: 92vh; height: 92svh; max-height: 900px; overflow: hidden; color: #F6F0E2; background: var(--green); }
+.hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero::after { content: ""; position: absolute; inset: 0; background:
+  linear-gradient(90deg, rgba(10,20,14,.72) 0%, rgba(10,20,14,.35) 45%, rgba(10,20,14,0) 70%),
+  linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 65%, rgba(20,45,32,.85) 100%); }
+.hero > *:not(video) { position: relative; z-index: 1; }
+
+.nav { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; max-width: 1240px; margin: 0 auto; padding: 18px 40px 0; }
+.badge { display: block; width: 132px; padding: 18px 14px 12px; background: var(--cream); border-radius: 66px 66px 10px 10px; box-shadow: 0 6px 24px rgba(0,0,0,.25); }
+.badge img { display: block; width: 100%; height: auto; }
+.links { display: flex; align-items: center; gap: 26px; padding-top: 24px; list-style: none; }
+.links a { text-decoration: none; font-size: 15px; font-weight: 300; letter-spacing: .01em; opacity: .92; transition: opacity .2s; }
+.links a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
+.links .cta { padding: 7px 14px; border: 1px solid rgba(246,240,226,.7); border-radius: 999px; }
+.links .cta:hover { background: rgba(246,240,226,.12); text-decoration: none; }
+.burger { display: none; margin-top: 18px; width: 44px; height: 44px; border: 1px solid rgba(246,240,226,.6); border-radius: 50%; background: rgba(0,0,0,.2); color: inherit; cursor: pointer; }
+.burger svg { width: 20px; height: 20px; }
+
+.hero-copy { max-width: 1240px; margin: 0 auto; padding: 9vh 40px 0; }
+.hero h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(52px, 7vw, 92px); line-height: 1; letter-spacing: -.01em; }
+.hero p { margin-top: 22px; font-size: clamp(16px, 1.6vw, 19px); font-weight: 300; opacity: .9; }
+.btn { display: inline-flex; align-items: center; gap: 12px; margin-top: 36px; padding: 13px 22px; background: var(--red); color: #fff; text-decoration: none; font-size: 16px; border-radius: 4px; box-shadow: 0 6px 18px rgba(0,0,0,.25); transition: background .2s, transform .2s; }
+.btn:hover { background: var(--red-dark); transform: translateY(-1px); }
+.btn svg { width: 18px; height: 18px; }
+
+.hero-ctrl { position: absolute; right: 40px; bottom: 0; display: flex; align-items: flex-end; gap: 14px; }
+.pause { width: 40px; height: 40px; margin-bottom: 26px; border: 1px solid rgba(246,240,226,.75); border-radius: 50%; background: rgba(0,0,0,.25); color: #F6F0E2; cursor: pointer; display: grid; place-items: center; }
+.pause svg { width: 14px; height: 14px; }
+.scroll { display: grid; place-items: end center; width: 28px; height: 72px; padding-bottom: 10px; margin-bottom: -20px; background: var(--cream-2); border: 1px solid rgba(31,61,46,.25); border-radius: 14px; color: var(--green); text-decoration: none; box-shadow: 0 4px 14px rgba(0,0,0,.2); }
+.scroll svg { width: 12px; height: 40px; animation: nudge 2.2s ease-in-out infinite; }
+@keyframes nudge { 50% { transform: translateY(5px); } }
+
+.status { background: var(--cream-2); border-bottom: 1px solid rgba(31,61,46,.08); }
+.status div { max-width: 1240px; margin: 0 auto; padding: 11px 40px; font-size: 14px; color: var(--green); }
+
+.lunch { padding: 110px 16px 120px; text-align: center; }
+.eyebrow { font-size: 15px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--red); }
+.days { margin-top: 14px; font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 4.6vw, 50px); line-height: 1.15; }
+.days em { font-style: italic; }
+.days .dot { color: var(--gold); font-size: .6em; vertical-align: .3em; padding: 0 .35em; }
+.rule { width: 140px; height: 1px; margin: 34px auto 30px; background: var(--gold); }
+.hours { font-family: var(--serif); font-weight: 600; font-size: clamp(44px, 6.4vw, 64px); line-height: 1; display: flex; align-items: center; justify-content: center; gap: .35em; font-variant-numeric: lining-nums; }
+.hours i { display: inline-block; width: 1em; height: 3px; background: var(--gold); }
+
+.card { position: relative; max-width: 400px; margin: 72px auto 0; padding: 26px 26px 18px; background: var(--green); color: #F2EBDA; text-align: left; box-shadow: 0 22px 50px rgba(31,61,46,.28); }
+.card::before { content: ""; position: absolute; inset: 9px; border: 1px solid rgba(194,162,106,.45); pointer-events: none; }
+.card-logo { width: 120px; margin: 0 auto; padding: 16px 12px 10px; background: var(--cream); border-radius: 60px 60px 6px 6px; }
+.card-logo img { display: block; width: 100%; height: auto; }
+.card h2 { margin: 16px 0 14px; text-align: center; font-family: var(--serif); font-weight: 500; font-size: 36px; }
+.card .date { display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid rgba(194,162,106,.4); border-bottom: 1px solid rgba(194,162,106,.4); font-size: 11px; opacity: .85; }
+.group { margin-top: 18px; }
+.group h3 { font-size: 9.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.item { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0 10px; }
+.item + .item { border-top: 1px solid rgba(194,162,106,.3); }
+.item b { display: block; font-weight: 400; font-size: 14.5px; }
+.item small { display: block; margin-top: 3px; font-size: 10.5px; opacity: .7; }
+.item span { font-size: 14px; white-space: nowrap; }
+.card-foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-top: 22px; padding-top: 12px; border-top: 1px solid rgba(194,162,106,.4); }
+.card-foot p { font-size: 9px; line-height: 1.5; opacity: .65; }
+.card-foot strong { font-family: var(--serif); font-weight: 500; font-size: 18px; }
+
+.about { background: #fff8ec; border-top: 1px solid rgba(31,61,46,.08); }
+.about-in { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; max-width: 1100px; margin: 0 auto; padding: 100px 40px; }
+.about img { display: block; width: 100%; height: auto; border-radius: 4px; box-shadow: 0 18px 40px rgba(31,61,46,.2); }
+.about h2 { margin-top: 12px; font-family: var(--serif); font-weight: 500; font-size: clamp(34px, 4vw, 46px); line-height: 1.1; }
+.about p { margin-top: 18px; font-size: 16px; line-height: 1.7; color: var(--muted); }
+
+footer { background: var(--green); color: #EDE5D2; }
+.foot-in { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 1100px; margin: 0 auto; padding: 64px 40px; font-size: 15px; line-height: 1.8; font-weight: 300; }
+footer h4 { font-family: var(--serif); font-weight: 500; font-size: 24px; margin-bottom: 10px; color: #fff; }
+footer a { text-decoration: none; border-bottom: 1px solid rgba(237,229,210,.35); }
+footer dl { display: grid; grid-template-columns: auto 1fr; column-gap: 18px; }
+footer dd { text-align: right; }
+.copy { padding: 18px 16px; text-align: center; font-size: 13px; opacity: .6; border-top: 1px solid rgba(237,229,210,.12); }
+
+@media (max-width: 860px) {
+  .nav { padding: 14px 16px 0; }
+  .badge { width: 104px; padding: 14px 11px 9px; }
+  .burger { display: grid; place-items: center; }
+  .links { display: none; position: absolute; top: 72px; right: 16px; flex-direction: column; align-items: stretch; gap: 0; padding: 8px; min-width: 210px; background: rgba(20,40,30,.96); border-radius: 10px; box-shadow: 0 12px 30px rgba(0,0,0,.35); }
+  .links.open { display: flex; }
+  .links a { display: block; padding: 12px 14px; font-size: 16px; }
+  .links .cta { margin-top: 6px; text-align: center; }
+  .hero-copy { padding: 10vh 16px 0; }
+  .hero-ctrl { right: 16px; }
+  .status div { padding: 11px 16px; }
+  .about-in { grid-template-columns: 1fr; gap: 32px; padding: 72px 16px; }
+  .foot-in { grid-template-columns: 1fr; padding: 48px 16px; }
+}
+@media (max-width: 420px) {
+  .card { padding: 22px 18px 16px; }
+  .days .dot { padding: 0 .2em; }
+}
+@media (prefers-reduced-motion: reduce) { .scroll svg { animation: none; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <video id="heroVideo" src="/videos/prusakovu-30s-16x9-svetainei.mp4" autoplay muted loop playsinline preload="auto"></video>
+
+  <nav class="nav">
+    <a class="badge" href="/" aria-label="Prusakovų užeiga — pradžia"><img src="logo.png" alt="Užeiga Prusakovų" width="440" height="323"></a>
+    <button class="burger" id="burger" aria-label="Meniu" aria-expanded="false" aria-controls="links">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <ul class="links" id="links">
+      <li><a href="/meniu/">Meniu</a></li>
+      <li><a href="#pietus">Dienos pietūs</a></li>
+      <li><a href="#apie">Apie mus</a></li>
+      <li><a href="/kontaktai/">Kontaktai</a></li>
+      <li><a class="cta" href="tel:+37060909488">Rezervacija</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero-copy">
+    <h1>Namų skonis</h1>
+    <p>Tradiciniai patiekalai, gaminami su meile</p>
+    <a class="btn" href="/meniu/">Žiūrėti meniu
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+
+  <div class="hero-ctrl">
+    <button class="pause" id="pauseBtn" aria-label="Sustabdyti vaizdo įrašą">
+      <svg id="pauseIcon" viewBox="0 0 14 14" fill="currentColor"><rect x="3" y="2" width="2.4" height="10" rx=".6"/><rect x="8.6" y="2" width="2.4" height="10" rx=".6"/></svg>
+    </button>
+    <a class="scroll" href="#pietus" aria-label="Slinkti žemyn">
+      <svg viewBox="0 0 12 40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1v37M1.5 33.5 6 38l4.5-4.5"/></svg>
+    </a>
+  </div>
+</header>
+
+<div class="status"><div id="today">Darbo laikas: Tr–Kt 11:00–17:00, Pn 11:00–19:00, Št 12:00–19:00</div></div>
+
+<main>
+  <section class="lunch" id="pietus">
+    <p class="eyebrow">Kiekvieną savaitę</p>
+    <h2 class="days">Trečiadienis<span class="dot">●</span><em>Ketvirtadienis</em><span class="dot">●</span>Penktadienis</h2>
+    <div class="rule"></div>
+    <p class="hours">11:00 <i></i> 15:00</p>
+
+    <article class="card">
+      <div class="card-logo"><img src="logo.png" alt="Užeiga Prusakovų" width="440" height="323"></div>
+      <h2>Dienos pietūs</h2>
+      <div class="date"><span id="cardDate">Data</span><span>11:00–15:00</span></div>
+
+      <div class="group">
+        <h3>Sriuba</h3>
+        <div class="item"><div><b>Dienos sriuba</b><small>Teiraukitės apie šios dienos sriubą</small></div><span>2,60 €</span></div>
+      </div>
+      <div class="group">
+        <h3>Karštieji patiekalai</h3>
+        <div class="item"><div><b>Čeburekas „Gurmaniškas“</b><small>Vištiena, špinatai, pomidorai, sūris</small></div><span>7,50 €</span></div>
+        <div class="item"><div><b>Naminiai koldūnai</b><small>Su grietine</small></div><span>6,50 €</span></div>
+        <div class="item"><div><b>Traškūs bulviniai blynai</b><small>Be mėsos</small></div><span>5,00 €</span></div>
+      </div>
+      <div class="group">
+        <h3>Desertas</h3>
+        <div class="item"><div><b>Žagarėliai</b><small>Su šokolado ir karamelės padažu</small></div><span>4,90 €</span></div>
+      </div>
+
+      <div class="card-foot">
+        <p>Patiekalų pasiūla gali keistis.<br>Apie alergenus teiraukitės aptarnaujančio personalo.</p>
+        <strong>Skanaus!</strong>
+      </div>
+    </article>
+  </section>
+
+  <section class="about" id="apie">
+    <div class="about-in">
+      <img src="/kontaktai/sale-900.jpg" alt="Prusakovų užeigos salė" loading="lazy">
+      <div>
+        <p class="eyebrow">Apie mus</p>
+        <h2>Jauki užeiga Savanorių prospekte</h2>
+        <p>Čeburekai, naminiai koldūnai, cepelinai ir bulviniai blynai — gaminame vietoje, kaip namuose. Užsukite pietų, pasiimkite išsinešti arba susitikite su draugais prie stalo.</p>
+        <a class="btn" href="/kontaktai/">Kaip mus rasti
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div>
+      <h4>Adresas</h4>
+      <a href="https://www.google.com/maps/search/?api=1&query=Prusakov%C5%B3+u%C5%BEeiga%2C+Savanori%C5%B3+pr.+139C%2C+Vilnius" target="_blank" rel="noopener">Savanorių pr. 139C, Vilnius</a>
+    </div>
+    <div>
+      <h4>Darbo laikas</h4>
+      <dl>
+        <dt>Trečiadienis–ketvirtadienis</dt><dd>11:00–17:00</dd>
+        <dt>Penktadienis</dt><dd>11:00–19:00</dd>
+        <dt>Šeštadienis</dt><dd>12:00–19:00</dd>
+        <dt>Sekmadienis–antradienis</dt><dd>Nedirbame</dd>
+      </dl>
+    </div>
+    <div>
+      <h4>Rezervacija</h4>
+      <a href="tel:+37060909488">+370 609 09488</a>
+    </div>
+  </div>
+  <p class="copy">© Prusakovų užeiga</p>
+</footer>
+
+<script>
+(() => {
+  const video = document.getElementById('heroVideo');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const icons = {
+    pause: '<rect x="3" y="2" width="2.4" height="10" rx=".6"/><rect x="8.6" y="2" width="2.4" height="10" rx=".6"/>',
+    play: '<path d="M4 2.2v9.6a.6.6 0 0 0 .9.5l7.4-4.8a.6.6 0 0 0 0-1L4.9 1.7a.6.6 0 0 0-.9.5Z"/>'
+  };
+  const syncIcon = () => {
+    document.getElementById('pauseIcon').innerHTML = video.paused ? icons.play : icons.pause;
+    pauseBtn.setAttribute('aria-label', video.paused ? 'Paleisti vaizdo įrašą' : 'Sustabdyti vaizdo įrašą');
+  };
+  pauseBtn.addEventListener('click', () => { video.paused ? video.play() : video.pause(); });
+  video.addEventListener('play', syncIcon);
+  video.addEventListener('pause', syncIcon);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { video.removeAttribute('autoplay'); video.pause(); }
+
+  const burger = document.getElementById('burger');
+  const links = document.getElementById('links');
+  burger.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+  });
+  links.addEventListener('click', e => { if (e.target.closest('a')) { links.classList.remove('open'); burger.setAttribute('aria-expanded', false); } });
+
+  const hours = { 3: ['11:00', '17:00'], 4: ['11:00', '17:00'], 5: ['11:00', '19:00'], 6: ['12:00', '19:00'] };
+  const dayNames = ['sekmadienį', 'pirmadienį', 'antradienį', 'trečiadienį', 'ketvirtadienį', 'penktadienį', 'šeštadienį'];
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Vilnius', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+    .formatToParts(new Date()).map(p => [p.type, p.value]));
+  const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(parts.weekday);
+  const now = `${parts.hour}:${parts.minute}`;
+  const today = hours[day];
+  let text;
+  if (today && now < today[1]) {
+    text = `Šiandien dirbame ${today[0]}–${today[1]}`;
+  } else {
+    let next = (day + 1) % 7;
+    while (!hours[next]) { next = (next + 1) % 7; }
+    text = `${today ? 'Šiandien jau uždaryta' : 'Šiandien nedirbame'} · ${next === (day + 1) % 7 ? 'rytoj' : dayNames[next]} dirbame ${hours[next][0]}–${hours[next][1]}`;
+  }
+  document.getElementById('today').textContent = text;
+
+  document.getElementById('cardDate').textContent = 'Data: ' + new Intl.DateTimeFormat('lt-LT', { timeZone: 'Europe/Vilnius', year: 'numeric', month: 'long', day: 'numeric' }).format(new Date());
+})();
+</script>
+</body>
+</html>
