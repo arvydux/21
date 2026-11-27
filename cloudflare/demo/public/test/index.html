@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Test · Prusakovų užeiga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#fbf7ee;--cream-deep:#f1eddf;--green:#183e34;--green-bright:#176b51;--ink:#263f35;--muted:#69776c;
+  --gold:#b39b68;--gold-text:#7e6635;--gold-light:#d7c493;--line:#d9d9c7;--serif:'Cormorant Garamond',Georgia,serif;--sans:'Manrope',Arial,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--cream);color:var(--ink);font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.container{width:min(1280px,calc(100% - 104px));margin:auto}
+.topline{background:var(--green);color:var(--cream);font-size:13px}
+.topline .container{display:flex;justify-content:space-between;align-items:center;min-height:36px}
+.topline a{display:inline-flex;gap:8px;align-items:center;opacity:.9}
+.site-header{background:rgba(251,247,238,.97);border-bottom:1px solid var(--line);position:relative;z-index:10}
+.header-inner{display:flex;align-items:center;height:96px;gap:30px}
+.logo-link img{height:78px}
+.desktop-nav{display:flex;gap:30px;margin-left:auto;font-size:15px;font-weight:500}
+.desktop-nav a:hover{color:var(--green-bright)}
+.header-cta{display:inline-flex;align-items:center;gap:11px;background:var(--green);color:var(--cream);font-weight:600;font-size:15px;
+  padding:13px 22px 13px 20px;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(215,196,147,.55),0 6px 18px -8px rgba(24,62,52,.55)}
+.track-dot{width:9px;height:9px;border-radius:50%;background:#7fd3a6}
+.hero{position:relative;background:var(--green);color:var(--cream);height:calc(100vh - 133px);min-height:600px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 40% 55% at 72% 50%,#3d5a3c 0%,#24493b 40%,var(--green) 72%)}
+.glow{position:absolute;inset:0;background:radial-gradient(circle at 72% 50%,rgba(215,196,147,.28),transparent 34%);animation:pulse 5s ease-in-out infinite;pointer-events:none}
+@keyframes pulse{50%{opacity:.6}}
+canvas#flecks{position:absolute;inset:0;pointer-events:none}
+.hero-copy{position:absolute;left:max(52px,calc((100% - 1280px)/2));top:50%;transform:translateY(calc(-50% - 18px));width:min(560px,44%);z-index:4}
+.eyebrow{font-size:14px;letter-spacing:.15em;font-weight:600;color:var(--gold-light);margin-bottom:20px;text-transform:uppercase;opacity:0}
+.hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(52px,6vw,88px);line-height:1.0;letter-spacing:-.02em}
+.hero h1 span{display:block;opacity:0;transform:translateY(24px)}
+.hero h1 em{color:var(--gold-light);font-weight:500}
+.hero-description{font-size:18px;line-height:1.65;color:#efeede;margin-top:26px;max-width:440px;opacity:0}
+.hero-actions{display:flex;gap:14px;margin-top:34px}
+.button{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:14px 26px;border-radius:3px;font-size:15px;font-weight:600;
+  border:1px solid transparent;opacity:0;transform:translateY(16px);transition:background .2s,color .2s}
+.button-cream{background:var(--cream);color:var(--green)}
+.button-cream:hover{background:#fff}
+.button-outline-light{border-color:rgba(251,247,238,.7);color:var(--cream)}
+.button-outline-light:hover{background:rgba(251,247,238,.1)}
+.hero-note{position:absolute;left:max(52px,calc((100% - 1280px)/2));bottom:28px;font-family:var(--serif);font-style:italic;font-size:21px;color:#e3e4d9;opacity:0;z-index:4}
+.stage{position:absolute;left:72%;top:50%;width:0;height:0;z-index:3}
+.food{position:absolute;left:0;top:0;transform:translate(-50%,-50%);will-change:transform,opacity;filter:drop-shadow(0 30px 34px rgba(5,20,14,.55))}
+#whole{width:min(30vw,440px)}
+#open{width:min(40vw,600px);opacity:0}
+.ing{position:absolute;left:0;top:0;opacity:0;will-change:transform,opacity;filter:drop-shadow(0 12px 16px rgba(5,20,14,.45))}
+.taste-nav{background:var(--cream);border-bottom:1px solid var(--line)}
+.taste-inner{display:flex;justify-content:center;align-items:center;gap:44px;min-height:76px}
+.taste-inner a{font-family:var(--serif);font-size:25px;font-weight:500;opacity:0;transform:translateY(10px)}
+.taste-inner a:hover{color:var(--green-bright)}
+.taste-inner span{width:4px;height:4px;border-radius:50%;background:var(--gold)}
+@media(max-width:950px){.desktop-nav{display:none}.header-cta{margin-left:auto}}
+@media(max-width:720px){
+  .container{width:calc(100% - 40px)}
+  .topline .container{justify-content:center;font-size:11px} .topline a:last-child{display:none}
+  .header-inner{height:78px} .logo-link img{height:62px} .header-cta{display:none}
+  .hero{height:auto;min-height:0;display:flex;flex-direction:column}
+  .food-area{position:relative;height:62vw;min-height:250px}
+  .stage{left:50%;top:52%}
+  #whole{width:52vw} #open{width:76vw}
+  .hero-copy{position:relative;left:auto;top:auto;transform:none;width:100%;padding:8px 24px 40px}
+  .eyebrow{font-size:11px;margin-bottom:12px}
+  .hero h1{font-size:clamp(42px,10.8vw,64px)}
+  .hero-description{font-size:15px;margin-top:18px}
+  .hero-actions{gap:10px;margin-top:22px} .button{flex:1;font-size:14px;min-height:49px;padding:12px}
+  .hero-note{display:none}
+  .taste-inner{justify-content:flex-start;overflow-x:auto;gap:18px;min-height:60px;padding:0 20px;width:100%}
+  .taste-inner a{font-size:22px;white-space:nowrap}
+}
+@media(min-width:721px){.food-area{position:absolute;inset:0}}
+@media(min-width:721px) and (max-height:740px){.hero-note{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="topline"><div class="container">
+  <a href="https://www.google.com/maps/dir/?api=1&destination=Prusakov%C5%B3+u%C5%BEeiga%2C+Savanori%C5%B3+pr.+139C%2C+Vilnius" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 0 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>Savanorių pr. 139C, Vilnius</a>
+  <a href="tel:+37060909488">Užsakymai telefonu&nbsp; +370 609 09488</a>
+</div></div>
+<header class="site-header"><div class="container header-inner">
+  <a class="logo-link" href="/"><img src="assets/logo.png" alt="Užeiga Prusakovų"></a>
+  <nav class="desktop-nav"><a href="/#pietus">Dienos pietūs</a><a href="/meniu/">Meniu</a><a href="/apie-mus/">Apie mus</a><a href="/kontaktai/">Kontaktai</a></nav>
+  <a class="header-cta" href="https://status.prusakovuuzeiga.lt/" target="_blank" rel="noopener"><span class="track-dot"></span>Sekti užsakymą</a>
+</div></header>
+<section class="hero">
+  <div class="hero-bg"></div><div class="glow"></div><canvas id="flecks"></canvas>
+  <div class="food-area"><div class="stage">
+    <img id="whole" class="food" src="assets/cheburek.webp" alt="Čeburekas">
+    <img id="open" class="food" src="assets/open.webp" alt="Čeburekas su įdaru">
+  </div></div>
+  <div class="hero-copy">
+    <p class="eyebrow">Vilnius</p>
+    <h1><span>Traškūs čeburekai,</span><span><em>su sultingu įdaru.</em></span></h1>
+    <p class="hero-description">Kepami vietoje kasdien: su mėsa, sūriu, grybais ir jalapenais. Taip pat naminiai patiekalai ir maži pasimėgavimo momentai.</p>
+    <div class="hero-actions"><a class="button button-cream" href="/meniu/">Atrasti meniu</a><a class="button button-outline-light" href="/#pietus">Dienos pietūs</a></div>
+  </div>
+  <p class="hero-note">Gera susitikti prie vieno stalo.</p>
+</section>
+<nav class="taste-nav"><div class="taste-inner">
+  <a href="/meniu/">Čeburekai</a><span></span><a href="/meniu/">Naminiai patiekalai</a><span></span><a href="/meniu/">Užkandžiai</a><span></span><a href="/meniu/">Desertai</a>
+</div></nav>
+<script>
+(function(){
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mobile=innerWidth<=720;
+const S=mobile?0.42:Math.min(0.8,Math.max(0.5,innerWidth/1800));
+const stage=document.querySelector('.stage');
+const ING=[['jalapeno',90,-330,-170,-25],['jalapeno',70,300,-210,40],['jalapeno',60,380,150,-60],
+  ["chili",150,-340,140,-35],['chili',120,260,240,70],['meat',90,-230,230,10],['meat',70,180,-280,-20],['meat',60,420,-40,30],
+  ['cheese',120,-140,-290,15],['cheese',100,360,-130,-30],["dill",90,-380,-60,20],['dill',80,120,290,-40]];
+const els=ING.map(([f,w,x,y,r])=>{const im=new Image();im.src='assets/'+f+'.webp';im.className='ing';im.alt='';im.style.width=(w*S)+'px';stage.appendChild(im);return{im,x:x*S,y:y*S,r}});
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+const ease='cubic-bezier(.2,.8,.2,1)';
+const anim=(el,kf,o)=>el.animate(kf,Object.assign({fill:'forwards',easing:ease},o));
+const D=reduce?1:null;
+function run(){
+  const whole=$('#whole'),open=$('#open');
+  anim(whole,[{transform:'translate(-50%,-260%) rotate(-25deg) scale(.7)',opacity:0},{transform:'translate(-50%,-50%) rotate(4deg) scale(1)',opacity:1,offset:.7},
+    {transform:'translate(-50%,-56%) rotate(-2deg)',offset:.85},{transform:'translate(-50%,-50%) rotate(0)',opacity:1}],{duration:D||1000,easing:'cubic-bezier(.3,.9,.4,1)'});
+  setTimeout(()=>{
+    anim(whole,[{opacity:1,transform:'translate(-50%,-50%) scale(1)'},{opacity:0,transform:'translate(-50%,-50%) scale(1.15)'}],{duration:350});
+    anim(open,[{opacity:0,transform:'translate(-50%,-50%) scale(.75)'},{opacity:1,transform:'translate(-50%,-50%) scale(1.06)',offset:.6},{opacity:1,transform:'translate(-50%,-50%) scale(1)'}],{duration:700});
+    els.forEach((e,i)=>{
+      const a=anim(e.im,[{transform:'translate(-50%,-50%) scale(.2)',opacity:0},
+        {transform:`translate(calc(-50% + ${e.x*1.15}px),calc(-50% + ${e.y*1.15}px)) scale(1.1) rotate(${e.r*1.5}deg)`,opacity:1,offset:.7},
+        {transform:`translate(calc(-50% + ${e.x}px),calc(-50% + ${e.y}px)) scale(1) rotate(${e.r}deg)`,opacity:1}],{duration:D||1100,delay:i*25});
+      a.onfinish=()=>{if(reduce)return;e.im.animate([
+        {transform:`translate(calc(-50% + ${e.x}px),calc(-50% + ${e.y}px)) rotate(${e.r}deg)`},
+        {transform:`translate(calc(-50% + ${e.x}px),calc(-50% + ${e.y-12}px)) rotate(${e.r+8}deg)`},
+        {transform:`translate(calc(-50% + ${e.x}px),calc(-50% + ${e.y}px)) rotate(${e.r}deg)`}],{duration:3000+i*170,iterations:Infinity,easing:'ease-in-out'})};
+    });
+  },reduce?0:1250);
+  setTimeout(()=>{if(reduce)return;open.animate([{transform:'translate(-50%,-50%)'},{transform:'translate(-50%,-53%)'},{transform:'translate(-50%,-50%)'}],{duration:4200,iterations:Infinity,easing:'ease-in-out'})},2000);
+  const t0=reduce?0:1500, up=[{opacity:0,transform:'translateY(20px)'},{opacity:1,transform:'none'}];
+  setTimeout(()=>anim($('.eyebrow'),[{opacity:0},{opacity:1}],{duration:600}),t0);
+  $$('.hero h1 span').forEach((s,i)=>setTimeout(()=>anim(s,up,{duration:800}),t0+120+i*160));
+  setTimeout(()=>anim($('.hero-description'),up,{duration:700}),t0+500);
+  $$('.button').forEach((b,i)=>setTimeout(()=>anim(b,up,{duration:600}),t0+680+i*110));
+  setTimeout(()=>anim($('.hero-note'),[{opacity:0},{opacity:1}],{duration:900}),t0+1000);
+  $$('.taste-inner a').forEach((a,i)=>setTimeout(()=>anim(a,up,{duration:600}),t0+900+i*90));
+}
+const cv=$('#flecks'),cx=cv.getContext('2d');let P=[];
+function size(){const r=cv.getBoundingClientRect();cv.width=r.width*devicePixelRatio;cv.height=r.height*devicePixelRatio}
+size();addEventListener('resize',size);
+for(let i=0;i<(mobile?22:45);i++)P.push({x:Math.random(),y:Math.random(),r:Math.random()*1.8+.5,v:Math.random()*.001+.0003,d:Math.random()*6.3});
+function tick(){cx.clearRect(0,0,cv.width,cv.height);
+  for(const p of P){p.y-=p.v;p.d+=.02;if(p.y<-.02){p.y=1.02;p.x=Math.random()}
+    const a=.25+.3*Math.sin(p.d*2);cx.beginPath();cx.arc((p.x+Math.sin(p.d)*.004)*cv.width,p.y*cv.height,p.r*devicePixelRatio,0,7);
+    cx.fillStyle=`rgba(215,196,147,${a})`;cx.fill()}
+  if(!reduce)requestAnimationFrame(tick)}
+tick();
+const need=[...document.images];let n=0;const go=()=>{if(++n>=need.length)run()};
+need.forEach(im=>im.complete?go():(im.onload=im.onerror=go));
+setTimeout(()=>{if(n<need.length){n=need.length;run()}},3500);
+})();
+</script>
+</body>
+</html>
