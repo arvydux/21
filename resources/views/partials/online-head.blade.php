@@ -41,7 +41,8 @@
         font-size: 28px;
         color: var(--green);
     }
-    header p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+    header .logo { display: block; width: auto; height: 84px; margin: 0 auto; }
+    header p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
     .unavailable { display: none; padding: 32px 24px; border-radius: 20px; background: #fff; border: 1px solid var(--line); text-align: center; }
     .unavailable .icon { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; margin-bottom: 16px; border-radius: 50%; background: var(--sand); color: var(--amber); }
     .unavailable h2 { margin: 0 0 10px; font-family: 'Playfair Display', Georgia, serif; font-size: 24px; color: var(--green); }

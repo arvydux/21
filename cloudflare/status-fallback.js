@@ -20,7 +20,8 @@ const OFFLINE_PAGE = `<!DOCTYPE html>
   main { max-width: 560px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 16px 28px; }
   header { text-align: center; margin-bottom: 20px; }
   header h1 { margin: 0; font-family: 'Playfair Display', Georgia, serif; font-size: 28px; color: var(--green); }
-  header p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+  header .logo { display: block; width: auto; height: 84px; margin: 0 auto; }
+  header p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
   .card { padding: 32px 24px; border-radius: 20px; background: #fff; border: 1px solid var(--line); text-align: center; }
   .icon { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; margin-bottom: 16px; border-radius: 50%; background: var(--sand); color: var(--amber); }
   .card h2 { margin: 0 0 10px; font-family: 'Playfair Display', Georgia, serif; font-size: 24px; color: var(--green); }
@@ -34,7 +35,7 @@ const OFFLINE_PAGE = `<!DOCTYPE html>
 <body>
 <main>
   <header>
-    <h1>Prusakovų užeiga</h1>
+    <h1><img class="logo" src="https://prusakovuuzeiga.lt/kontaktai/logo.png" alt="Prusakovų užeiga" width="440" height="323"></h1>
     <p>Užsakymų būsena realiu laiku</p>
   </header>
   <div class="card" role="status">

@@ -89,3 +89,13 @@ it('ships a friendly notice for when the board cannot reach the server', functio
         ->assertSee('Puslapis atsinaujins automatiškai')
         ->assertSee('is-unavailable', false);
 });
+
+it('shows the restaurant logo instead of a text title on the online board', function () {
+    $this->get(route('online-orders'))
+        ->assertSuccessful()
+        ->assertSee('online-logo.png', false)
+        ->assertSee('alt="Prusakovų užeiga"', false)
+        ->assertDontSee('<h1>Prusakovų užeiga</h1>', false);
+
+    expect(public_path('online-logo.png'))->toBeFile();
+});

@@ -102,7 +102,7 @@
 <body>
 <main data-main>
     <header>
-        <h1>Prusakovų užeiga</h1>
+        <h1><img class="logo" src="{{ asset('online-logo.png') }}" alt="Prusakovų užeiga" width="440" height="323"></h1>
         <p>Užsakymų būsena realiu laiku</p>
     </header>
 
